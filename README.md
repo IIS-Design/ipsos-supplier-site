@@ -68,14 +68,21 @@ Replace the example `MOCK_AUTH_SECRET` in `.env.local` with a long, random local
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000). Sign in with a demo account below to reach Projects.
+Open [localhost:3000/supplier/](http://localhost:3000/supplier/). Sign in with a demo account below to reach Projects.
 
 ### Build and serve locally
 
 ```sh
 npm run build
+cp -r public .next/standalone/
+mkdir -p .next/standalone/.next
+cp -r .next/static .next/standalone/.next/
 npm run start
 ```
+
+All application routes use the `/supplier` prefix in development and production. Route paths listed above are relative to that prefix. Settings and contact requests, email previews, and report downloads retain this prefix.
+
+The standalone server needs the public and generated static assets copied beside it when running outside the Containerfile.
 
 If a restricted environment blocks Turbopack worker-port access, the webpack build is available:
 
@@ -142,6 +149,7 @@ Server pages read through services and repositories. Interactive forms submit to
 | [Authentication](docs/ai-context/authentication.md)     | Sign-in, recovery, and session behavior                                             |
 | [Account Settings](docs/ai-context/account-settings.md) | Profile editing and password-change behavior                                        |
 | [Email assets](public/emails/README.md)                 | HTML template variables and engineering integration notes                           |
+| [Production deployment handoff](docs/deployment/production-handoff.md) | IIS-Design container platform configuration and production checks |
 
 ## Prototype Limitations
 

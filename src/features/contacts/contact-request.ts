@@ -1,10 +1,12 @@
+import { withBasePath } from "@/lib/app-path";
+
 export async function saveContactsRequest<T>(
   url: string,
   body: unknown,
 ): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(url, {
+    response = await fetch(withBasePath(`${url.replace(/\/$/, "")}/`), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

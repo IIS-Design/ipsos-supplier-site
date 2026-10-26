@@ -1,5 +1,7 @@
 "use client";
 
+import { withBasePath } from "@/lib/app-path";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch, type FieldPath } from "react-hook-form";
@@ -31,7 +33,7 @@ export function SettingsForm({ section, initialValues }: { section: EditableSett
   const save = handleSubmit(async values => {
     setError(""); setSuccess(false);
     try {
-      const response = await fetch("/api/settings/preferences", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section, values }) });
+      const response = await fetch(withBasePath("/api/settings/preferences/"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section, values }) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message ?? "Settings could not be saved.");
       reset(result.values); setSuccess(true); router.refresh();

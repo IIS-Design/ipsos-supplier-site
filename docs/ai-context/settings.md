@@ -81,3 +81,9 @@ at 390px verified mobile section selection and no horizontal overflow. A running
 process can retain old repository modules after interface expansion; restart it if
 Settings save reports a missing repository method. A fresh production server was
 used to verify saves without resetting the existing demo’s process-local data.
+
+## Deployment paths
+
+Settings retain the local implementation under the deployment base path `/supplier`.
+Settings API requests, organization and subsample contact saves, and user email
+preview links include that prefix. Next.js links apply it automatically.

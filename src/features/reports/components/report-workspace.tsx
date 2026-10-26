@@ -2,6 +2,7 @@
 
 import { ReportAction } from "@/features/projects/components/report-action";
 import { ReportErrorDetails } from "@/components/report-error-details";
+import { withBasePath } from "@/lib/app-path";
 
 import Link from "next/link";
 import { PrototypeEmptyNotice, usePrototypeState } from "@/components/prototype-state";
@@ -137,7 +138,7 @@ function ReportList({
               {report.status === "finished" && report.downloadUrl ? (
                 <Button asChild variant="outline" className="mt-2 min-h-11">
                 <a
-                  href={report.downloadUrl}
+                  href={withBasePath(report.downloadUrl)}
                   download
                 >
                   Download report

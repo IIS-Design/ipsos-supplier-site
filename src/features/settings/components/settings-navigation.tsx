@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 const icons = { organization: Building2, users: Users, "survey-configuration": ListChecks, redirects: Route, "server-to-server": ArrowLeftRight, security: Shield };
 export const settingsHref = (section: SettingsSection) => section === "organization" ? "/settings" : `/settings/${section}`;
 export function SettingsNavigation() {
-  const pathname = usePathname();
+  const pathname = usePathname().replace(/\/$/, "") || "/";
   const router = useRouter();
   const section = settingsSections.find(key => settingsHref(key) === pathname) ?? "organization";
   return <>

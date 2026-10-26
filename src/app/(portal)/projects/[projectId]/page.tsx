@@ -6,5 +6,5 @@ export default async function ProjectContextRoute({
   params: Promise<{ projectId: string }>;
 }) {
   const { projectId } = await params;
-  redirect(`/projects/${encodeURIComponent(projectId)}/subsamples`);
+  redirect(`/projects/${encodeURIComponent(projectId)}/subsamples/`);
 }

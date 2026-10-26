@@ -23,7 +23,7 @@ export function WorkspaceTabs({
   projectId: string;
   subsampleId: string;
 }) {
-  const pathname = usePathname();
+  const pathname = usePathname().replace(/\/$/, "") || "/";
   const router = useRouter();
   const currentTab =
     tabs.find((tab) => pathname.endsWith(tab.suffix))?.value ?? "details";

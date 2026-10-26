@@ -21,6 +21,7 @@ import { ListPagination } from "@/components/ui/list-pagination";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { withBasePath } from "@/lib/app-path";
 import {
   Select,
   SelectContent,
@@ -375,7 +376,7 @@ export function CostsWorkspace({
     setError(null);
     setSuccess(null);
     try {
-      const response = await fetch("/api/costs/decisions", {
+      const response = await fetch(withBasePath("/api/costs/decisions/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ decision, costIds: visibleIds }),

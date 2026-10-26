@@ -3,6 +3,10 @@
 Source verification: 2026-10-22. Route groups `(auth)` and `(portal)` are filesystem
 organization, not URL segments. Dynamic page/handler params use Promise types.
 
+All paths below are relative to the `/supplier` deployment prefix. The deployment
+uses trailing slashes; client navigation compares paths without the final slash
+to preserve active Settings, workspace tabs, and prototype controls.
+
 ## Primary structure
 
 - Projects is the operational landing page after login and the destination of `/`.

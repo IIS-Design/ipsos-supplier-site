@@ -1,5 +1,7 @@
 "use client";
 
+import { withBasePath } from "@/lib/app-path";
+
 import { useState } from "react";
 import { useMockAuth } from "@/components/auth/mock-auth-provider";
 import { useRouter } from "next/navigation";
@@ -22,7 +24,7 @@ import { useUnsavedChanges } from "@/features/contacts/use-unsaved-changes";
 
 type Profile = z.infer<typeof managedProfileSchema>;
 async function manage(request: UserManagementRequest) {
-  const response = await fetch("/api/settings/users", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(request) });
+  const response = await fetch(withBasePath("/api/settings/users/"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(request) });
   const data = await response.json();
   if (!response.ok) throw new Error(data.message ?? "Unable to update this user.");
   return data.user as User;
@@ -51,7 +53,7 @@ export function SettingsUsers({ users, actorId }: { users: User[]; actorId: stri
   return <div className="space-y-5">
     {message && <p role="status" className="text-emerald-800">{message}</p>}
     {error && !action && <p role="alert" className="text-destructive">{error}</p>}
-    {preview && <Button asChild variant="outline"><a href={`/email-preview/${preview}`} target="_blank" rel="noopener noreferrer">Open {preview === "user-invitation" ? "Invitation" : "Reset Password"} Email</a></Button>}
+    {preview && <Button asChild variant="outline"><a href={withBasePath(`/email-preview/${preview}/`)} target="_blank" rel="noopener noreferrer">Open {preview === "user-invitation" ? "Invitation" : "Reset Password"} Email</a></Button>}
     <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_160px_auto]"><Input aria-label="Search users" placeholder="Search users…" value={query} onChange={event => setQuery(event.target.value)} /><Select value={status} onValueChange={setStatus}><SelectTrigger aria-label="Filter users by status"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">All Status</SelectItem><SelectItem value="active">Active</SelectItem><SelectItem value="invited">Invited</SelectItem><SelectItem value="inactive">Inactive</SelectItem></SelectContent></Select><Button variant="outline" onClick={() => setEditor("invite")}><UserPlus aria-hidden="true" className="size-4" />Invite User</Button></div>
     <Table className="table-fixed"><TableHeader><TableRow><TableHead>Name</TableHead><TableHead className="hidden md:table-cell">Email</TableHead><TableHead className="hidden sm:table-cell">Role</TableHead><TableHead className="w-24">Status</TableHead><TableHead className="w-12"><span className="sr-only">User actions</span></TableHead></TableRow></TableHeader><TableBody>{rows.map(user => <TableRow key={user.id} className={(user.status ?? "active") === "inactive" ? "text-muted-foreground" : ""}><TableCell className="whitespace-normal wrap-break-word"><p>{user.firstName} {user.lastName}</p><p className="text-xs text-muted-foreground md:hidden">{user.email}</p><p className="text-xs text-muted-foreground sm:hidden">{user.role === "admin" ? "Administrator" : "User"}</p></TableCell><TableCell className="hidden whitespace-normal wrap-break-word md:table-cell">{user.email}</TableCell><TableCell className="hidden sm:table-cell">{user.role === "admin" ? "Administrator" : "User"}</TableCell><TableCell><Badge variant="outline" className="capitalize">{user.status ?? "active"}</Badge></TableCell><TableCell className="px-0"><DropdownMenu><DropdownMenuTrigger asChild><Button aria-label={`Actions for ${user.firstName} ${user.lastName}`} className="size-11 px-0" variant="ghost"><MoreHorizontal aria-hidden="true" className="size-4" /></Button></DropdownMenuTrigger><DropdownMenuContent><DropdownMenuItem onSelect={() => setEditor(user)}><UserRoundPen aria-hidden="true" className="size-4" />Edit User</DropdownMenuItem><DropdownMenuItem disabled={(user.status ?? "active") !== "active"} onSelect={() => { setError(""); setAction({ user, type: "reset-password" }); }}><KeyRound aria-hidden="true" className="size-4" />Reset Password</DropdownMenuItem><DropdownMenuSeparator /><DropdownMenuItem disabled={user.id === actorId || user.status === "invited"} onSelect={() => { setError(""); setAction({ user, type: user.status === "inactive" ? "activate" : "deactivate" }); }}><UserRoundX aria-hidden="true" className="size-4" />{user.status === "inactive" ? "Activate User" : "Deactivate User"}</DropdownMenuItem></DropdownMenuContent></DropdownMenu></TableCell></TableRow>)}</TableBody></Table>
     {!rows.length && <p className="py-8 text-center text-muted-foreground">No users match these filters.</p>}

@@ -19,7 +19,7 @@ const baseNavigation = [
 ] as const;
 
 export function PrimaryNavigation() {
-  const pathname = usePathname();
+  const pathname = usePathname().replace(/\/$/, "") || "/";
   const [menuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
   const menuButton = useRef<HTMLButtonElement>(null);

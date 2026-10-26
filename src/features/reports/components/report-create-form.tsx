@@ -7,6 +7,7 @@ import type { FormEvent } from "react";
 import { z } from "zod";
 import { ArrowLeft, ChevronDown, CircleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { withBasePath } from "@/lib/app-path";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -247,7 +248,7 @@ export function ReportCreateForm({
 
     setSubmitting(true);
     try {
-      const response = await fetch("/api/reports", {
+      const response = await fetch(withBasePath("/api/reports/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
