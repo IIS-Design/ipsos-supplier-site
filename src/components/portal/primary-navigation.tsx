@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useId, useRef, useState } from "react";
-import { LogOut, Menu, X } from "lucide-react";
+import { ChevronDown, LogOut, Menu, User, X } from "lucide-react";
 import { useMockAuth } from "@/components/auth/mock-auth-provider";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
@@ -69,9 +69,9 @@ export function PrimaryNavigation() {
             menuOpen ? "flex flex-col" : "hidden",
           )}
         >
-          <div className="border-b px-3 pb-3 pt-1 lg:hidden">
+          <div className="flex items-center justify-between gap-3 border-b px-3 pb-3 pt-1 lg:hidden">
             <p className="font-medium">{user?.firstName} {user?.lastName}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{user?.role === "admin" ? "Administrator" : "User"}</p>
+            <p className="shrink-0 text-right text-xs text-muted-foreground">{user?.role === "admin" ? "Administrator" : "User"}</p>
           </div>
           {navigation.map(({ href, label }) => {
             const active = pathname === href || pathname.startsWith(`${href}/`);
@@ -90,9 +90,7 @@ export function PrimaryNavigation() {
               </Link>
             );
           })}
-          <div className="mt-2 border-t py-2 lg:hidden">
-            <Link aria-current={pathname === "/account" ? "page" : undefined} className="flex min-h-11 items-center rounded-md px-3 text-sm font-medium hover:bg-muted" href="/account" onClick={() => setMenuOpen(false)}>Account Settings</Link>
-          </div>
+          <Link aria-current={pathname === "/account" ? "page" : undefined} className={cn("inline-flex h-11 items-center gap-2 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:hidden", pathname === "/account" && "bg-muted text-foreground")} href="/account" onClick={() => setMenuOpen(false)}>Account Settings</Link>
           <div className="mt-2 border-t pt-2 lg:hidden">
             <Button className="w-full justify-start" onClick={handleSignOut} type="button" variant="ghost"><LogOut aria-hidden="true" className="size-4" />Sign Out</Button>
           </div>
@@ -101,9 +99,13 @@ export function PrimaryNavigation() {
         <div className="ml-auto hidden shrink-0 lg:block">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button aria-label="User menu" className="rounded-md px-3 py-2 text-right hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" type="button">
+              <button aria-label="User menu" className="flex items-center gap-2 rounded-md px-3 py-2 text-right hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" type="button">
+                <User aria-hidden="true" className="size-4 shrink-0" />
+                <span>
                 <span className="block font-medium">{user?.firstName} {user?.lastName}</span>
                 <span className="block text-xs text-muted-foreground">{user?.role === "admin" ? "Administrator" : "User"}</span>
+                </span>
+                <ChevronDown aria-hidden="true" className="size-4 shrink-0" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>

@@ -1,3 +1,5 @@
+import { defaultSettings, settingsSchema, userManagementSchema } from "@/features/settings/settings-model";
+import type { SettingsValues } from "@/features/settings/settings-model";
 import "server-only";
 import { accountSchema } from "@/features/account/account-model";
 import { mockRecoveryStore } from "@/lib/auth/mock-recovery-store";
@@ -144,6 +146,31 @@ const userGlobal = globalThis as typeof globalThis & { __ipsosAccountUsers?: Use
 const userRecords = (userGlobal.__ipsosAccountUsers ??= structuredClone(users));
 
 const userRepository: UserRepository = {
+  async manage(supplierId, actorId, input) {
+    const request = userManagementSchema.parse(input);
+    const actor = userRecords.find(user => user.id === actorId && user.supplierId === supplierId && (user.status ?? "active") === "active");
+    if (actor?.role !== "admin") throw new Error("FORBIDDEN");
+    if (request.action === "invite") {
+      if (userRecords.some(user => user.email.toLowerCase() === request.profile.email)) throw new Error("EMAIL_IN_USE");
+      const user: User = { ...request.profile, id: `user-${randomUUID()}` as UserId, supplierId, status: "invited" };
+      userRecords.push(user);
+      return structuredClone(user);
+    }
+    const index = userRecords.findIndex(user => user.id === request.userId && user.supplierId === supplierId);
+    if (index < 0) throw new Error("NOT_FOUND");
+    const current = userRecords[index];
+    if (request.action === "edit") {
+      if (current.id === actorId && request.profile.role !== "admin") throw new Error("SELF_CHANGE");
+      if (userRecords.some(user => user.id !== current.id && user.email.toLowerCase() === request.profile.email)) throw new Error("EMAIL_IN_USE");
+      mockRecoveryStore.renameAccountEmail(current.email, request.profile.email);
+      userRecords[index] = { ...current, ...request.profile };
+    } else if (request.action === "deactivate" || request.action === "activate") {
+      if (current.id === actorId) throw new Error("SELF_CHANGE");
+      if (current.status === "invited") throw new Error("INVITATION_PENDING");
+      userRecords[index] = { ...current, status: request.action === "activate" ? "active" : "inactive" };
+    } else if ((current.status ?? "active") !== "active") throw new Error("USER_NOT_ACTIVE");
+    return structuredClone(userRecords[index]);
+  },
   async saveProfile(supplierId, userId, input) {
     const profile = accountSchema.parse(input);
     const index = userRecords.findIndex(user => user.id === userId && user.supplierId === supplierId);
@@ -348,7 +375,29 @@ const costRepository: CostRepository = {
   },
 };
 
+const settingsGlobal = globalThis as typeof globalThis & { __ipsosSupplierPreferences?: Record<string, SettingsValues> };
+const preferences = (settingsGlobal.__ipsosSupplierPreferences ??= {});
+
 export const mockRepositories: PortalRepositories = {
+  settings: {
+    async get(supplierId) {
+      const supplier = contactState.suppliers.find(item => item.id === supplierId);
+      if (!supplier) throw new Error("NOT_FOUND");
+      return structuredClone(preferences[supplierId] ?? defaultSettings(supplier.name));
+    },
+    async save(supplierId, actorId, section, input) {
+      const actor = userRecords.find(user => user.id === actorId && user.supplierId === supplierId && (user.status ?? "active") === "active");
+      if (actor?.role !== "admin") throw new Error("FORBIDDEN");
+      const values = settingsSchema.parse(input);
+      const supplier = contactState.suppliers.find(item => item.id === supplierId);
+      if (!supplier) throw new Error("NOT_FOUND");
+      const current = preferences[supplierId] ?? defaultSettings(supplier.name);
+      const next = { ...current, [section]: structuredClone(values[section]) };
+      preferences[supplierId] = next;
+      if (section === "organization") supplier.name = values.organization.companyName;
+      return structuredClone(next);
+    },
+  },
   suppliers: supplierRepository,
   users: userRepository,
   projects: projectRepository,

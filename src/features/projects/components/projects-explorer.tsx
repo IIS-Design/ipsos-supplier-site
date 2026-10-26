@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, Search, SlidersHorizontal, X } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge, ViewCountBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ListPagination } from "@/components/ui/list-pagination";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
 import {
@@ -167,12 +168,7 @@ export function ProjectsExplorer({
             variant="ghost"
           >
             Live Projects
-            <Badge
-              className="border-transparent bg-emerald-700 text-white"
-              variant="outline"
-            >
-              {liveProjects.length}
-            </Badge>
+            <ViewCountBadge active={view === "live"}>{liveProjects.length}</ViewCountBadge>
           </Button>
           <Button
             aria-pressed={view === "pending"}
@@ -182,12 +178,7 @@ export function ProjectsExplorer({
             variant="ghost"
           >
             Pending Projects
-            <Badge
-              className="border-transparent bg-slate-200 text-slate-800"
-              variant="outline"
-            >
-              {pendingProjects.length}
-            </Badge>
+            <ViewCountBadge active={view === "pending"}>{pendingProjects.length}</ViewCountBadge>
           </Button>
         </div>
       </header>
@@ -323,25 +314,7 @@ export function ProjectsExplorer({
           ))}
         </ul>
       )}
-      {visibleProjects.length > 0 ? (
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-4">
-          <p aria-live="polite" className="text-sm text-muted-foreground">
-            {pageStart + 1}–{Math.min(pageStart + pageSize, visibleProjects.length)} of {visibleProjects.length} projects
-          </p>
-          <div className="flex flex-wrap items-center gap-3">
-            <label className="text-sm text-muted-foreground" htmlFor="project-page-size">Items per page</label>
-            <Select onValueChange={(value) => { setPageSize(Number(value)); setPage(1); }} value={String(pageSize)}>
-              <SelectTrigger className="w-20" id="project-page-size" aria-label="Items per page"><SelectValue /></SelectTrigger>
-              <SelectContent>{[10, 20, 50].map((size) => <SelectItem key={size} value={String(size)}>{size}</SelectItem>)}</SelectContent>
-            </Select>
-            <nav aria-label="Projects pagination" className="flex items-center gap-2">
-              <Button disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)} size="sm" type="button" variant="outline">Previous</Button>
-              <span className="text-sm tabular-nums" aria-live="polite">Page {currentPage} of {pageCount}</span>
-              <Button disabled={currentPage === pageCount} onClick={() => setPage(currentPage + 1)} size="sm" type="button" variant="outline">Next</Button>
-            </nav>
-          </div>
-        </div>
-      ) : null}
+      <ListPagination total={visibleProjects.length} noun="projects" page={currentPage} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={(size) => { setPageSize(size); setPage(1); }} />
     </section>
   );
 }

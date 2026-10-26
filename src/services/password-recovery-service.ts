@@ -4,7 +4,7 @@ import { mockRecoveryStore } from "@/lib/auth/mock-recovery-store";
 
 export async function requestPasswordRecovery(email: string) {
   const user = await getUserByEmail(email);
-  return mockRecoveryStore.request(email, Boolean(user));
+  return mockRecoveryStore.request(email, Boolean(user && (user.status ?? "active") === "active"));
 }
 
 export const getRecoveryMail = (receipt: string) =>

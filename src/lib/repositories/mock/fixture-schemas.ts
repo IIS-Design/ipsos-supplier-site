@@ -96,6 +96,7 @@ export const userSchema = z
     lastName: z.string().min(1),
     email: z.email(),
     role: z.enum(["admin", "user"]),
+    status: z.enum(["active", "invited", "inactive"]).optional(),
   })
   .strict();
 

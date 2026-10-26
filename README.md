@@ -10,7 +10,7 @@ Ipsos Supplier Site is a supplier-facing portal prototype for managing research 
 - **Subsample operations:** All Subsamples navigation, Details, Field Progress and quota metrics, directly scoped Costs, and editable Contacts. Supplier contact defaults inherit to Subsamples unless explicitly overridden.
 - **Reports:** Create Respondent Info, Survey Duration, and Mini-Router Quota reports at Project or Subsample scope. Review History and Queue, inspect error details, and download the finished sample report. New requests enter the queue; report execution is not implemented.
 - **Cost review:** Project- or Subsample-scoped records, filters, expandable details, approval history, and Administrator-only bulk approve/reject actions.
-- **Account and organization settings:** Both roles can edit their own personal information and request a password change. Administrators can manage Organization Contact defaults separately.
+- **Account and organization settings:** Both roles can edit their own personal information and request a password change. Administrators can manage Organization profiles, Users & Permissions (including Organization Contacts), Survey Configuration, Respondent Redirects, Server-to-Server and Security through supplier Settings.
 - **Authentication:** Sign-in, remembered sessions, password visibility controls, and a password-recovery flow using simulated email previews.
 - **Contextual Prototype Tools:** Useful actions such as opening email previews or a sample report and toggling temporary empty states. Projects Activity previews can be switched independently and restored without changing fixture data.
 
@@ -24,7 +24,7 @@ The fixtures include 50 Projects and 180 Subsamples, with varied statuses, long 
 | Subsample Workspace | Open a Subsample from Projects                  | Shared Project context and Subsample selector, with Details, Field Progress, Costs, Contacts, and Configuration sections. Configuration content remains a placeholder. Project entry opens its All Subsamples list. |
 | Reports             | `/reports`, `/reports/create`                   | Report creation, History and Queue views, filtering, error details, and sample downloads. Queued/executing Activity entries open Queue; finished entries download directly.                                         |
 | Costs               | `/costs`                                        | Pending Approval and History views. Both roles can inspect records; only Administrators can approve or reject.                                                                                                      |
-| Settings            | `/settings`                                     | Administrator-only Organization Contacts. Other organization settings are not implemented.                                                                                                                          |
+| Settings            | `/settings`                                     | Administrator-only supplier settings: Organization, Users & Permissions (including Organization Contacts), Survey Configuration, Respondent Redirects, Server-to-Server, and Security.                                                                                                                          |
 | Account Settings    | `/account`                                      | Personal Information and Security tabs, available from the desktop user dropdown or mobile hamburger menu.                                                                                                          |
 | Authentication      | `/login`, `/forgot-password`, `/reset-password` | Sign-in, recovery confirmation, token-based password reset, and password-updated confirmation. Recovery emails open through Prototype Tools.                                                                        |
 
@@ -91,7 +91,7 @@ npm run lint
 node --conditions=react-server --import tsx --test tests/*.test.ts
 ```
 
-The full test command includes Contacts, recovery, email templates, Project filter boundaries, report identifiers, and Account Settings. Focused npm scripts are also available:
+The full test command includes Contacts, recovery, email templates, Project filter boundaries, report identifiers, Account Settings, and Supplier Settings authorization/validation. Focused npm scripts are also available:
 
 ```sh
 npm run test:contacts
@@ -147,7 +147,7 @@ Server pages read through services and repositories. Interactive forms submit to
 
 - **No durable backend:** Profile edits, contacts, cost decisions, reports, and recovery credentials are held in one server process. They can survive navigation and reloads, but reset on server restart and do not synchronize across instances. Runtime changes do not rewrite JSON fixtures.
 - **No live report execution:** New reports remain queued. Executing, Finished, and Error examples are seeded states. Downloads contain a static synthetic CSV, not results generated from the requested options; failed reports have no retry action.
-- **Limited integrations and settings:** No real email delivery, self-registration/invitations, invoicing, or external service integration. Docs and technical Configuration editors remain placeholders. Organization Settings currently covers Contacts only.
+- **Limited integrations and settings:** No real email delivery, invitation acceptance, self-registration, invoicing, or external service integration. Settings invitations and integration credentials are simulated. Docs and technical Configuration editors remain placeholders. Settings changes use process-local mock storage; only Contacts has operational Subsample inheritance.
 - **Prototype authentication:** No production identity provider, MFA, rate limiting, global session revocation, or email ownership verification. Account Settings is self-service profile editing, not a Users & Permissions administration module.
 - **Validation gaps remain:** Session-expiry recovery, failed sign-out handling, some filter/empty-state combinations, unsaved-navigation edge cases, and accessibility/responsive behavior need further work. There is no formal accessibility certification or comprehensive browser regression suite.
 
@@ -177,3 +177,6 @@ README.md must remain aligned with implementation reality. Whenever **features, 
 Check the Features, Screens, setup commands, demo credentials, structure, and limitations against the final implementation. Update the relevant detailed documents alongside the overview, keep links valid, and remove claims that are no longer true. Avoid adding temporary test totals or treating planned work as implemented.
 
 By IIS Design
+
+Supplier Settings implementation and prototype boundaries are documented in
+[Settings guide](docs/ai-context/settings.md).

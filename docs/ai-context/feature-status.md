@@ -35,14 +35,14 @@ production integration exists. Parent statuses include their missing subareas.
 | Report execution / generated exports           | Not Started | No worker, progression or real data output                                   |
 | Costs (mock approval slice)                    | Complete    | View/filter/details, bulk decisions, history and feedback                    |
 | Pending cost decisions                         | Complete    | Administrator-only, all-record validation before mutation                    |
-| Cost History                                   | Complete    | Approved/rejected records, approver/date, details, ten-row pagination        |
+| Cost History                                   | Complete    | Approved/rejected records, approver/date, details, shared 10/20/50 pagination and approval date-range picker        |
 | Cost invoicing / allocations                   | Not Started | No invoice workflow or Project-to-Subsample allocation                       |
 | Account Settings (/account) | Complete | Both roles: self profile Save/Cancel, unsaved protection, Security reset-email action; process-local storage |
-| Settings area                                  | Partial     | Only Organization Contacts implemented                                       |
+| Settings area                                  | Partial     | Six reference sections; process-local saves/actions; see settings.md                                       |
 | Organization Contacts defaults                 | Complete    | Four roles; name/email collections; Administrator-only save                  |
 | Organization profile                           | Not Started | No page/editor/API                                                           |
-| Users & Permissions management                 | Not Started | Fixture roles; no user-administration/invitation API; self-profile editing is separate                                   |
-| Supplier survey/redirect/S2S/security settings | Not Started | Reserved data shapes only                                                    |
+| Users & Permissions management                 | Partial     | Invite/edit/status/reset UI and API; no invitation acceptance or real delivery                                   |
+| Supplier survey/redirect/S2S/security settings | Partial     | Complete editable UI/mock saves; no execution or non-contact inheritance                                                    |
 | Docs                                           | Placeholder | Unavailable content and Return to Projects                                   |
 | Durable persistence / external APIs            | Not Started | JSON seeds plus process-local mock mutations                                 |
 | Regression tests                               | Partial     | Contacts/recovery/emails, account profiles, Project filters and report IDs; browser checks manual            |
@@ -90,3 +90,17 @@ fixtures/repositories are unaffected by those actions. No Dashboard route added.
 Account Settings is separate from organization Settings. Desktop identity dropdown
 and mobile hamburger link to /account. See account-settings.md for current behavior
 and production integration boundaries.
+
+## Reports landing page
+
+Reports provides one Create Report action in the page header above Report Activity.
+The three report-type shortcut cards have been removed; all three types remain
+available in the existing creation form. History/Queue and filters are unchanged.
+
+## Full-width Report row actions
+
+Reports History/Queue reuse the Projects widget status actions: finished names/icons
+download the sample, queued/executing names/icons select Queue locally, and error
+icons open dismissible details on click/tap or keyboard (hover is optional). Report
+icons and the outlined Download report button provide 44px touch targets. Scope,
+identifier, timestamp and status remain visible in the full-width list.

@@ -13,7 +13,7 @@ export function ReportErrorDetails({ message, reportId, className, children }: {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button aria-label={`View error for ${reportId}`} className={className} onMouseEnter={keepOpen} onMouseLeave={closeSoon} onClick={(event) => { event.preventDefault(); keepOpen(); }} type="button">{children}</button>
+        <button aria-label={`View error for ${reportId}`} className={className} onMouseEnter={keepOpen} onMouseLeave={closeSoon} onClick={() => { if (timer.current) clearTimeout(timer.current); }} type="button">{children}</button>
       </PopoverTrigger>
       <PopoverContent aria-labelledby={id} onOpenAutoFocus={(event) => event.preventDefault()} onMouseEnter={keepOpen} onMouseLeave={closeSoon} side="left">
         <h3 className="mb-1 text-sm font-semibold" id={id}>Report Error</h3>

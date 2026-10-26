@@ -31,7 +31,7 @@ export async function POST(request: Request) {
   }
 
   const user = await getUserByEmail(email.trim());
-  if (!user || !acceptsMockPassword(user.email, password))
+  if (!user || (user.status ?? "active") !== "active" || !acceptsMockPassword(user.email, password))
     return NextResponse.json(INVALID_CREDENTIALS, { status: 401 });
 
   await setMockSession(user, keepMeSignedIn === true);

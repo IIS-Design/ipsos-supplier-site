@@ -40,7 +40,7 @@ export async function PUT(request: Request) {
       parsed.data,
       user.id,
     );
-    revalidatePath("/settings");
+    revalidatePath("/settings/users");
     revalidatePath("/projects", "layout");
     return NextResponse.json({ contacts });
   } catch (error) {

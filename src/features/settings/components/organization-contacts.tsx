@@ -24,9 +24,11 @@ type Values = z.infer<typeof formSchema>;
 export function OrganizationContacts({
   contacts,
   supplierName,
+  embedded = false,
 }: {
   contacts: SupplierContacts;
   supplierName: string;
+  embedded?: boolean;
 }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
@@ -75,15 +77,8 @@ export function OrganizationContacts({
     >
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-muted-foreground">
-            Settings · {supplierName}
-          </p>
-          <h1
-            className="mt-1 text-2xl font-semibold tracking-tight"
-            id="organization-contacts-heading"
-          >
-            Organization Contacts
-          </h1>
+          {!embedded && <p className="text-sm text-muted-foreground">Settings · {supplierName}</p>}
+          {embedded ? <h2 className="text-xl font-semibold" id="organization-contacts-heading">Organization Contacts</h2> : <h1 className="mt-1 text-2xl font-semibold tracking-tight" id="organization-contacts-heading">Organization Contacts</h1>}
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
             Default contacts for your organization. Subsamples using defaults
             inherit saved changes. Custom Subsample selections are not changed.

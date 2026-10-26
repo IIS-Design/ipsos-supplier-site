@@ -111,7 +111,8 @@ export async function getCurrentUser(): Promise<User | null> {
   const session = verifySessionToken(token);
   if (!session) return null;
 
-  return getUser(session.supplierId, session.userId);
+  const user = await getUser(session.supplierId, session.userId);
+  return user && (user.status ?? "active") === "active" ? user : null;
 }
 
 export async function requireUser(): Promise<User> {

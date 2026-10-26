@@ -132,7 +132,7 @@ export function ContactsPanel({
         {canEditDefaults ? (
           <Link
             className="mt-2 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
-            href="/settings"
+            href="/settings/users#organization-contacts-heading"
           >
             Manage Organization Contacts
           </Link>

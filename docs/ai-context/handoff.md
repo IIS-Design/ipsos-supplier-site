@@ -18,8 +18,9 @@ screenshots or session memory. No business-data persistence exists outside one p
    a redirect, not a placeholder. Subsamples are the operational entity.
 4. Keep exactly `admin` / `user` roles and the three report types. Visual references
    include unsupported concepts; screenshots do not authorize additional scope.
-5. Settings implements Organization Contacts only. Field Progress is implemented.
-   Configuration and Docs remain placeholders. Reports queue creation is not execution.
+5. Settings implements all six supplier sections with mock saves/user actions; read
+   [settings.md](settings.md). Field Progress is implemented. Subsample Configuration
+   and Docs remain placeholders. Reports queue creation is not execution.
 6. Read the current file before edits; formatting/user changes can invalidate patches.
 7. Do not remove prototype information; use the reusable floating Prototype Tools pattern.
 8. Do not persist real data/passwords or imply that passing builds makes mock auth production-safe.
@@ -73,8 +74,8 @@ See [navigation.md](navigation.md) for full page/API tables. Key routes:
 - `/projects/[projectId]` → same Project `/subsamples` list.
 - `/projects/[projectId]/subsamples/[subsampleId]` → `/details`; siblings:
   `/field-progress`, `/costs`, `/contacts`, `/configuration?section=…`.
-- Admin-only `/settings` renders Organization Contacts directly. No `/settings/*`
-  section routes exist. `/docs` and Configuration subsection content are placeholders.
+- Admin-only `/settings` renders Organization profile; `/settings/users` includes Contacts below User Management; `/settings/[section]`
+  renders Users, Survey Configuration, Redirects, Server-to-Server or Security. `/docs` and Configuration subsection content are placeholders.
 
 ## Repository contracts and runtime state
 
@@ -98,7 +99,7 @@ Subsamples 180, reports 4, costs 8. Do not infer runtime counts from fixtures af
 Global mock state keys:
 
 - `__ipsosSupplierMockReports`, `__ipsosSupplierMockCosts` — mutated lists.
-- `__ipsosAccountUsers` — saved self-service profiles; `__ipsosReportSequences` — report ID reservations.
+- `__ipsosAccountUsers` — saved self-service/managed users and statuses; `__ipsosReportSequences` — report ID reservations.
 - `__ipsosSupplierContacts` — cloned suppliers/Subsamples and role contact options.
 - `__ipsosMockRecovery` — recovery store instance with tokens/inboxes/password hashes.
   Navigation/reload/HMR may retain state; restart resets all process-local changes.
@@ -221,7 +222,7 @@ Reset uses `ipsos_prototype_email` (HttpOnly, Path=/email-preview, 24h) and the 
 process-local recovery receipt. Internal recovery store still calls this collection
 `inboxes`; this is storage naming, not an inbox UI. Expired/invalid links remain direct test routes, not Tools actions.
 All four templates are in `public/emails/` with integration README. Other previews
-use sample data; no account/invitation workflow or SMTP exists. Shared authentication
+use sample data; invitations can be staged in Settings but have no acceptance or SMTP. Shared authentication
 field errors use `components/ui/field-error.tsx`.
 
 Email template checks: `npm run test:emails` (2 tests: all four renders/escaping,
@@ -360,7 +361,7 @@ Report and Show Empty Reports State; Costs offers Show Empty Costs State. No Too
 trigger appears on pages with no relevant actions. Link-state actions and automatic
 report-download guidance have been removed.
 Empty previews use pathname-scoped local React context, with no storage, server
-requests or fixture mutation. Tools and an inline preview notice both offer Restore
+requests or fixture mutation. Tools offers Restore for both modules; only Reports also shows an inline preview notice with Restore
 Reports/Costs. Leaving the page or reloading clears the preview; restoring retains
 module filters/tab state. See prototype-messaging.md for the complete action matrix.
 
@@ -408,7 +409,7 @@ fixtures/repositories are unaffected by those actions. No Dashboard route added.
 
 Global body remains 14px. Projects list names and their Project: prefix are 18px/400. Subsample names in
 Projects/All Subsamples and the workspace heading/selector are 16px/500. Report
-names in the Activity widget, Reports cards, History/Queue and creation-page heading
+names in the Activity widget, History/Queue and creation-page heading
 are 16px/500; generic page/section headings retain their existing hierarchy.
 Project/Subsample and Reports row metadata is 14px, including language, field-end
 date, incidence, remaining and status. Pending-cost scope names on Projects use
@@ -428,7 +429,8 @@ are unchanged; the pending fixture count is now six.
 
 /account is available to both roles from the name/role desktop dropdown and the
 mobile hamburger. Desktop Sign Out is inside the dropdown; mobile Account Settings
-is separated from primary navigation and the icon Sign Out at the bottom.
+follows Settings (or Docs for Users) with the same navigation styling. A single
+separator divides Account Settings from the icon Sign Out action at the bottom.
 Line tabs provide Personal Information (first/last name, email; Save/Cancel, validation,
 unsaved-change protection and async feedback) and Security (masked Password, Change
 Password via the existing recovery-email flow). PUT /api/account only edits the
@@ -436,3 +438,12 @@ session actor, rejects protected fields and duplicate emails, and refreshes head
 identity. Profile storage is process-local. Email changes preserve password hashes
 and invalidate old reset links. No additional security/session-management features.
 See account-settings.md for API behavior, constraints and validation.
+
+## Supplier Settings expansion
+
+All six reference sections are implemented behind the existing Admin guard. See
+[settings.md](settings.md) for routes, API/adapter contracts, mock lifecycle, validation,
+reference deviations and verification. `__ipsosSupplierPreferences` stores per-supplier
+preferences; users reuse `__ipsosAccountUsers`. Invited/inactive users cannot sign in
+or use an existing session. Integration keys are synthetic; Subsample Configuration
+and non-contact inheritance remain unimplemented. Current complete suite: 30 TAP results.

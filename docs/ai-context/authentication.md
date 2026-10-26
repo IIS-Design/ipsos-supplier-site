@@ -156,7 +156,8 @@ semantics and existing input associations), including “Enter a valid email add
 
 /account is available to both roles from the name/role desktop dropdown and the
 mobile hamburger. Desktop Sign Out is inside the dropdown; mobile Account Settings
-is separated from primary navigation and the icon Sign Out at the bottom.
+follows Settings (or Docs for Users) with the same navigation styling. A single
+separator divides Account Settings from the icon Sign Out action at the bottom.
 Line tabs provide Personal Information (first/last name, email; Save/Cancel, validation,
 unsaved-change protection and async feedback) and Security (masked Password, Change
 Password via the existing recovery-email flow). PUT /api/account only edits the
@@ -164,3 +165,9 @@ session actor, rejects protected fields and duplicate emails, and refreshes head
 identity. Profile storage is process-local. Email changes preserve password hashes
 and invalidate old reset links. No additional security/session-management features.
 See account-settings.md for API behavior, constraints and validation.
+
+Settings user management adds optional active/invited/inactive status to User. Missing
+status means Active. Login and session resolution reject invited/inactive users; recovery
+issues no new capability for them. Only active same-supplier Administrators manage users;
+self-deactivation and self-demotion are blocked. Admin reset actions use the existing
+receipt-scoped reset email preview. Invitations are staged, without an acceptance flow.

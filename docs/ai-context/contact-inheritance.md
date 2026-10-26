@@ -5,7 +5,7 @@ Only Contacts currently implements a saved inheritance workflow.
 
 ## Scope / access
 
-- `/settings`: Organization Contacts only. Project Manager, Sales Contact, Finance
+- `/settings/users`: Organization Contacts below User Management. Project Manager, Sales Contact, Finance
   Contact, Help Desk Contact. Zero to twenty contact objects per role; name/email validation.
 - Only same-supplier Admin may view Settings/save defaults. Both roles may save
   owned Subsample Contacts. API/repository validate supplier, actor, canonical parent,

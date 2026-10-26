@@ -2,9 +2,12 @@
 
 /account is available to both Administrator and User through the desktop user-name/
 role dropdown and the mobile hamburger. It is separate from organization Settings.
-Desktop shows only name/role as the trigger, with Account Settings, separator and
+Desktop shows a User icon, name/role, and trailing ChevronDown as the trigger, with Account Settings, separator and
 icon Sign Out. Mobile keeps identity, primary links, Account Settings, then a separated
-Sign Out action. There are no nested menu levels. Radix DropdownMenu handles focus,
+Sign Out action. Mobile identity places the name on the left and role on the right,
+vertically centered. Account Settings shares the primary link styling directly after
+Settings (Docs for Users), with only one separator before Sign Out.
+There are no nested menu levels. Radix DropdownMenu handles focus,
 keyboard navigation and dismissal; mobile account/sign-out targets are at least 40px.
 
 ## Personal Information

@@ -1,9 +1,9 @@
 "use client";
 
 import { Fragment, useMemo, useState } from "react";
-import { PrototypeEmptyNotice, usePrototypeState } from "@/components/prototype-state";
+import { usePrototypeState } from "@/components/prototype-state";
 import { useRouter } from "next/navigation";
-import { ChevronDown, ChevronRight, Search } from "lucide-react";
+import { ChevronDown, ChevronRight, Search, X } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,10 +14,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
+import { Badge, ViewCountBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ListPagination } from "@/components/ui/list-pagination";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -108,17 +111,27 @@ function targetFor(
 
 function StatusBadge({ status }: { status: Cost["status"] }) {
   return (
-    <Badge className={statusClasses[status]} variant="outline">
+    <Badge className={`max-w-full whitespace-normal text-center lg:whitespace-nowrap ${statusClasses[status]}`} variant="outline">
       {statusLabels[status]}
     </Badge>
   );
+}
+
+function CostProjectName({ name }: { name: string }) {
+  return <>
+    <Popover>
+      <PopoverTrigger asChild><button type="button" title={name} aria-label={`Show full project name: ${name}`} className="block min-h-7 w-full truncate text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden">{name}</button></PopoverTrigger>
+      <PopoverContent className="wrap-break-word" align="end">{name}</PopoverContent>
+    </Popover>
+    <span className="hidden lg:inline">{name}</span>
+  </>;
 }
 
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div className="grid gap-1 text-xs sm:grid-cols-[135px_minmax(0,1fr)] sm:gap-3">
       <dt className="text-muted-foreground">{label}:</dt>
-      <dd className="wrap-break-word font-medium">{value}</dd>
+      <dd className="min-w-0 wrap-break-word font-medium">{value}</dd>
     </div>
   );
 }
@@ -139,6 +152,7 @@ function CostDetails({
     : undefined;
   return (
     <div className="grid gap-x-8 gap-y-5 bg-indigo-50/70 px-4 py-4 sm:grid-cols-2 lg:px-14">
+      <div className="min-w-0 space-y-5">
       <section aria-labelledby={`general-${cost.id}`} className="space-y-2">
         <h3
           className="border-b pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground"
@@ -156,7 +170,6 @@ function CostDetails({
           <Detail label="Survey Event ID" value={target.surveyEventId} />
         </dl>
       </section>
-      <div className="space-y-5">
         <section aria-labelledby={`billing-${cost.id}`} className="space-y-2">
           <h3
             className="border-b pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground"
@@ -179,6 +192,8 @@ function CostDetails({
             />
           </dl>
         </section>
+      </div>
+      <div className="min-w-0 space-y-5">
         <section
           aria-labelledby={`adjustments-${cost.id}`}
           className="space-y-2"
@@ -394,22 +409,19 @@ export function CostsWorkspace({
 
   return (
     <div className="space-y-5">
-      <header className="flex flex-wrap items-center justify-between gap-4">
+      <header className="flex flex-wrap items-center justify-start gap-x-4 gap-y-2">
         <h1 className="text-2xl font-semibold tracking-tight">Costs</h1>
         <Tabs onValueChange={changeView} value={view}>
           <TabsList aria-label="Cost views">
             <TabsTrigger value="pending">
               Pending Approval{" "}
-              <Badge className="ml-2" variant="secondary">
-                {pending.length}
-              </Badge>
+              <ViewCountBadge active={view === "pending"} className="ml-2">{pending.length}</ViewCountBadge>
             </TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
         </Tabs>
       </header>
 
-      <PrototypeEmptyNotice module="Costs" />
 
       {success ? (
         <p
@@ -420,8 +432,8 @@ export function CostsWorkspace({
         </p>
       ) : null}
 
-      <div className="grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(220px,1fr)_180px_160px_160px]">
-        <div className="relative">
+      <div className="grid min-w-0 grid-cols-2 gap-3 lg:grid-cols-[minmax(220px,1fr)_240px_160px]">
+        <div className="relative col-span-2 lg:col-span-1">
           <Search
             aria-hidden="true"
             className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -458,21 +470,7 @@ export function CostsWorkspace({
             </SelectContent>
           </Select>
         ) : (
-          <>
-            <label className="sr-only" htmlFor="cost-date-from">
-              Approval date from
-            </label>
-            <Input
-              aria-label="Approval date from"
-              id="cost-date-from"
-              onChange={(event) => {
-                setDateFrom(event.target.value);
-                clearSelection();
-              }}
-              type="date"
-              value={dateFrom}
-            />
-          </>
+          <DateRangePicker label="Approval date range" value={{ from: dateFrom, to: dateTo }} onChange={(range) => { setDateFrom(range.from); setDateTo(range.to); clearSelection(); }} />
         )}
         <Select
           onValueChange={(value) => {
@@ -496,23 +494,6 @@ export function CostsWorkspace({
             )}
           </SelectContent>
         </Select>
-        {view === "history" ? (
-          <>
-            <label className="sr-only" htmlFor="cost-date-to">
-              Approval date to
-            </label>
-            <Input
-              aria-label="Approval date to"
-              id="cost-date-to"
-              onChange={(event) => {
-                setDateTo(event.target.value);
-                clearSelection();
-              }}
-              type="date"
-              value={dateTo}
-            />
-          </>
-        ) : null}
       </div>
 
       {invalidDates ? (
@@ -520,6 +501,7 @@ export function CostsWorkspace({
           Start date must be on or before end date.
         </p>
       ) : null}
+      <div className="flex flex-wrap items-center justify-between gap-3">
       {canDecide && view === "pending" ? (
         <div aria-live="polite" className="flex flex-wrap items-center gap-3">
           <span className="inline-flex items-center gap-2 text-sm font-medium">
@@ -556,6 +538,15 @@ export function CostsWorkspace({
           </Button>
         </div>
       ) : null}
+
+      <div className="ml-auto flex flex-wrap items-center gap-2">
+        <Button disabled={!rows.length || rows.every((cost) => expandedIds.has(cost.id))} onClick={() => setExpandedIds((current) => new Set([...current, ...rows.map((cost) => cost.id)]))} size="sm" variant="ghost"><ChevronRight aria-hidden="true" className="size-4" />Expand All</Button>
+        <Button disabled={!rows.some((cost) => expandedIds.has(cost.id))} onClick={() => setExpandedIds((current) => { const next = new Set(current); rows.forEach((cost) => next.delete(cost.id)); return next; })} size="sm" variant="ghost"><ChevronDown aria-hidden="true" className="size-4" />Collapse All</Button>
+        {search.trim() || country !== "all" || status !== "all" || dateFrom || dateTo ? (
+          <Button className="h-8 gap-1.5 px-2 text-muted-foreground" onClick={() => { setSearch(""); setCountry("all"); setStatus("all"); setDateFrom(""); setDateTo(""); clearSelection(); }} size="sm" type="button" variant="ghost"><X aria-hidden="true" className="size-3.5" />Clear Filters</Button>
+        ) : null}
+      </div>
+      </div>
 
       {!rows.length ? (
         <div className="rounded-md border bg-white px-5 py-10 text-center">
@@ -595,6 +586,7 @@ export function CostsWorkspace({
         />
       ) : (
         <HistoryTable
+          key={JSON.stringify([search, status, dateFrom, dateTo])}
           costs={rows}
           expandedIds={expandedIds}
           onExpand={toggleExpanded}
@@ -684,12 +676,13 @@ function PendingTable({
 }) {
   return (
     <div className="border-y">
-      <Table>
+      {canDecide ? <label className="flex min-h-11 items-center gap-2 border-b px-2 lg:hidden"><Checkbox checked={allSelected} onCheckedChange={(value) => onSelectAll(value === true)} />Select all visible pending costs</label> : null}
+      <Table className="block lg:table lg:table-fixed">
         <caption className="sr-only">Costs pending approval</caption>
-        <TableHeader>
+        <TableHeader className="hidden lg:table-header-group">
           <TableRow>
             {canDecide ? (
-              <TableHead className="w-10">
+              <TableHead className="w-8 px-1 text-center">
                 <Checkbox
                   aria-label="Select all visible pending costs"
                   checked={allSelected}
@@ -697,19 +690,19 @@ function PendingTable({
                 />
               </TableHead>
             ) : null}
-            <TableHead className="w-8">
+            <TableHead className="w-9 px-0">
               <span className="sr-only">Expand details</span>
             </TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead className="w-36">Status</TableHead>
             <TableHead>Project</TableHead>
             <TableHead>Survey / Subsample</TableHead>
-            <TableHead>Country</TableHead>
-            <TableHead className="text-right">Completes</TableHead>
-            <TableHead className="text-right">CPI</TableHead>
-            <TableHead className="text-right">Total Cost</TableHead>
+            <TableHead className="w-24">Country</TableHead>
+            <TableHead className="w-20 text-right">Completes</TableHead>
+            <TableHead className="w-20 text-right">CPI</TableHead>
+            <TableHead className="w-28 text-right">Total Cost</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="block lg:table-row-group">
           {costs.map((cost) => {
             const target = targetFor(cost, projects, subsamples);
             const expanded = expandedIds.has(cost.id);
@@ -717,10 +710,10 @@ function PendingTable({
               <Fragment key={cost.id}>
                 <TableRow
                   aria-expanded={expanded}
-                  className={selectedIds.has(cost.id) ? "bg-indigo-50" : ""}
+                  className={`grid grid-cols-[44px_repeat(4,minmax(0,1fr))] items-start gap-x-2 py-2 [&>td]:py-1 lg:table-row lg:py-0 lg:[&>td]:py-2 ${selectedIds.has(cost.id) ? "bg-indigo-50" : ""}`}
                 >
                   {canDecide ? (
-                    <TableCell>
+                    <TableCell className="col-start-1 row-span-2 row-start-1 flex h-11 items-center justify-center p-0 lg:table-cell lg:h-auto lg:px-1 lg:py-2 lg:text-center">
                       <Checkbox
                         aria-label={`Select cost for ${target.project}`}
                         checked={selectedIds.has(cost.id)}
@@ -730,10 +723,10 @@ function PendingTable({
                       />
                     </TableCell>
                   ) : null}
-                  <TableCell>
+                  <TableCell className="col-start-1 row-start-3 flex justify-center p-0 lg:table-cell lg:py-2">
                     <Button
                       aria-label={`${expanded ? "Collapse" : "Expand"} details for ${target.project}`}
-                      className="size-7 px-0"
+                      className="size-11 px-0 lg:size-8"
                       onClick={() => onExpand(cost.id)}
                       size="sm"
                       variant="ghost"
@@ -745,30 +738,30 @@ function PendingTable({
                       )}
                     </Button>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="col-start-2 col-span-4 row-start-1">
                     <StatusBadge status={cost.status} />
                   </TableCell>
-                  <TableCell className="font-medium">
-                    {target.project}
+                  <TableCell className="col-start-2 col-span-4 row-start-2 min-w-0 whitespace-normal font-medium wrap-break-word">
+                    <CostProjectName name={target.project} />
                     <span className="block text-xs font-normal text-muted-foreground">
                       Event ID: {target.surveyEventId}
                     </span>
                   </TableCell>
-                  <TableCell>{target.survey}</TableCell>
-                  <TableCell>{cost.country}</TableCell>
-                  <TableCell className="text-right tabular-nums">
-                    {cost.completes}
+                  <TableCell className="col-start-2 col-span-4 row-start-3 min-w-0 whitespace-normal wrap-break-word"><span className="block text-xs text-muted-foreground lg:hidden">Survey / Subsample</span>{target.survey}</TableCell>
+                  <TableCell className="col-start-2 row-start-4 min-w-0 whitespace-normal wrap-break-word"><span className="block text-xs text-muted-foreground lg:hidden">Country</span>{cost.country}</TableCell>
+                  <TableCell className="col-start-3 row-start-4 min-w-0 whitespace-normal wrap-break-word tabular-nums lg:text-right">
+                    <span className="block text-xs text-muted-foreground lg:hidden">Completes</span>{cost.completes}
                   </TableCell>
-                  <TableCell className="text-right tabular-nums">
-                    {currency(cost.cpi, cost.currency)}
+                  <TableCell className="col-start-4 row-start-4 min-w-0 whitespace-normal wrap-break-word tabular-nums lg:text-right">
+                    <span className="block text-xs text-muted-foreground lg:hidden">CPI</span>{currency(cost.cpi, cost.currency)}
                   </TableCell>
-                  <TableCell className="text-right font-medium tabular-nums">
+                  <TableCell className="col-start-5 row-start-4 min-w-0 whitespace-normal wrap-break-word font-medium tabular-nums lg:text-right"><span className="block text-xs text-muted-foreground lg:hidden">Total Cost</span>
                     {currency(cost.totalCost, cost.currency)}
                   </TableCell>
                 </TableRow>
                 {expanded ? (
-                  <TableRow className="hover:bg-transparent">
-                    <TableCell className="p-0" colSpan={canDecide ? 9 : 8}>
+                  <TableRow className="block hover:bg-transparent lg:table-row">
+                    <TableCell className="block whitespace-normal p-0 lg:table-cell" colSpan={canDecide ? 9 : 8}>
                       <CostDetails
                         cost={cost}
                         supplierName={supplierName}
@@ -805,7 +798,7 @@ function HistoryTable({
   users: Map<string, User>;
 }) {
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const [pageSize, setPageSize] = useState(10);
   const pageCount = Math.max(1, Math.ceil(costs.length / pageSize));
   const currentPage = Math.min(page, pageCount);
   const pageRows = costs.slice(
@@ -815,21 +808,21 @@ function HistoryTable({
   return (
     <div className="space-y-3">
       <div className="border-y">
-        <Table>
+        <Table className="block lg:table lg:table-fixed">
           <caption className="sr-only">Processed cost history</caption>
-          <TableHeader>
+          <TableHeader className="hidden lg:table-header-group">
             <TableRow>
-              <TableHead className="w-8">
+              <TableHead className="w-9 px-0">
                 <span className="sr-only">Expand details</span>
               </TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead className="w-36">Status</TableHead>
               <TableHead>Project</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Approver</TableHead>
               <TableHead>Approval Date</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="block lg:table-row-group">
             {pageRows.map((cost) => {
               const target = targetFor(cost, projects, subsamples);
               const approver = cost.approval
@@ -838,11 +831,11 @@ function HistoryTable({
               const expanded = expandedIds.has(cost.id);
               return (
                 <Fragment key={cost.id}>
-                  <TableRow aria-expanded={expanded}>
-                    <TableCell>
+                  <TableRow aria-expanded={expanded} className="grid grid-cols-[44px_repeat(4,minmax(0,1fr))] items-start gap-x-2 py-2 [&>td]:py-1 lg:[&>td]:py-2 lg:table-row lg:py-0">
+                    <TableCell className="col-start-1 row-start-1 flex justify-center p-0 lg:table-cell lg:py-2">
                       <Button
                         aria-label={`${expanded ? "Collapse" : "Expand"} details for ${target.project}`}
-                        className="size-7 px-0"
+                        className="size-11 px-0 lg:size-8"
                         onClick={() => onExpand(cost.id)}
                         size="sm"
                         variant="ghost"
@@ -854,30 +847,34 @@ function HistoryTable({
                         )}
                       </Button>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="col-start-2 col-span-4 row-start-1">
                       <StatusBadge status={cost.status} />
                     </TableCell>
-                    <TableCell className="font-medium">
-                      {target.project}
-                      <span className="block text-xs font-normal text-muted-foreground">
-                        {target.survey}
-                      </span>
+                    <TableCell className="col-start-2 col-span-4 row-start-2 min-w-0 whitespace-normal font-medium wrap-break-word">
+                      <CostProjectName name={target.project} />
+                      <span className="block text-xs font-normal text-muted-foreground lg:hidden">Event ID: {target.surveyEventId}</span>
+                      <span className="hidden text-xs font-normal text-muted-foreground lg:block">{target.survey}</span>
                     </TableCell>
-                    <TableCell className="font-medium tabular-nums">
+                    <TableCell className="hidden whitespace-normal font-medium tabular-nums lg:table-cell"><span className="block text-xs text-muted-foreground lg:hidden">Amount</span>
                       {currency(cost.totalCost, cost.currency)}
                     </TableCell>
-                    <TableCell>
-                      {approver
+                    <TableCell className="col-start-2 col-span-2 row-start-5 whitespace-normal wrap-break-word">
+                      <span className="block text-xs text-muted-foreground lg:hidden">Approver</span>{approver
                         ? `${approver.firstName} ${approver.lastName}`
                         : "—"}
                     </TableCell>
-                    <TableCell>
-                      {dateTime(cost.approval?.decidedAt ?? cost.publishedAt)}
+                    <TableCell className="col-start-4 col-span-2 row-start-5 whitespace-normal wrap-break-word">
+                      <span className="block text-xs text-muted-foreground lg:hidden">Approval Date</span>{dateTime(cost.approval?.decidedAt ?? cost.publishedAt)}
                     </TableCell>
+                    <TableCell className="col-start-2 col-span-4 row-start-3 min-w-0 whitespace-normal wrap-break-word lg:hidden"><span className="block text-xs text-muted-foreground">Survey / Subsample</span>{target.survey}</TableCell>
+                    <TableCell className="col-start-2 row-start-4 min-w-0 whitespace-normal wrap-break-word lg:hidden"><span className="block text-xs text-muted-foreground">Country</span>{cost.country}</TableCell>
+                    <TableCell className="col-start-3 row-start-4 min-w-0 whitespace-normal wrap-break-word lg:hidden"><span className="block text-xs text-muted-foreground">Completes</span>{cost.completes}</TableCell>
+                    <TableCell className="col-start-4 row-start-4 min-w-0 whitespace-normal wrap-break-word lg:hidden"><span className="block text-xs text-muted-foreground">CPI</span>{currency(cost.cpi, cost.currency)}</TableCell>
+                    <TableCell className="col-start-5 row-start-4 min-w-0 whitespace-normal wrap-break-word lg:hidden"><span className="block text-xs text-muted-foreground">Total Cost</span>{currency(cost.totalCost, cost.currency)}</TableCell>
                   </TableRow>
                   {expanded ? (
-                    <TableRow className="hover:bg-transparent">
-                      <TableCell className="p-0" colSpan={6}>
+                    <TableRow className="block hover:bg-transparent lg:table-row">
+                      <TableCell className="block whitespace-normal p-0 lg:table-cell" colSpan={6}>
                         <CostDetails
                           cost={cost}
                           supplierName={supplierName}
@@ -893,29 +890,7 @@ function HistoryTable({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">
-          Page {currentPage} of {pageCount}
-        </span>
-        <div className="flex gap-2">
-          <Button
-            disabled={currentPage <= 1}
-            onClick={() => setPage((value) => Math.max(1, value - 1))}
-            size="sm"
-            variant="outline"
-          >
-            Previous
-          </Button>
-          <Button
-            disabled={currentPage >= pageCount}
-            onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
-            size="sm"
-            variant="outline"
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <ListPagination total={costs.length} noun="costs" page={currentPage} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={(size) => { setPageSize(size); setPage(1); }} />
     </div>
   );
 }

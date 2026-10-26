@@ -1,5 +1,6 @@
 "use client";
 
+import { ReportAction } from "@/features/projects/components/report-action";
 import { ReportErrorDetails } from "@/components/report-error-details";
 
 import Link from "next/link";
@@ -13,9 +14,8 @@ import {
   Plus,
   Search,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge, ViewCountBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -24,7 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Project } from "@/types/project";
 import type { Report, ReportType } from "@/types/report";
@@ -79,11 +78,13 @@ function ReportList({
   projects,
   subsamples,
   emptyMessage,
+  onViewQueue,
 }: {
   reports: Report[];
   projects: Project[];
   subsamples: Subsample[];
   emptyMessage: string;
+  onViewQueue: () => void;
 }) {
   const projectById = new Map(projects.map((project) => [project.id, project]));
   const subsampleById = new Map(
@@ -104,19 +105,22 @@ function ReportList({
         const StatusIcon = statusIcons[report.status];
         return (
           <li className="flex gap-3 py-3" key={report.id}>
-            {report.status === "error" ? <ReportErrorDetails reportId={report.id} message={report.errorMessage} className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-md bg-rose-100 text-rose-700 hover:bg-rose-200"><StatusIcon aria-hidden="true" className="size-4" /></ReportErrorDetails> : (
-            <span
-              aria-hidden="true"
-              className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-md bg-muted text-muted-foreground"
+            {report.status === "error" ? <ReportErrorDetails reportId={report.id} message={report.errorMessage} className="mt-0.5 grid size-11 shrink-0 place-items-center rounded-md bg-rose-100 text-rose-700 hover:bg-rose-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><StatusIcon aria-hidden="true" className="size-4" /></ReportErrorDetails> : (
+            <ReportAction
+              report={report}
+              onViewQueue={onViewQueue}
+              label={`${report.status === "finished" ? "Download" : "View in queue:"} ${reportTypeLabels[report.type]} (${report.id})`}
+              className="mt-0.5 grid size-11 shrink-0 place-items-center rounded-md bg-muted text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <StatusIcon
+                aria-hidden="true"
                 className={`size-4 ${report.status === "executing" ? "animate-spin motion-reduce:animate-none" : ""}`}
               />
-            </span>
+            </ReportAction>
             )}
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-base font-medium leading-5">{reportTypeLabels[report.type]}</p>
+                <p className="text-base font-medium leading-5"><ReportAction report={report} onViewQueue={onViewQueue} className="text-left underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{reportTypeLabels[report.type]}</ReportAction></p>
                 <Badge
                   className={`text-sm ${statusStyles[report.status]}`}
                   variant="outline"
@@ -131,13 +135,14 @@ function ReportList({
                 ID {report.id} · {formatDate(report.createdAt)}
               </p>
               {report.status === "finished" && report.downloadUrl ? (
+                <Button asChild variant="outline" className="mt-2 min-h-11">
                 <a
-                  className="mt-1 inline-block text-xs font-medium text-primary underline-offset-4 hover:underline"
                   href={report.downloadUrl}
                   download
                 >
                   Download report
                 </a>
+                </Button>
               ) : null}
             </div>
           </li>
@@ -212,13 +217,16 @@ export function ReportWorkspace({
   ).length;
 
   return (
-    <div className="space-y-5">
-      <header className="flex flex-wrap items-end justify-between gap-4">
+    <Tabs className="gap-0 space-y-5" value={view} onValueChange={(value) => setView(value as "history" | "queue")}>
+      <header className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Reports</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Create and monitor operational reports.
-          </p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <h1 className="text-2xl font-semibold tracking-tight">Reports</h1>
+            <TabsList aria-label="Report views">
+              <TabsTrigger value="history">Report History</TabsTrigger>
+              <TabsTrigger value="queue">Report Queue<ViewCountBadge active={view === "queue"} className="ml-2">{queuedCount + executingCount}</ViewCountBadge></TabsTrigger>
+            </TabsList>
+          </div>
         </div>
         <Button asChild>
           <Link href="/reports/create">
@@ -240,37 +248,11 @@ export function ReportWorkspace({
         </p>
       ) : null}
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        {(
-          ["respondent_info", "survey_duration", "mini_router_quota"] as const
-        ).map((type) => (
-          <Card className="gap-3 py-4" key={type}>
-            <CardHeader className="px-4">
-              <CardTitle>
-                <h2 className="text-base font-medium leading-5">
-                  {reportTypeLabels[type]}
-                </h2>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="px-4">
-              <Button asChild className="w-full" size="sm" variant="outline">
-                <Link href={`/reports/create?type=${type}`}>Create Report</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Card className="gap-0 py-0">
-        <CardHeader className="border-b px-4 py-4">
+      <section aria-labelledby="report-activity-heading" className="space-y-4">
+        <header>
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <CardTitle>
-                <h2 className="text-lg font-semibold">Report Activity</h2>
-              </CardTitle>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Recent reports, execution progress, and completed downloads.
-              </p>
+              <h2 className="text-lg font-semibold" id="report-activity-heading">Report Activity</h2>
             </div>
             <div className="flex gap-2 text-sm text-muted-foreground">
               <span>{queuedCount} queued</span>
@@ -278,8 +260,8 @@ export function ReportWorkspace({
               <span>{executingCount} executing</span>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="px-4 py-4">
+        </header>
+        <div>
           <div className="mb-4 grid gap-3 sm:grid-cols-[minmax(180px,1fr)_180px_180px]">
             <div className="relative">
               <Search
@@ -316,16 +298,6 @@ export function ReportWorkspace({
               </SelectContent>
             </Select>
           </div>
-          <Tabs
-            value={view}
-            onValueChange={(value) => setView(value as "history" | "queue")}
-          >
-            <TabsList aria-label="Report views">
-              <TabsTrigger value="history">Report History</TabsTrigger>
-              <TabsTrigger value="queue">
-                Report Queue ({queuedCount + executingCount})
-              </TabsTrigger>
-            </TabsList>
             <TabsContent value="history" className="mt-3">
               <ReportList
                 emptyMessage={
@@ -334,6 +306,7 @@ export function ReportWorkspace({
                     : "No reports have been created yet."
                 }
                 projects={projects}
+                onViewQueue={() => setView("queue")}
                 reports={history}
                 subsamples={subsamples}
               />
@@ -346,14 +319,13 @@ export function ReportWorkspace({
                     : "There are no reports in the queue."
                 }
                 projects={projects}
+                onViewQueue={() => setView("queue")}
                 reports={queue}
                 subsamples={subsamples}
               />
             </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-      <Separator />
-    </div>
+        </div>
+      </section>
+    </Tabs>
   );
 }

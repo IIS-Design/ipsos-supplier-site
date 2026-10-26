@@ -33,8 +33,9 @@ the displayed Reports/Costs arrays; fixtures, repositories and server records ar
 untouched. No requests or storage writes occur. Leaving the pathname or reloading
 resets the preview. Module tabs can be tested while empty.
 
-While previewing, Tools offers Restore Reports/Costs. A visible inline preview
-notice provides the same Restore action even when Tools is closed. Restoring returns
+While previewing, Tools offers Restore Reports/Costs. Reports also provides an
+inline preview notice with Restore. Costs has no inline preview banner; restore it
+through Prototype Tools. Restoring returns
 to the latest supplied module data and retains the module's filters/tab choices.
 Projects has separate local Reports/Costs Activity toggles. Each swaps only its widget
 for the same widget with an empty array; Projects, Subsamples, and the other panel

@@ -44,4 +44,8 @@ function Badge({
   );
 }
 
-export { Badge, badgeVariants };
+function ViewCountBadge({ active, className, ...props }: React.ComponentProps<"span"> & { active: boolean }) {
+  return <Badge variant="outline" className={cn("border-transparent", active ? "bg-primary text-primary-foreground" : "bg-white text-foreground", className)} {...props} />;
+}
+
+export { Badge, ViewCountBadge, badgeVariants };

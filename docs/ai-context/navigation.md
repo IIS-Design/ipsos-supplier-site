@@ -46,7 +46,7 @@ Use `P = /projects/[projectId]` and `S = P/subsamples/[subsampleId]` below.
 | `/reports`         | Both roles | History/Queue, creation links, activity filters                          |
 | `/reports/create`  | Both roles | Creation form for one of three report types                              |
 | `/costs`           | Both roles | Pending/History; decisions only for Admin                                |
-| `/settings`        | Admin      | Organization Contacts defaults only                                      |
+| `/settings`        | Admin      | Organization company name and time zone                                      |
 | `/docs`            | Both roles | Placeholder: no content yet; Return to Projects                          |
 
 ### Current query parameters
@@ -74,8 +74,8 @@ Use `P = /projects/[projectId]` and `S = P/subsamples/[subsampleId]` below.
   programmatic navigation and sign-out use the existing custom event; no general
   router-level blocker is installed.
 - Recent Reports Create New Report currently links to `/reports`, not the form.
-- Configuration editors and other Settings sections must not be inferred from
-  the visual references. No extra `/settings/*` routes exist.
+- Subsample Configuration editors remain placeholders. Supplier Settings implements
+  the reference sections at `/settings/[section]`; see settings.md.
 
 ## API routes
 
@@ -114,7 +114,7 @@ horizontal sidebar collapse/expand; selection persists through collapse. Desktop
 starts at 1280px; smaller viewports stack the explorer and Activity.
 
 Mobile expanded menu includes User Name / Role, divider, primary links (Settings
-only for Admin), divider, Account Settings, divider, Sign Out. Projects pagination and expansion are local
+only for Admin), Account Settings, divider, Sign Out. Projects pagination and expansion are local
 state: page size 10/20/50, filters reset page one, expansion survives page changes.
 
 Activity tab order is Costs (default), Reports. Its sidebar toggle is desktop-only (1280px+); stacked layouts always show the panel content.
@@ -128,7 +128,8 @@ Open Reset Password Email. See prototype-messaging.md for the action matrix.
 
 /account is available to both roles from the name/role desktop dropdown and the
 mobile hamburger. Desktop Sign Out is inside the dropdown; mobile Account Settings
-is separated from primary navigation and the icon Sign Out at the bottom.
+follows Settings (or Docs for Users) with the same navigation styling. A single
+separator divides Account Settings from the icon Sign Out action at the bottom.
 Line tabs provide Personal Information (first/last name, email; Save/Cancel, validation,
 unsaved-change protection and async feedback) and Security (masked Password, Change
 Password via the existing recovery-email flow). PUT /api/account only edits the
@@ -139,3 +140,13 @@ See account-settings.md for API behavior, constraints and validation.
 
 `PUT /api/account` saves only the session actor’s first/last name and email, with
 validation, duplicate-email rejection and no role/supplier/identity changes.
+
+## Supplier Settings routes
+
+`/settings` is Organization profile; Contacts sits below User Management at `/settings/users`.
+`/settings/organization` redirects to `/settings`.
+Admin-only `/settings/users`, `/settings/survey-configuration`, `/settings/redirects`,
+`/settings/server-to-server`, `/settings/security` share desktop side navigation and
+a mobile selector. Unknown sections return 404. PUT `/api/settings/preferences`
+saves one section; POST `/api/settings/users` manages supplier users. Both require an
+active same-supplier Administrator. Existing Contacts API remains unchanged.

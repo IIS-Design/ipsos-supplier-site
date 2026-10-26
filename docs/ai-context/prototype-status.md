@@ -35,7 +35,7 @@ not production readiness.
   History date range, expandable details, selection, confirmation, Administrator
   bulk approve/reject, in-dialog errors and explicit decision-success feedback.
   History uses ten records per page; User accounts are read-only for decisions.
-- Settings Organization Contacts only: view/edit/add/remove/save/cancel for four
+- Settings includes Organization profile and five other sections, with Contacts below User Management in Users & Permissions (see settings.md). Contacts: view/edit/add/remove/save/cancel for four
   contact roles; validation, loading, retryable route errors and submission feedback.
 - Subsample Contacts: saved default/custom mode, custom ID selections, effective
   inherited values, save/cancel, unsaved-change warnings and success/error states.
@@ -54,7 +54,7 @@ not production readiness.
   result generation, polling, failed-report retry or report-parameter inspection.
 - Projects: landing only exposes Live/Pending; All Subsamples is a read-only list,
   not the broader filtered comparison workspace described in earlier documentation.
-- Settings: Organization Contacts is operational; no other Settings sections exist.
+- Settings: six supplier sections have complete UI and process-local mock saves/actions; see settings.md.
 - Subsample Workspace: four functional fixture-backed sections plus Configuration
   subsection navigation and unavailable-content panels.
 
@@ -63,9 +63,8 @@ not production readiness.
 - Docs is a protected placeholder with Return to Projects.
 - Configuration `entry-links`, `redirects`, `server-to-server`, `security` are navigable
   placeholders; each has Return to Subsample Details. No technical-settings editor/save.
-- Organization profile, Users & Permissions, supplier survey configuration, redirects,
-  server-to-server and security management have no implemented Settings screens/APIs.
-- No account invitation, user-administration editing, self-registration, MFA, SSO, real mail, external
+- Settings invitations have no acceptance flow; saved integration settings do not execute external operations.
+- No self-registration, MFA, SSO, real mail, external
   integrations, Project-level inheritance or Project cost allocation/aggregation.
   These are absent scope, not implied capabilities.
 
@@ -121,7 +120,7 @@ to page one. Expand All/Collapse All apply to all matching Projects across pages
 controlled row state survives paging. Subsample metric labels are muted and values
 use full foreground. Live/Pending uses a segmented selector with count badges and no View label.
 All protected pages have white backgrounds; authentication remains light gray.
-Mobile hamburger menu order is user/role, divider, navigation, divider, Account Settings, divider, Sign Out.
+Mobile hamburger menu order is user/role, divider, navigation, Account Settings, divider, Sign Out.
 Existing 50 Projects / 180 Subsamples already cover the requested fixture scope;
 no further expansion was needed in this pass. All four email footers remain correct.
 
@@ -201,7 +200,7 @@ Report and Show Empty Reports State; Costs offers Show Empty Costs State. No Too
 trigger appears on pages with no relevant actions. Link-state actions and automatic
 report-download guidance have been removed.
 Empty previews use pathname-scoped local React context, with no storage, server
-requests or fixture mutation. Tools and an inline preview notice both offer Restore
+requests or fixture mutation. Tools offers Restore for both modules; only Reports also shows an inline preview notice with Restore
 Reports/Costs. Leaving the page or reloading clears the preview; restoring retains
 module filters/tab state. See prototype-messaging.md for the complete action matrix.
 
@@ -249,7 +248,7 @@ fixtures/repositories are unaffected by those actions. No Dashboard route added.
 
 Global body remains 14px. Projects list names and their Project: prefix are 18px/400. Subsample names in
 Projects/All Subsamples and the workspace heading/selector are 16px/500. Report
-names in the Activity widget, Reports cards, History/Queue and creation-page heading
+names in the Activity widget, History/Queue and creation-page heading
 are 16px/500; generic page/section headings retain their existing hierarchy.
 Project/Subsample and Reports row metadata is 14px, including language, field-end
 date, incidence, remaining and status. Pending-cost scope names on Projects use
@@ -269,7 +268,8 @@ are unchanged; the pending fixture count is now six.
 
 /account is available to both roles from the name/role desktop dropdown and the
 mobile hamburger. Desktop Sign Out is inside the dropdown; mobile Account Settings
-is separated from primary navigation and the icon Sign Out at the bottom.
+follows Settings (or Docs for Users) with the same navigation styling. A single
+separator divides Account Settings from the icon Sign Out action at the bottom.
 Line tabs provide Personal Information (first/last name, email; Save/Cancel, validation,
 unsaved-change protection and async feedback) and Security (masked Password, Change
 Password via the existing recovery-email flow). PUT /api/account only edits the
@@ -277,3 +277,29 @@ session actor, rejects protected fields and duplicate emails, and refreshes head
 identity. Profile storage is process-local. Email changes preserve password hashes
 and invalidate old reset links. No additional security/session-management features.
 See account-settings.md for API behavior, constraints and validation.
+
+Costs responsive refinement: Pending/History use bounded wrapping desktop columns
+and labeled two-column rows below 1024px. All fields, selection/approval and History
+pagination remain available. Billing follows General in expanded details. ESLint,
+TypeScript and diff checks passed; desktop browser inspection confirmed long-name
+wrapping, visible amount columns and Billing placement. Mobile requires visual QA.
+
+## Costs controls alignment
+
+Costs view selector sits beside the title. Shared default Tabs now match the
+Projects segmented selector: bordered muted container, white bordered active
+segment, semibold selected label and no shadow; line-style tabs are unchanged.
+Costs Expand All/Collapse All use row chevrons and apply to all filtered records in
+the current view, including History pages, preserving expansion outside the filter.
+On smaller screens checkbox and caret share a centered left rail, checkbox above
+caret; all other row content sits in the right column. Desktop control spacing is compact. Admin-only approval behavior is unchanged.
+
+Costs History shares the Projects DateRangePicker (presets/custom ranges) for
+approval dates and ListPagination (range count, 10/20/50 sizes, Previous/Next).
+History filters reset pagination. Mobile History mirrors Pending: separate status,
+project/event and survey rows, one Country/Completes/CPI/Total Cost metrics row,
+then Approver/Approval Date. Desktop History columns remain unchanged.
+
+Supplier Settings now implements Organization, Users & Permissions (including preserved Contacts), Survey Configuration, Respondent Redirects, Server-to-Server and Security.
+Desktop side navigation/mobile selector follows the reviewed references. Saves are
+process-local and Admin-only. See [settings.md](settings.md) for implementation and limits.

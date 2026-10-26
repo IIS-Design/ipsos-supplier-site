@@ -1,3 +1,4 @@
+import type { SettingsValues, EditableSettingsSection, UserManagementRequest } from "@/features/settings/settings-model";
 import type { AccountProfile } from "@/features/account/account-model";
 import type {
   CostId,
@@ -28,6 +29,7 @@ export interface SupplierRepository {
 }
 
 export interface UserRepository {
+  manage(supplierId: SupplierId, actorId: UserId, request: UserManagementRequest): Promise<User>;
   saveProfile(supplierId: SupplierId, userId: UserId, profile: AccountProfile): Promise<User>;
   listForSupplier(supplierId: SupplierId): Promise<User[]>;
   getById(supplierId: SupplierId, userId: UserId): Promise<User | null>;
@@ -79,7 +81,13 @@ export interface CostRepository {
   ): Promise<Cost[]>;
 }
 
+export interface SettingsRepository {
+  get(supplierId: SupplierId): Promise<SettingsValues>;
+  save(supplierId: SupplierId, actorId: UserId, section: EditableSettingsSection, values: SettingsValues): Promise<SettingsValues>;
+}
+
 export type PortalRepositories = {
+  settings: SettingsRepository;
   suppliers: SupplierRepository;
   users: UserRepository;
   projects: ProjectRepository;

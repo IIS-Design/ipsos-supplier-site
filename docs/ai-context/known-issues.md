@@ -37,7 +37,7 @@ labels, focus styling, role/status feedback and Radix primitives are not proof o
 - RSP-01 (Medium): primary navigation now uses an inline hamburger below 1024px,
   but full Project context still stacks before the Subsample task. Prior browser checks at 384×844 put the
   Subsample heading around 717px and tabs around 765px. No compact context behavior exists.
-- Wide tables scroll horizontally; no sticky identifier column or overflow hint.
+- Other wide tables may scroll horizontally; no sticky identifier column or overflow hint. Costs uses bounded desktop columns and labeled stacked rows on smaller screens.
   Treat usability at very narrow widths as a validation gap, not proof of a broken table.
 - Recent branded header/notification changes have not received a full breakpoint
   and assistive-technology regression pass.
@@ -73,3 +73,12 @@ Do not reopen fixed findings: the finished download asset exists; Project entry
 redirects to All Subsamples; cost errors are inside dialogs; report drafts are
 guarded; creation/approval/rejection have success feedback; Projects 1024px and
 Costs 768px filter overflow was corrected; recovery and contact saves are implemented.
+
+## Supplier Settings boundaries
+
+Settings has six implemented UI sections with process-local saves and user actions.
+No invitation acceptance/SMTP, external key rotation, endpoint execution, required-field
+enforcement or non-contact Subsample inheritance is implemented. The Time Zone list
+is curated. See settings.md. Existing Organization Contacts focus-restoration issue
+remains. A dev restart may be needed after repository interface changes (fresh builds
+work); the existing demo process was left running to preserve its local data.

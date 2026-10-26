@@ -17,11 +17,13 @@ Fields below are current data contracts, not claims that all corresponding edito
 
 ## Supplier and User
 
-- Supplier: id, name, settings. Current Settings UI only edits contacts. Reserved
-  redirects/serverToServer/security payloads do not imply working configuration.
+- Supplier: id, name, settings. Contacts retain their existing store; typed supplier
+  profile/survey/redirect/S2S/security preferences use SettingsRepository (settings.md).
+  Saved integration values do not imply an execution engine.
 - User: id, supplierId, firstName, lastName, email, role (`admin` or `user`).
-  No password/account-lifecycle fields in this type; mock reset credentials live
-  separately in the recovery store. No user management/invitation repository writes.
+  Optional status is active/invited/inactive (missing means active). Mock password
+  credentials remain separate in the recovery store. UserRepository supports
+  Administrator-managed invitations, edits and activation/deactivation.
 - Admin can access Settings, save contact defaults and decide costs. Both roles
   read operational pages, request reports and save owned Subsample contact overrides.
 

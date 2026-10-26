@@ -10,4 +10,5 @@ export type User = {
   lastName: string;
   email: string;
   role: UserRole;
+  status?: "active" | "invited" | "inactive";
 };

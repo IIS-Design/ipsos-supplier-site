@@ -36,7 +36,7 @@ implemented features. Accessibility/enterprise principles are targets, not compl
 - Header min-height 64px. Text-only primary links on desktop (1024px+). Below
   1024px, a labeled hamburger expands navigation below the header in normal flow;
   no off-canvas sidebar. Menu order is User Name / Role, separator, role-allowed
-  navigation links, separator, Account Settings, separator, Sign Out. User/sign-out controls are not duplicated
+  navigation links, Account Settings, separator, Sign Out. User/sign-out controls are not duplicated
   in the mobile top row. Escape closes it and focuses its trigger.
 - Authentication centers a `max-w-110` (440px) column in a full-height shell.
 - Projects: explorer plus 340px Activity column at `xl` (1280px+), stacked below.
@@ -259,7 +259,7 @@ Report and Show Empty Reports State; Costs offers Show Empty Costs State. No Too
 trigger appears on pages with no relevant actions. Link-state actions and automatic
 report-download guidance have been removed.
 Empty previews use pathname-scoped local React context, with no storage, server
-requests or fixture mutation. Tools and an inline preview notice both offer Restore
+requests or fixture mutation. Tools offers Restore for both modules; only Reports also shows an inline preview notice with Restore
 Reports/Costs. Leaving the page or reloading clears the preview; restoring retains
 module filters/tab state. See prototype-messaging.md for the complete action matrix.
 
@@ -307,7 +307,7 @@ fixtures/repositories are unaffected by those actions. No Dashboard route added.
 
 Global body remains 14px. Projects list names and their Project: prefix are 18px/400. Subsample names in
 Projects/All Subsamples and the workspace heading/selector are 16px/500. Report
-names in the Activity widget, Reports cards, History/Queue and creation-page heading
+names in the Activity widget, History/Queue and creation-page heading
 are 16px/500; generic page/section headings retain their existing hierarchy.
 Project/Subsample and Reports row metadata is 14px, including language, field-end
 date, incidence, remaining and status. Pending-cost scope names on Projects use
@@ -327,7 +327,8 @@ are unchanged; the pending fixture count is now six.
 
 /account is available to both roles from the name/role desktop dropdown and the
 mobile hamburger. Desktop Sign Out is inside the dropdown; mobile Account Settings
-is separated from primary navigation and the icon Sign Out at the bottom.
+follows Settings (or Docs for Users) with the same navigation styling. A single
+separator divides Account Settings from the icon Sign Out action at the bottom.
 Line tabs provide Personal Information (first/last name, email; Save/Cancel, validation,
 unsaved-change protection and async feedback) and Security (masked Password, Change
 Password via the existing recovery-email flow). PUT /api/account only edits the
@@ -335,3 +336,78 @@ session actor, rejects protected fields and duplicate emails, and refreshes head
 identity. Profile storage is process-local. Email changes preserve password hashes
 and invalidate old reset links. No additional security/session-management features.
 See account-settings.md for API behavior, constraints and validation.
+
+## Full-width Report row actions
+
+Reports History/Queue reuse the Projects widget status actions: finished names/icons
+download the sample, queued/executing names/icons select Queue locally, and error
+icons open dismissible details on click/tap or keyboard (hover is optional). Report
+icons and the outlined Download report button provide 44px touch targets. Scope,
+identifier, timestamp and status remain visible in the full-width list.
+
+Reports renders Report Activity directly on the page as a labeled section, without
+a surrounding card, outer border/shadow, header divider or inset card padding.
+Filters, History/Queue tabs and report row separators retain their behavior.
+
+## Costs responsive layout
+
+Costs Pending and History use fixed-layout desktop tables (1024px+) with wrapping
+project/survey names, keeping amounts and other columns within the page width.
+Below 1024px, rows become labeled two-column summaries; selection, bulk selection,
+expansion, amounts and History pagination remain available. Expand controls have
+44px touch targets on smaller screens. Expanded details place General then Billing
+in the left column, Adjustments then Approval on the right; mobile stacks them.
+
+## Costs controls alignment
+
+Costs view selector sits beside the title. Shared default Tabs now match the
+Projects segmented selector: bordered muted container, white bordered active
+segment, semibold selected label and no shadow; line-style tabs are unchanged.
+Costs Expand All/Collapse All use row chevrons and apply to all filtered records in
+the current view, including History pages, preserving expansion outside the filter.
+On smaller screens row controls share a 44px left rail: checkbox above caret,
+centered on the same axis, with all other row content in the right column. Desktop
+checkbox/caret columns use compact widths and reduced cell padding. Admin-only approval behavior is unchanged.
+
+Reports History/Queue uses the same segmented selector as Costs beside the page
+title, with an integrated Queue count badge. Filters and row actions are unchanged.
+
+Reports header aligns Create Report with the title/segmented selector at 768px+;
+below 768px the action occupies a second row.
+
+View selector count badges share ViewCountBadge: active views use primary blue
+with white text; inactive views use white with foreground text. Projects Live/
+Pending, Costs Pending Approval and Reports Queue update badge color on selection.
+Status badges and Prototype Tools notifications retain their semantic colors.
+
+Costs Pending mobile rows put status, project/event name and survey/subsample on
+separate full-width content rows. Country, Completes, CPI and Total Cost share one
+four-column metrics row. The checkbox/caret remain in the left rail. Project names
+truncate with full text in a tap/click/keyboard Popover (and native hover title).
+History retains paired metadata columns.
+Desktop table wrapping and approval behavior are unchanged.
+
+Costs filters below 1024px use a full-width Search row followed by two equal filter
+columns (Country/Status for Pending). Mobile pending rows use compact cell padding
+and name spacing; checkbox/caret targets remain 44px in the independent left rail.
+
+Costs History shares the Projects DateRangePicker (presets/custom ranges) for
+approval dates and ListPagination (range count, 10/20/50 sizes, Previous/Next).
+History filters reset pagination. Mobile History mirrors Pending: separate status,
+project/event and survey rows, one Country/Completes/CPI/Total Cost metrics row,
+then Approver/Approval Date. Desktop History columns remain unchanged.
+
+Costs shows Clear Filters after Collapse All at the right end of the toolbar in both views,
+using the Projects ghost button and X icon. It clears
+search, country/status and approval dates plus bulk selection, retaining the active
+view and row expansion. It is visible only while a filter is active.
+
+## Supplier Settings layout
+
+Six icon navigation items follow the Settings reference screens, with a 260px
+left column/divider at 1024px+ and a shared section Select below. Content uses title/
+breadcrumbs, reference field groups and existing flat controls. Organization Contacts
+sits below User Management in Users & Permissions with its original editor/inheritance behavior. Users
+uses a responsive shared table, dropdown actions and Radix invite/edit dialogs; forms
+reuse RHF/Zod, FieldError, async states and draft protection. Blue theme/two domain
+roles remain consistent with the portal. See settings.md for reference deviations.

@@ -11,10 +11,10 @@ export default function SettingsError({
   return (
     <section className="max-w-2xl space-y-4 rounded-md border p-6" role="alert">
       <h1 className="text-xl font-semibold">
-        Organization Contacts unavailable
+        Settings unavailable
       </h1>
       <p className="text-sm text-muted-foreground">
-        We could not load contact defaults. Please try again.
+        We could not load supplier settings. Please try again.
       </p>
       <Button onClick={retry} type="button">
         Try Again

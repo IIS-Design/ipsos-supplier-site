@@ -25,9 +25,9 @@ default management. Not a marketing site, BI product or training experience.
   Creation queues mock records; no executor. Finished downloads are synthetic samples.
 - Admin decisions belong in main Costs; Subsample Costs is informational/direct-scope.
   No Project allocation or invoice behavior exists.
-- Settings implements Organization Contacts only. Supplier defaults → Subsample
-  independent overrides; no Project inheritance layer. Other technical sections/Docs
-  are placeholders; other Settings screens are absent.
+- Settings implements the six reference supplier sections with mock saves/user actions; see settings.md. Supplier defaults → Subsample
+  independent contact overrides; no Project inheritance layer. Subsample technical
+  Configuration and Docs remain placeholders.
 - Login/recovery is testable mock behavior with simulated email preview and process-local
   credentials. No real email, production identity or durable mutation storage.
 
