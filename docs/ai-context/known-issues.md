@@ -49,8 +49,8 @@ labels, focus styling, role/status feedback and Radix primitives are not proof o
 - Report creation never advances beyond queued automatically. Existing Executing,
   Finished and Error entries are fixtures. Failed report rows have no retry action;
   report results are a static synthetic CSV, not generated from selected parameters.
-- Reports/Pending Costs render all supplied records. Projects and Costs History
-  are paginated. Large-dataset performance beyond the synthetic fixtures remains
+- Reports and Pending Costs module lists render all supplied records; Projects Activity
+  widgets cap their lists at 10. Projects and Costs History are paginated. Large-dataset performance beyond the synthetic fixtures remains
   unverified, not a measured regression.
 - One-supplier fixtures do not prove tenant isolation comprehensively. Repository
   and API ownership checks exist; tests cover selected foreign-actor/path failures.

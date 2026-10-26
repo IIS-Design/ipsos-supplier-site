@@ -41,11 +41,11 @@ production integration exists. Parent statuses include their missing subareas.
 | Settings area                                  | Partial     | Only Organization Contacts implemented                                       |
 | Organization Contacts defaults                 | Complete    | Four roles; name/email collections; Administrator-only save                  |
 | Organization profile                           | Not Started | No page/editor/API                                                           |
-| Users & Permissions management                 | Not Started | Fixture roles only; no invitation/edit API                                   |
+| Users & Permissions management                 | Not Started | Fixture roles; no user-administration/invitation API; self-profile editing is separate                                   |
 | Supplier survey/redirect/S2S/security settings | Not Started | Reserved data shapes only                                                    |
 | Docs                                           | Placeholder | Unavailable content and Return to Projects                                   |
 | Durable persistence / external APIs            | Not Started | JSON seeds plus process-local mock mutations                                 |
-| Regression tests                               | Partial     | Contacts/recovery/email-template tests; browser checks are manual            |
+| Regression tests                               | Partial     | Contacts/recovery/emails, account profiles, Project filters and report IDs; browser checks manual            |
 
 Dashboard is removed, not an unfinished feature. Screenshot-only roles/reports are
 not supported; do not treat them as inventory requirements.

@@ -1,5 +1,8 @@
 # AI handoff — read first
 
+Human-facing project entry point: [README.md](../../README.md). This handoff remains
+the primary onboarding document for AI agents.
+
 Verified against source on 2026-10-23. This is a running Next.js prototype, not the
 earlier docs/data-only foundation. Prefer current code over historical summaries,
 screenshots or session memory. No business-data persistence exists outside one process.
@@ -44,7 +47,7 @@ screenshots or session memory. No business-data persistence exists outside one p
 | `src/app/(auth)`                                                                  | Public auth layout and login/recovery pages                                 |
 | `src/app/(portal)`                                                                | `requireUser()` layout, operational pages; Settings has Admin layout        |
 | `src/app/api`                                                                     | Authenticated mutation handlers and public mock-auth/recovery endpoints     |
-| `src/features/projects`, `subsamples`, `reports`, `costs`, `settings`, `contacts` | Domain components, shared contact model, workspace data loader              |
+| `src/features/projects`, `subsamples`, `reports`, `costs`, `settings`, `contacts`, `account` | Domain components, shared contact model, workspace data loader              |
 | `src/components/ui`                                                               | Local primitives; check actual props (Button sizes only default/sm)         |
 | `src/components/auth`, `portal`                                                   | Auth forms/provider, session-facing shell/navigation                        |
 | `src/services`                                                                    | Typed repository wrappers; report creation metadata; recovery orchestration |
@@ -79,7 +82,7 @@ See [navigation.md](navigation.md) for full page/API tables. Key routes:
 Contracts in `contracts.ts`:
 
 - Suppliers: list/get, `listContactOptions`, `saveContactDefaults` (Admin actor).
-- Users: list/get by supplier, normalized email lookup; no write methods.
+- Users: list/get by supplier, normalized email lookup, authenticated self-profile save.
 - Projects: supplier-scoped list/get; no write methods.
 - Subsamples: list/listByProject/get, `saveContacts` (supplier actor + parent check).
 - Reports: list/get/create; no executor/status-update/retry method.
@@ -90,11 +93,12 @@ Contracts in `contracts.ts`:
 `fixture-store.ts` imports six JSON files, parses strict Zod arrays and checks
 unique IDs, supplier ownership, parent/scoped references, requester/approver and
 approval-status consistency. Base fixture counts: suppliers 1, users 2, projects 50,
-Subsamples 180, reports 4, costs 6. Do not infer runtime counts from fixtures after tests.
+Subsamples 180, reports 4, costs 8. Do not infer runtime counts from fixtures after tests.
 
 Global mock state keys:
 
 - `__ipsosSupplierMockReports`, `__ipsosSupplierMockCosts` — mutated lists.
+- `__ipsosAccountUsers` — saved self-service profiles; `__ipsosReportSequences` — report ID reservations.
 - `__ipsosSupplierContacts` — cloned suppliers/Subsamples and role contact options.
 - `__ipsosMockRecovery` — recovery store instance with tokens/inboxes/password hashes.
   Navigation/reload/HMR may retain state; restart resets all process-local changes.
@@ -160,7 +164,7 @@ Global mock state keys:
   centers one horizontal logo/Supplier Site row above the existing card. Login and
   both Reset fields use shared `components/ui/password-input.tsx` visibility controls.
   Prototype Tools is a subtle bottom-right Wrench Popover opening upward. Login
-  defaults collapsed; recovery confirmation defaults expanded and contains Open Reset Password Email. No prototype toasts/session deduplication. Downloads open report tools each time.
+  defaults collapsed; recovery confirmation defaults expanded and contains Open Reset Password Email. No prototype toasts/session deduplication. Downloads do not open informational Tools panels.
   Authentication support copy sits below the cards in the shared layout. Keep operational errors,
   success, email copy and intentional email preview labels separate from prototype boilerplate.
 
@@ -185,6 +189,8 @@ Rules:
 3. Documentation updates must not be deferred.
 4. Whenever implementation changes occur, review **all documentation files** and
    determine which require updates, including README, dev-rules and focused guides.
+   Review README whenever features, routes, workflows or architecture change; update
+   its human-facing overview in the same task when affected.
 5. If changes are required, update the documents and explain why. Keep feature
    statuses, routes, examples, fixture facts and known issues synchronized.
 6. If no documentation changes are required, explicitly state:
@@ -232,7 +238,7 @@ container-aware (single row at desktop with >=640px available; graceful wrapping
 Header primary links are text-only; below 1024px use hamburger navigation expanding
 below the header. Shared Input owns native date icon alignment; Projects uses a single DateRangePicker. Shared Select/Popover
 styles and semantic tokens now cover contrast, focus/hover, spacing and layering.
-No independent Command/Dropdown Menu implementation exists.
+A shared Radix DropdownMenu supports the user menu; no independent Command implementation exists.
 Fixtures: 50 Projects (20 Live/14 Pending/9 Closed/7 Canceled), 180 Subsamples; see
 prototype-status for child-count/edge coverage. Original records are preserved.
 Dev HMR appends new seed children without resetting saved contacts. Four email

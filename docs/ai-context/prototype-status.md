@@ -65,17 +65,17 @@ not production readiness.
   placeholders; each has Return to Subsample Details. No technical-settings editor/save.
 - Organization profile, Users & Permissions, supplier survey configuration, redirects,
   server-to-server and security management have no implemented Settings screens/APIs.
-- No account invitation/editing/self-registration, MFA, SSO, real mail, external
+- No account invitation, user-administration editing, self-registration, MFA, SSO, real mail, external
   integrations, Project-level inheritance or Project cost allocation/aggregation.
   These are absent scope, not implied capabilities.
 
 ## Prototype limitations
 
 - JSON fixtures seed one supplier, two users, 50 projects, 180 Subsamples, four
-  reports and six costs. Runtime edits do not rewrite JSON.
+  reports and eight costs. Runtime edits do not rewrite JSON.
 - Reports, Costs, Contacts and recovery credentials/tokens use process-local global
   state. They survive navigation/reload in that process, reset on restart and do not
-  synchronize between instances. Read-only Projects/Users use fixtures.
+  synchronize between instances. Projects use read-only fixtures; self-service User profiles use process-local storage.
 - Default mock sign-in accepts a non-empty password up to 128 characters until that
   account resets it; afterward the new password is required until restart.
 - Session signing is not production identity. `MOCK_AUTH_SECRET` is required when
