@@ -1,0 +1,183 @@
+[
+  {
+    "id": "cost-001",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-1014592"
+    },
+    "completes": 35,
+    "cpi": 5,
+    "totalCost": 175,
+    "currency": "USD",
+    "country": "Romania",
+    "supplierProjectId": "1005248",
+    "billingMode": "survey_level",
+    "apiEnabled": true,
+    "status": "pending_approval",
+    "discountAmount": 0,
+    "discountReason": "",
+    "supplierStatus": "default",
+    "ipsosStatus": "pending"
+  },
+  {
+    "id": "cost-004",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-1014595"
+    },
+    "completes": 28,
+    "cpi": 5.25,
+    "totalCost": 147,
+    "currency": "USD",
+    "country": "Romania",
+    "supplierProjectId": "1005248",
+    "billingMode": "survey_level",
+    "apiEnabled": true,
+    "status": "pending_approval",
+    "discountAmount": 0,
+    "discountReason": "",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending"
+  },
+  {
+    "id": "cost-005",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "project",
+      "projectId": "project-1046192"
+    },
+    "completes": 62,
+    "cpi": 4.8,
+    "totalCost": 297.6,
+    "currency": "EUR",
+    "country": "Romania",
+    "supplierProjectId": "1005248",
+    "billingMode": "project_level",
+    "apiEnabled": false,
+    "status": "pending_approval",
+    "discountAmount": 12.4,
+    "discountReason": "Project volume discount",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending"
+  },
+  {
+    "id": "cost-006",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-1008462"
+    },
+    "completes": 24,
+    "cpi": 6.1,
+    "totalCost": 146.4,
+    "currency": "USD",
+    "country": "United States",
+    "supplierProjectId": "1008120",
+    "billingMode": "survey_level",
+    "apiEnabled": true,
+    "status": "pending_approval",
+    "discountAmount": 0,
+    "discountReason": "",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending"
+  },
+  {
+    "id": "cost-002",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "project",
+      "projectId": "project-1008820"
+    },
+    "completes": 58,
+    "cpi": 5,
+    "totalCost": 290,
+    "currency": "USD",
+    "country": "United States",
+    "supplierProjectId": "1008410",
+    "billingMode": "project_level",
+    "apiEnabled": true,
+    "status": "approved",
+    "discountAmount": 4,
+    "discountReason": "API discount",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "published",
+    "publishedAt": "2026-10-06T09:00:00Z",
+    "approval": {
+      "status": "approved",
+      "decidedAt": "2026-10-05T11:20:00Z",
+      "decidedByUserId": "user-admin-001",
+      "note": "Approved after reconciliation with the completed fieldwork."
+    }
+  },
+  {
+    "id": "cost-003",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "project",
+      "projectId": "project-1024360"
+    },
+    "completes": 18,
+    "cpi": 5,
+    "totalCost": 90,
+    "currency": "USD",
+    "country": "United States",
+    "supplierProjectId": "1008615",
+    "billingMode": "survey_level",
+    "apiEnabled": false,
+    "status": "rejected",
+    "discountAmount": 0,
+    "discountReason": "",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "rejected",
+    "approval": {
+      "status": "rejected",
+      "decidedAt": "2026-10-02T16:45:00Z",
+      "decidedByUserId": "user-admin-001",
+      "note": "Returned for a completes-count discrepancy."
+    }
+  },
+  {
+    "id": "cost-007",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "project",
+      "projectId": "project-1100004"
+    },
+    "completes": 125,
+    "cpi": 4.8,
+    "totalCost": 600,
+    "currency": "EUR",
+    "country": "Romania",
+    "supplierProjectId": "1100004",
+    "billingMode": "project_level",
+    "apiEnabled": false,
+    "status": "pending_approval",
+    "discountAmount": 12.4,
+    "discountReason": "Project volume discount",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending"
+  },
+  {
+    "id": "cost-008",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "project",
+      "projectId": "project-1100003"
+    },
+    "completes": 75,
+    "cpi": 4.8,
+    "totalCost": 360,
+    "currency": "EUR",
+    "country": "Romania",
+    "supplierProjectId": "1100003",
+    "billingMode": "project_level",
+    "apiEnabled": false,
+    "status": "pending_approval",
+    "discountAmount": 12.4,
+    "discountReason": "Project volume discount",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending"
+  }
+]

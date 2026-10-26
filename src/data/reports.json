@@ -1,0 +1,66 @@
+[
+  {
+    "id": "RPT-2026-1045",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-1014592"
+    },
+    "type": "respondent_info",
+    "status": "finished",
+    "requestedByUserId": "user-ops-001",
+    "createdAt": "2026-10-20T09:00:00Z",
+    "startedAt": "2026-10-20T09:00:15Z",
+    "finishedAt": "2026-10-20T09:02:40Z",
+    "parameters": {
+      "includePartialResponses": false
+    },
+    "downloadUrl": "/mock-reports/RPT-2026-1045.csv"
+  },
+  {
+    "id": "RPT-2026-1046",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "project",
+      "projectId": "project-1046192"
+    },
+    "type": "survey_duration",
+    "status": "executing",
+    "requestedByUserId": "user-admin-001",
+    "createdAt": "2026-10-21T08:30:00Z",
+    "startedAt": "2026-10-21T08:30:12Z",
+    "parameters": {
+      "minimumCompletes": 1
+    }
+  },
+  {
+    "id": "RPT-2026-1047",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-1014595"
+    },
+    "type": "mini_router_quota",
+    "status": "queued",
+    "requestedByUserId": "user-ops-001",
+    "createdAt": "2026-10-21T09:15:00Z",
+    "parameters": {
+      "includeClosedQuotas": false
+    }
+  },
+  {
+    "id": "RPT-2026-1044",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "project",
+      "projectId": "project-1008301"
+    },
+    "type": "survey_duration",
+    "status": "error",
+    "requestedByUserId": "user-admin-001",
+    "createdAt": "2026-10-19T14:10:00Z",
+    "startedAt": "2026-10-19T14:10:08Z",
+    "finishedAt": "2026-10-19T14:10:20Z",
+    "errorMessage": "The report could not be generated because no completed interviews were available."
+  }
+]

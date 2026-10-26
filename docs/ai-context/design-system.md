@@ -1,0 +1,337 @@
+# Design system — current implementation
+
+Source verification: 2026-10-23. Visual references inform layouts but do not define
+implemented features. Accessibility/enterprise principles are targets, not compliance claims.
+
+## UI foundation
+
+- Tailwind CSS v4 + PostCSS; local ShadCN-style Radix components in `src/components/ui`.
+- Lucide icons; RHF + Zod for Login/Recovery/Contacts. Reports currently uses local
+  form state plus Zod; do not document universal RHF adoption.
+- Prototype guidance uses the shared Radix Popover-based floating tools component.
+  Sonner 2.0.8 and its local primitive remain installed but are not mounted for guidance.
+- Use existing primitives/compositions. Button currently supports default/sm sizes,
+  not every upstream ShadCN example prop. Inspect installed/local APIs before copying.
+- Shared `components/ui/password-input.tsx` preserves Input/RHF props and provides
+  independent Eye/EyeOff visibility controls with keyboard access, aria-labels,
+  aria-controls and aria-pressed for Login and both Reset fields.
+- Native lists and local Table components, not TanStack Table. No new table library
+  is needed merely to match an old documentation mandate.
+
+## Branding
+
+- Supplied asset: `public/logos/ipsos-logo.png` (62×56 native pixels).
+- Shared `src/components/ipsos-logo.tsx` statically imports it via Next Image,
+  preserves aspect ratio, uses alt `Ipsos`, and preloads it.
+- Header: image height **32px** (`h-8`). Authentication: **56px** (`h-14`).
+- Header home link has accessible name `Ipsos Supplier Portal home` and targets
+  `/projects`. Adjacent Supplier Portal text remains; no letter-box branding placeholder.
+- Authentication branding is one centered horizontal logo + **Supplier Site** row
+  above the existing card. Shared auth layout covers Login, Forgot Password, email preview, Reset and success.
+  Logo replacement did not introduce a new layout or promotional treatment.
+
+## Layout / responsiveness
+
+- Portal container `max-w-300` = 1200px. Outer padding 16px, 24px from `sm`.
+- Header min-height 64px. Text-only primary links on desktop (1024px+). Below
+  1024px, a labeled hamburger expands navigation below the header in normal flow;
+  no off-canvas sidebar. Menu order is User Name / Role, separator, role-allowed
+  navigation links, separator, Account Settings, separator, Sign Out. User/sign-out controls are not duplicated
+  in the mobile top row. Escape closes it and focuses its trigger.
+- Authentication centers a `max-w-110` (440px) column in a full-height shell.
+- Projects: explorer plus 340px Activity column at `xl` (1280px+), stacked below.
+  Filters use Search, Language and one Date Range Picker. A 640px minimum
+  explorer container puts all three on one row; narrower containers wrap.
+  Live/Pending use a bordered segmented selector with integrated count badges and
+  selected text/background hierarchy, without an enclosing tab strip.
+  Activity uses `<TabsList variant="line">`. A PanelLeft sidebar trigger collapses
+  its desktop column from 340px to a 48px rail, widening Projects; it expands back
+  horizontally. No vertical accordion animation. Inactive/collapsed content is
+  unavailable to keyboard/assistive technology; selected tab survives toggling.
+  Smaller screens stack Projects above Activity, keep it expanded and hide the collapse control.
+- Subsample: Project context and main content at `lg`; stacked below it. Section
+  controls wrap. Configuration uses its existing subsection navigation.
+- Costs filters: one column, two at `sm`, four at `lg`. Loading skeleton matches.
+- Tables use horizontal overflow wrappers. Desktop-first, with 1440×900 primary,
+  1280×800 secondary and 768×1024 tablet validation targets. Mobile is supported
+  by reflow but context density remains an open issue.
+- Tailwind v4 numeric utilities (`max-w-300`, fractional spacing) and
+  `wrap-break-word` are valid. Do not enforce the old exclusive spacing list;
+  current primitives use additional spacing and sizing values.
+
+## Tokens and typography
+
+Source: `src/app/globals.css`, light-only theme.
+
+| Token              | Value   |
+| ------------------ | ------- |
+| background         | #f8fafc |
+| foreground         | #172033 |
+| card               | #ffffff |
+| card-foreground    | #172033 |
+| primary / ring     | #174ea6 |
+| primary-foreground | #ffffff |
+| muted              | #eef2f7 |
+| muted-foreground   | #536176 |
+| border             | #d8dee8 |
+
+- Base font Arial/Helvetica/sans-serif, 14px, line-height 1.5.
+- Typical page headings `text-2xl font-semibold`; section headings text-lg/sm;
+  supporting labels/text text-sm/xs. Some section headings are uppercase/tracked;
+  actual screens are not uniformly sentence case.
+- Global focus-visible outline is 3px ring color with 2px offset; controls add
+  local focus styles. No dark-mode implementation.
+- Popover, accent, secondary, input and destructive tokens are now defined globally.
+  Popover/Select surfaces are opaque white with dark text; option hover/focus/checked
+  states are explicit. Select uses a collision-aware anchored popper at z-60; Popover
+  uses z-50, viewport-constrained width/height, scrolling and explicit input borders.
+  Dark variants require an explicit `.dark` ancestor; OS dark preferences do not
+  override the application’s light palette.
+  Contacts combobox uses the same Popover/Input/Checkbox primitives. No separate
+  Command or Dropdown Menu implementation exists. Formal contrast certification is absent.
+
+## Status and interaction conventions
+
+- Status uses text plus color, not color alone. Badges are frequently outline;
+  reports also use labeled icons. Reduced-motion handling exists on executing-report spinners.
+- Project: Live/Pending/Closed/Canceled. Subsample: Live/Pending/Canceled.
+  Report: Queued/Executing/Finished/Error. Cost: Pending Approval/Approved/Rejected.
+- Labels/color maps/formatters are currently repeated per feature, not a universal
+  central status component. Preserve status semantics when sharing code.
+- Internal navigation uses Next Link; download is a native anchor with download
+  attribute; email contacts use mailto links. Link hover underline is common;
+  icons accompany some internal actions, so historical no-icon rules are not absolute.
+- Loading: skeleton route fallbacks. Retry errors use Next error boundary `retry`.
+  No-data and no-match states exist but some filter wording remains inaccurate.
+- Costs uses AlertDialog for bulk decision confirmation; errors render inside it.
+- Contacts forms show inline dirty/saving/error/success states. Report creation
+  confirms the returned ID in Queue; cost success confirms count and decision.
+- Unsaved navigation warnings use native confirms, not a custom modal redesign.
+
+## Prototype messaging
+
+`PrototypeEnvironment` is mounted once in the root layout and includes page-scoped Tools. `FloatingPrototypeTools` is the
+reusable presentation component with optional action-count badge and availabilityKey. The panel displays page-specific actions only.
+
+- Muted Wrench trigger labeled Prototype Tools, fixed bottom-right. Popover opens upward, aligned right,
+  with explicit Close, Escape and outside-click dismissal; trigger reopens it.
+- Login defaults collapsed; Forgot Password Confirmation defaults expanded without
+  focus theft. Other routes default collapsed. Route changes reset contextual state.
+- No prototype toasts, expiry timers or sessionStorage deduplication.
+- Confirmation's Open Reset Password Email action lives in Tools and opens a standalone email in a new tab.
+  Its card contains neutral messaging and the two production-style return actions.
+- Authentication support message sits outside/below cards in the shared layout.
+- Report downloads do not open informational Tools content.
+  Operational feedback and approved email copy remain inline and unchanged.
+- Message content and behavior: [prototype-messaging.md](prototype-messaging.md).
+
+## Accessibility baseline and remaining work
+
+Existing skip link, labeled inputs, RHF error associations in auth/contact editors,
+status/alert live regions and visible focus are baseline implementation. Target is
+WCAG 2.2 AA, not a passed audit. Known gaps include report validation association,
+repeated cost control names, route-tab relationships and Settings focus restoration;
+see [known-issues.md](known-issues.md). Do not turn these into a false compliance claim.
+
+## Email assets / validation
+
+Four branded responsive HTML emails live in `public/emails/`: reset-password,
+user-invitation, password-changed and account-created. Fluid presentation tables,
+inline core styles, mobile rules, preheader, Outlook VML buttons and fallback links
+support engineering reuse. `/email-preview/[template]` renders the same files outside
+the portal shell in a new tab. No Mock Inbox workflow remains. See
+`public/emails/README.md` for variables and mail-client validation boundaries.
+Authentication uses shared `FieldError` rose text/alert styling, not undefined
+`text-destructive`, including the invalid-email message.
+
+Tools actions follow workflow context; see [prototype-messaging.md](prototype-messaging.md).
+Badge precedes the label, red-700 with white numerals; count is described accessibly
+and announced politely. A single 4-second text shimmer animates badge arrival/action changes,
+never panel reopening, and is omitted under prefers-reduced-motion.
+
+Native date Inputs share a far-right CalendarDays affordance. Native picker behavior
+and keyboard date editing remain; the WebKit native hit target occupies the same
+right-hand area without a duplicate icon. This covers Reports and Costs; Projects uses the shared calendar range picker.
+All four email footers use “Ipsos Supplier Site” and “© 2026 Ipsos” on separate lines.
+
+## Projects list controls and route surfaces
+
+PortalShell scopes the background token to white for every authenticated page.
+Authentication keeps the light gray #f8fafc surface. Summary labels use muted text;
+values explicitly use full foreground color (not reduced opacity).
+Projects pagination defaults to 10 rows, with 10/20/50 page sizes. Range and current
+page are announced; Previous/Next disable at boundaries. Filters, status and page size
+reset page to one. Expand All/Collapse All act on all filtered Projects across pages;
+individual row expansion is controlled by the explorer and survives paging/filtering.
+Dropdown option text wraps for long scope names; Popover surfaces expose focus rings
+and Contacts choice rows highlight keyboard focus as well as hover.
+
+Global default border color and fallback focus outline are in Tailwind's base layer,
+allowing component
+transparent/active/focus border utilities to override it. This prevents unwanted
+boxes around line-style tabs, avoids doubled focus outlines/rings, and restores
+explicit dropdown/badge border styling.
+
+## Shared controls and compact Projects layout
+
+`components/ui/form-control.ts` owns the flat 40px treatment for text/search Input,
+Select, Contacts combobox and DateRangePicker triggers. Controls use the same border,
+white background and focus treatment without elevation; overlay shadows remain.
+Projects DateRangePicker uses a single right-icon trigger and a popover calendar.
+Arrow keys move by day/week; Home/End move within a week. Start/end selection supports
+reversed endpoints; Apply commits a complete range, Cancel discards the draft and
+Clear dates removes the filter. Labels and full selected ranges are accessible.
+Projects use compact white cards with light borders, small radii and spacing. Expand All/Collapse All use the same
+ChevronRight/ChevronDown as row toggles. Activity's line tabs and PanelLeft control
+share one header row; no visible Activity heading. Widget titles sit close to content
+without a following divider. Desktop name/role opens the Account Settings / Sign Out dropdown; mobile Sign Out retains LogOut.
+
+## Focused Projects hierarchy and Activity behavior
+
+Activity tabs are Costs (default), Reports. Desktop (1280px+) shows tabs beside the PanelLeft toggle without a vertical separator. Stacked layouts have no toggle or
+separator and always render the panel expanded. Returning to desktop restores its
+collapse choice. Subsample rows use a left border and short branches, compact
+indentation and a 2px name-to-metrics gap; they remain semantic lists, not ARIA trees.
+DateRangePicker shows presets first: Last Month, Last 3 Months, Last 6 Months, Last
+12 Months, This Year, Custom Range. Previous-month presets use complete previous
+calendar months; This Year uses January 1 through today. Custom Range alone exposes
+the calendar, preserving keyboard selection and Apply/Cancel/Clear behavior.
+The left red Prototype Tools badge remains high contrast; badge numerals only
+use one 4-second gradient text-highlight sweep on action identity arrival/change.
+This follows the ShadCN Attachment shimmer-once approach, never loops and respects
+prefers-reduced-motion. Reopening the popover does not restart it.
+
+## Projects visual refinement
+
+Projects are compact white cards with light borders, small radii, internal padding
+and an 8px gap; expansion, filtering and paging are unchanged. Expanded Subsamples
+retain soft indented tree guides. Status leads the compact metrics row, with subtle
+dot separators; labels stay muted and values use foreground. Achieved is omitted from the Projects summary; Remaining displays the total of
+exclusive and shared capacity.
+Custom Range now has month/year selects (100 years back, 20 forward from the current
+year, extended for the visible month) and Today navigation. Today focuses today's
+date without changing the selected range. Presets and custom Apply/Cancel remain.
+Clear Dates appears only for a committed range. Standard Separator components divide
+footer actions, replacing the border applied to a rounded button.
+Prototype notification attention is badge-only: one 4-second text shimmer, triggered
+by action availability identity, with no looping/replay on popover reopening. The
+Tools label remains static and reduced motion disables animation.
+
+## Projects advanced filters
+
+Search, Language and Date Range remain visible. A Filters button opens a modal
+ShadCN-style Sheet on the right (full width below 640px), with Subsample Status
+(Any/Live/Pending/Canceled) and Remaining (Any/0/1–50/51–200/200+). Country, Router
+and Incidence filters are not implemented in this pass.
+Advanced changes apply immediately, combine with existing filters and reset page
+one. A Project remains only if at least one Subsample matches all filters; its
+expanded list/count includes those matches. Remaining combines exclusive and shared
+capacity. Buckets are non-overlapping: 200 belongs to 51–200; 200+ means >200.
+Filters shows an active advanced-filter count. Reset advanced filters preserves
+Search/Language/Date Range; Clear Filters resets all filters. Closing with Done,
+Escape, close button or overlay preserves choices and restores trigger focus.
+Sheet focus is trapped; Select overlays render above the Sheet. Project expansion
+state remains intact. Boundary/status-composition tests live in project-filters.test.ts.
+Activity Costs/Reports retain text-width active underlines; Pending Cost Approvals
+keeps its title/badge and no longer displays the currency icon.
+
+## Projects scanability refinement
+
+Activity's vertical separator is removed; Costs/Reports text-width line tabs and the
+desktop horizontal-collapse toggle remain. View All and Review Costs are secondary
+outline buttons retaining /reports and /costs destinations. Create New Report keeps
+/reports and its existing icon, with no caret or dropdown affordance.
+Live/Pending is a single bordered segmented-view selector, with short labels and
+count badges, aria-pressed state, and no View label. Behavior is unchanged.
+Subsample summary metadata is limited to Status, Language, Field End Date, Incidence
+and Remaining, in that order. Achieved is omitted here. Remaining displays total
+exclusive plus shared capacity; detailed breakdown remains on the Subsample view.
+Each metric pair stays together; the row wraps naturally without a forced Remaining
+line. Search/Language/Date Range remain visible; only advanced Status/Remaining
+filters live in the Sheet.
+
+## Action-only Prototype Tools
+
+Tools exposes only useful page-specific actions, never persistence/repository/mock
+implementation paragraphs. Login shows Valid Credentials and the two account emails.
+Confirmation contains only Open Reset Password Email. Reports offers Open Sample
+Report and Show Empty Reports State; Costs offers Show Empty Costs State. No Tools
+trigger appears on pages with no relevant actions. Link-state actions and automatic
+report-download guidance have been removed.
+Empty previews use pathname-scoped local React context, with no storage, server
+requests or fixture mutation. Tools and an inline preview notice both offer Restore
+Reports/Costs. Leaving the page or reloading clears the preview; restoring retains
+module filters/tab state. See prototype-messaging.md for the complete action matrix.
+
+## Projects title / Activity preview alignment
+
+The primary segmented selector follows Projects immediately in the title row, with
+Live Projects/Pending Projects labels and existing counts. On narrow screens the
+row may wrap naturally. Filtering, paging and expansion behavior is unchanged.
+Projects Tools groups actions under Reports and Costs. Show Empty Reports State
+and Show Empty Costs State independently swap the respective Activity widget to
+its empty state; each action becomes Restore Reports/Costs while active. Both can
+be previewed together. Project/Subsample rows remain unchanged. State is local,
+resets on pathname navigation/reload and never modifies fixtures or repositories.
+Other screens retain their established contextual actions. No Dashboard route is
+introduced: Projects remains the landing workspace. Activity still has no vertical
+separator, metadata remains Status/Language/Field End Date/Incidence/total Remaining,
+and its footer actions retain white outline buttons with original destinations.
+
+## Activity action placement
+
+The desktop PanelLeft collapse/expand control precedes the Costs/Reports tabs on
+the left of the Activity header; stacked layouts still hide it. Recent Reports
+places Create New Report then View All together in its footer on one row, for both
+normal and empty states. Both retain their existing /reports destinations.
+
+## Activity report interactions and widget limits
+
+Recent Reports shows the newest 10 by createdAt; Pending Cost Approvals shows the
+first 10 pending records in existing order, with its badge counting all pending
+records. Neither widget paginates. View All/Review Costs remain available.
+Queued/executing report names and icons navigate directly to /reports?view=queue.
+Finished names/icons use native download links to the existing synthetic CSV.
+Errors keep compact name/status/metadata rows; the accessible error icon opens
+shared ReportErrorDetails on hover, click or keyboard activation, with Escape/
+outside dismissal. Full errors are not rendered inline, including Reports history.
+Report fixture IDs use RPT-2026-1044 through RPT-2026-1047. New report IDs use
+RPT-YYYY-NNNN (at least four digits) with synchronous process-local reservation,
+seeded above fixture numbers for that year. This shares the mock lifecycle; a
+production adapter requires durable atomic ID allocation. The renamed sample asset
+is /mock-reports/RPT-2026-1045.csv, with content/download behavior unchanged.
+Projects-only Activity empty previews remain independent, reversible and local;
+fixtures/repositories are unaffected by those actions. No Dashboard route added.
+
+## Entity typography hierarchy
+
+Global body remains 14px. Projects list names and their Project: prefix are 18px/400. Subsample names in
+Projects/All Subsamples and the workspace heading/selector are 16px/500. Report
+names in the Activity widget, Reports cards, History/Queue and creation-page heading
+are 16px/500; generic page/section headings retain their existing hierarchy.
+Project/Subsample and Reports row metadata is 14px, including language, field-end
+date, incidence, remaining and status. Pending-cost scope names on Projects use
+16px/500 and their metadata 14px. No padding, margins or gap sizes are increased;
+existing compact line heights and natural wrapping accommodate the type hierarchy.
+
+## Project label and long cost-name alignment
+
+Project: and its Project name share 18px regular typography in the Projects list.
+Pending cost rows reserve a nonshrinking, single-line amount column. Scope names
+truncate with ellipsis in the remaining width; a native title exposes the full name.
+Two new pending fixture costs (cost-007/008) reference long-named Projects, including
+a longer Brand Awareness fixture name. Project count and existing cost records/values
+are unchanged; the pending fixture count is now six.
+
+## Account Settings
+
+/account is available to both roles from the name/role desktop dropdown and the
+mobile hamburger. Desktop Sign Out is inside the dropdown; mobile Account Settings
+is separated from primary navigation and the icon Sign Out at the bottom.
+Line tabs provide Personal Information (first/last name, email; Save/Cancel, validation,
+unsaved-change protection and async feedback) and Security (masked Password, Change
+Password via the existing recovery-email flow). PUT /api/account only edits the
+session actor, rejects protected fields and duplicate emails, and refreshes header
+identity. Profile storage is process-local. Email changes preserve password hashes
+and invalidate old reset links. No additional security/session-management features.
+See account-settings.md for API behavior, constraints and validation.

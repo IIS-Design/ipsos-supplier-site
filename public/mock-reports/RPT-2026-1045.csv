@@ -1,0 +1,3 @@
+data_source,respondent_id,status,duration_minutes
+synthetic_prototype_sample,sample-001,complete,4.2
+synthetic_prototype_sample,sample-002,complete,5.1

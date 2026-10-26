@@ -1,0 +1,18 @@
+[
+  {
+    "id": "user-admin-001",
+    "supplierId": "supplier-northstar",
+    "firstName": "Jordan",
+    "lastName": "Lee",
+    "email": "admin@supplier.com",
+    "role": "admin"
+  },
+  {
+    "id": "user-ops-001",
+    "supplierId": "supplier-northstar",
+    "firstName": "Sarah",
+    "lastName": "Billingson",
+    "email": "user@supplier.com",
+    "role": "user"
+  }
+]
