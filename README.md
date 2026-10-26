@@ -18,29 +18,29 @@ The fixtures include 50 Projects and 180 Subsamples, with varied statuses, long 
 
 ## Screens
 
-| Screen | Entry point | Current experience |
-| --- | --- | --- |
-| Projects | `/projects` | Primary workspace with project cards and switchable Costs/Reports Activity widgets. Each widget shows up to 10 entries, with links to its full module. |
-| Subsample Workspace | Open a Subsample from Projects | Shared Project context and Subsample selector, with Details, Field Progress, Costs, Contacts, and Configuration sections. Configuration content remains a placeholder. Project entry opens its All Subsamples list. |
-| Reports | `/reports`, `/reports/create` | Report creation, History and Queue views, filtering, error details, and sample downloads. Queued/executing Activity entries open Queue; finished entries download directly. |
-| Costs | `/costs` | Pending Approval and History views. Both roles can inspect records; only Administrators can approve or reject. |
-| Settings | `/settings` | Administrator-only Organization Contacts. Other organization settings are not implemented. |
-| Account Settings | `/account` | Personal Information and Security tabs, available from the desktop user dropdown or mobile hamburger menu. |
-| Authentication | `/login`, `/forgot-password`, `/reset-password` | Sign-in, recovery confirmation, token-based password reset, and password-updated confirmation. Recovery emails open through Prototype Tools. |
+| Screen              | Entry point                                     | Current experience                                                                                                                                                                                                  |
+| ------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Projects            | `/projects`                                     | Primary workspace with project cards and switchable Costs/Reports Activity widgets. Each widget shows up to 10 entries, with links to its full module.                                                              |
+| Subsample Workspace | Open a Subsample from Projects                  | Shared Project context and Subsample selector, with Details, Field Progress, Costs, Contacts, and Configuration sections. Configuration content remains a placeholder. Project entry opens its All Subsamples list. |
+| Reports             | `/reports`, `/reports/create`                   | Report creation, History and Queue views, filtering, error details, and sample downloads. Queued/executing Activity entries open Queue; finished entries download directly.                                         |
+| Costs               | `/costs`                                        | Pending Approval and History views. Both roles can inspect records; only Administrators can approve or reject.                                                                                                      |
+| Settings            | `/settings`                                     | Administrator-only Organization Contacts. Other organization settings are not implemented.                                                                                                                          |
+| Account Settings    | `/account`                                      | Personal Information and Security tabs, available from the desktop user dropdown or mobile hamburger menu.                                                                                                          |
+| Authentication      | `/login`, `/forgot-password`, `/reset-password` | Sign-in, recovery confirmation, token-based password reset, and password-updated confirmation. Recovery emails open through Prototype Tools.                                                                        |
 
 The header uses desktop navigation and an inline expanding hamburger menu on smaller screens. Account Settings and Sign Out are grouped with user actions. The protected `/docs` screen currently shows unavailable content.
 
 ## Tech Stack
 
-| Technology | Use |
-| --- | --- |
-| Next.js 16 / React 19 | App Router, server-rendered pages, interactive components, and API route handlers |
-| TypeScript | Typed domain models, services, and repository contracts |
-| Tailwind CSS 4 | Layout, responsive behavior, and styling |
-| ShadCN UI patterns / Radix UI | Local, customizable UI primitives and accessible interaction foundations |
-| Lucide | Icons |
-| Zod | Form, API, and fixture validation |
-| React Hook Form | Form state, validation integration, and submission states |
+| Technology                    | Use                                                                               |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| Next.js 16 / React 19         | App Router, server-rendered pages, interactive components, and API route handlers |
+| TypeScript                    | Typed domain models, services, and repository contracts                           |
+| Tailwind CSS 4                | Layout, responsive behavior, and styling                                          |
+| ShadCN UI patterns / Radix UI | Local, customizable UI primitives and accessible interaction foundations          |
+| Lucide                        | Icons                                                                             |
+| Zod                           | Form, API, and fixture validation                                                 |
+| React Hook Form               | Form state, validation integration, and submission states                         |
 
 See [package.json](package.json) for dependency versions and scripts. Data access uses typed services and repositories backed by JSON fixtures and in-memory prototype state.
 
@@ -103,10 +103,10 @@ Browser validation is currently manual; there is no committed end-to-end browser
 
 ## Demo Credentials
 
-| Email | Role | Access |
-| --- | --- | --- |
-| `admin@supplier.com` | Administrator | Operational screens, Account Settings, Organization Contacts, and cost approvals |
-| `user@supplier.com` | User | Operational screens and own Account Settings; no organization Settings or cost decisions |
+| Email                | Role          | Access                                                                                   |
+| -------------------- | ------------- | ---------------------------------------------------------------------------------------- |
+| `admin@supplier.com` | Administrator | Operational screens, Account Settings, Organization Contacts, and cost approvals         |
+| `user@supplier.com`  | User          | Operational screens and own Account Settings; no organization Settings or cost decisions |
 
 Before an account resets its password, **any non-empty password of up to 128 characters** is accepted—for example, `Prototype123!`. After a password reset, use the newly saved password. If you change your email in Account Settings, use that saved address to sign in.
 
@@ -131,17 +131,17 @@ Server pages read through services and repositories. Interactive forms submit to
 
 ## Documentation
 
-| Document | Start here when you need… |
-| --- | --- |
-| [AI handoff](docs/ai-context/handoff.md) | AI onboarding, architecture context, established decisions, and documentation rules |
-| [Prototype status](docs/ai-context/prototype-status.md) | A detailed account of implemented, partial, and absent behavior |
-| [Feature inventory](docs/ai-context/feature-status.md) | Feature-level scope and completion boundaries |
-| [Known issues](docs/ai-context/known-issues.md) | Open UX, accessibility, responsive, and technical issues |
-| [Navigation](docs/ai-context/navigation.md) | Route and API details |
-| [Design system](docs/ai-context/design-system.md) | Shared visual and interaction conventions |
-| [Authentication](docs/ai-context/authentication.md) | Sign-in, recovery, and session behavior |
-| [Account Settings](docs/ai-context/account-settings.md) | Profile editing and password-change behavior |
-| [Email assets](public/emails/README.md) | HTML template variables and engineering integration notes |
+| Document                                                | Start here when you need…                                                           |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [AI handoff](docs/ai-context/handoff.md)                | AI onboarding, architecture context, established decisions, and documentation rules |
+| [Prototype status](docs/ai-context/prototype-status.md) | A detailed account of implemented, partial, and absent behavior                     |
+| [Feature inventory](docs/ai-context/feature-status.md)  | Feature-level scope and completion boundaries                                       |
+| [Known issues](docs/ai-context/known-issues.md)         | Open UX, accessibility, responsive, and technical issues                            |
+| [Navigation](docs/ai-context/navigation.md)             | Route and API details                                                               |
+| [Design system](docs/ai-context/design-system.md)       | Shared visual and interaction conventions                                           |
+| [Authentication](docs/ai-context/authentication.md)     | Sign-in, recovery, and session behavior                                             |
+| [Account Settings](docs/ai-context/account-settings.md) | Profile editing and password-change behavior                                        |
+| [Email assets](public/emails/README.md)                 | HTML template variables and engineering integration notes                           |
 
 ## Prototype Limitations
 
@@ -175,3 +175,5 @@ If documentation conflicts with the running implementation, verify the relevant 
 README.md must remain aligned with implementation reality. Whenever **features, routes, workflows, or architecture change**, review whether this README needs an update and make any required changes in the same task or pull request.
 
 Check the Features, Screens, setup commands, demo credentials, structure, and limitations against the final implementation. Update the relevant detailed documents alongside the overview, keep links valid, and remove claims that are no longer true. Avoid adding temporary test totals or treating planned work as implemented.
+
+By IIS Design
