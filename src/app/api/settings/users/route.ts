@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lib/app-path";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -18,7 +19,7 @@ export async function POST(request: Request) {
     const response = NextResponse.json({ user }, { headers: { "Cache-Control": "no-store" } });
     if (parsed.data.action === "reset-password") {
       const receipt = await requestPasswordRecovery(user.email);
-      response.cookies.set("ipsos_prototype_email", receipt, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/email-preview", maxAge: 86400 });
+      response.cookies.set("ipsos_prototype_email", receipt, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: withBasePath("/email-preview"), maxAge: 86400 });
     }
     revalidatePath("/", "layout");
     return response;

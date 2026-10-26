@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
@@ -117,12 +118,12 @@ export function LoginForm() {
           />
           Keep Me Signed In
         </label>
-        <a
+        <Link
           className="font-medium text-primary underline-offset-4 hover:underline"
           href="/forgot-password"
         >
           Forgot Password?
-        </a>
+        </Link>
       </div>
 
       <Button

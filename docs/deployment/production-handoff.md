@@ -94,6 +94,7 @@ location ^~ /supplier/ {
     proxy_pass http://ipsos-supplier-site:3000;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
@@ -145,3 +146,31 @@ The local smoke test uses `/supplier/_health/`; `.iis-deploy` uses the service-n
 ## Authentication release blocker
 
 This application currently has **mock prototype authentication**, not production identity. Setting a strong `MOCK_AUTH_SECRET` only protects the integrity of its signed session cookies. It does not make authentication safe: before a fixture account resets its password, any non-empty password is accepted; demo administrator and user accounts are present; there is no SSO, MFA, rate limiting, lockout, or verified email; and passwords, recovery tokens, sessions, and application changes are process-local. A fixture review found internal `@ipsos.com` contact values in the sample Subsample data, so the repository cannot currently be certified as containing only synthetic personal data. Remove or replace those values and obtain data-owner confirmation before exposing the route. The application must not be exposed as a real supplier portal or used with real supplier data until mock authentication and prototype data/storage are replaced with production-grade services. A public deployment with mock auth exposes the prototype's demo accounts and functionality to anyone who can reach it. Cloudflare Access restricting `/supplier/*` to named prototype testers is a practical interim restriction, not a substitute for production authentication.
+## Subpath routing audit
+
+The public application lives at `https://design.go.ar/supplier/`, including local
+production builds at `http://localhost:3000/supplier/`. `basePath` is compiled into
+the application; changing it requires rebuilding the image. The proxy must retain
+the `/supplier` prefix. Direct root paths such as `/forgot-password` are outside
+this application.
+
+Use Next.js `Link`, App Router `push`/`replace`, and page `redirect` with application
+paths such as `/forgot-password`; Next.js applies the prefix. Use `withBasePath`
+for browser `fetch`, native download links, email previews, and cookie paths.
+Do not add the prefix twice. External report URLs, mail links, query strings, and
+fragments remain unchanged. `notFound()` renders within the application and does
+not require a URL. There is no middleware or proxy source file in this repository.
+
+Email preview absolute links use the public `Host`/`X-Forwarded-Host` and
+`X-Forwarded-Proto` supplied by the trusted reverse proxy, rather than the
+standalone server's `http://0.0.0.0:3000` request origin. The Nginx settings above
+already preserve `Host` and set `X-Forwarded-Proto`. If another proxy changes those
+headers, set optional runtime `APP_ORIGIN=https://design.go.ar` in the application's
+host `.env` (origin only, without `/supplier`). It overrides forwarded headers.
+
+The Forgot Password entry uses Next.js Link. Administrator-initiated reset emails
+scope their receipt cookie to `/supplier/email-preview`, matching self-service
+recovery. Preview state remains process-local: a restart or multiple application
+replicas can invalidate a receipt independently of URL correctness. Authentication
+cookies require HTTPS in production. Fixture-backed settings, reports and recovery
+remain prototype behavior; this routing audit does not introduce external services.

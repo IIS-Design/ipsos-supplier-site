@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { emailTemplates, renderEmailTemplate, type EmailTemplate } from "@/lib/email-templates";
 import { getRecoveryMail } from "@/services/password-recovery-service";
+import { getPublicOrigin } from "@/lib/public-origin";
 import { withBasePath } from "@/lib/app-path";
 
 export const runtime = "nodejs";
@@ -19,7 +20,7 @@ export async function GET(request: Request, { params }: {
   };
   if (!emailTemplates.includes(template as EmailTemplate))
     return new Response("Email preview not found.", { status: 404, headers });
-  const origin = new URL(request.url).origin;
+  const origin = getPublicOrigin(request);
   let actionUrl = `${origin}${withBasePath("/login/")}`;
   if (template === "reset-password") {
     const receipt = (await cookies()).get("ipsos_prototype_email")?.value ?? "";

@@ -171,3 +171,12 @@ status means Active. Login and session resolution reject invited/inactive users;
 issues no new capability for them. Only active same-supplier Administrators manage users;
 self-deactivation and self-demotion are blocked. Admin reset actions use the existing
 receipt-scoped reset email preview. Invitations are staged, without an acceptance flow.
+
+## Deployment URL behavior
+
+The application is served under `/supplier/`. Login's Forgot Password action is a
+Next.js Link so the prefix applies in both rendered HTML and client navigation.
+Both self-service and administrator-triggered reset receipts use the
+`/supplier/email-preview` cookie path. Email previews resolve absolute login,
+reset and logo URLs from trusted public proxy headers or optional `APP_ORIGIN`,
+not the container bind address. See the production handoff for proxy requirements.
