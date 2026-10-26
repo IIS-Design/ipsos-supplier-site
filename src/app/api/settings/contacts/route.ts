@@ -15,7 +15,7 @@ export async function PUT(request: Request) {
     return NextResponse.json(
       {
         message:
-          "Only an Administrator can edit organization contact defaults.",
+          "Only an Administrator can edit supplier default contacts.",
       },
       { status: 403 },
     );
@@ -31,7 +31,7 @@ export async function PUT(request: Request) {
   const parsed = contactsSchema.safeParse(body);
   if (!parsed.success)
     return NextResponse.json(
-      { message: "Check the contact names and email addresses and try again." },
+      { message: "Check the selected contacts and email addresses and try again." },
       { status: 400 },
     );
   try {
@@ -44,7 +44,7 @@ export async function PUT(request: Request) {
     revalidatePath("/projects", "layout");
     return NextResponse.json({ contacts });
   } catch (error) {
-    console.error("Organization contact defaults failed to save", error);
+    console.error("Default contacts failed to save", error instanceof Error && error.name !== "ZodError" ? error.message : "Invalid contact data");
     return NextResponse.json(
       {
         message:

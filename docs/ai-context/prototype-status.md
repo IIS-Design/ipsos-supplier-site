@@ -35,8 +35,7 @@ not production readiness.
   History date range, expandable details, selection, confirmation, Administrator
   bulk approve/reject, in-dialog errors and explicit decision-success feedback.
   History uses ten records per page; User accounts are read-only for decisions.
-- Settings includes Organization profile and five other sections, with Contacts below User Management in Users & Permissions (see settings.md). Contacts: view/edit/add/remove/save/cancel for four
-  contact roles; validation, loading, retryable route errors and submission feedback.
+- Settings includes Organization profile and five other sections, with Default Contacts below User Management in Users & Permissions (see settings.md). Default Contacts: one multi-select for portal users and standalone emails, Save/Cancel; validation, loading, retryable route errors and submission feedback.
 - Subsample Contacts: saved default/custom mode, custom ID selections, effective
   inherited values, save/cancel, unsaved-change warnings and success/error states.
 - Supplier-scoped repositories/services, strict fixture schemas and relationship checks.
@@ -52,8 +51,8 @@ not production readiness.
 
 - Reports: creation is queued in memory only; no execution/status progression,
   result generation, polling, failed-report retry or report-parameter inspection.
-- Projects: landing only exposes Live/Pending; All Subsamples is a read-only list,
-  not the broader filtered comparison workspace described in earlier documentation.
+- Projects: landing only exposes Live/Pending; All Subsamples has read-only cards with project-local search/status/language/router/
+  date filters; no editing or cross-project comparison.
 - Settings: six supplier sections have complete UI and process-local mock saves/actions; see settings.md.
 - Subsample Workspace: four functional fixture-backed sections plus Configuration
   subsection navigation and unavailable-content panels.
@@ -270,7 +269,7 @@ are unchanged; the pending fixture count is now six.
 mobile hamburger. Desktop Sign Out is inside the dropdown; mobile Account Settings
 follows Settings (or Docs for Users) with the same navigation styling. A single
 separator divides Account Settings from the icon Sign Out action at the bottom.
-Line tabs provide Personal Information (first/last name, email; Save/Cancel, validation,
+Shared Settings side navigation/mobile selector provides Personal Information (first/last name, email; Save/Cancel, validation,
 unsaved-change protection and async feedback) and Security (masked Password, Change
 Password via the existing recovery-email flow). PUT /api/account only edits the
 session actor, rejects protected fields and duplicate emails, and refreshes header
@@ -303,3 +302,44 @@ then Approver/Approval Date. Desktop History columns remain unchanged.
 Supplier Settings now implements Organization, Users & Permissions (including preserved Contacts), Survey Configuration, Respondent Redirects, Server-to-Server and Security.
 Desktop side navigation/mobile selector follows the reviewed references. Saves are
 process-local and Admin-only. See [settings.md](settings.md) for implementation and limits.
+
+## Shared Project/Subsample workspace
+
+All Subsamples and individual Subsample pages reuse SubsampleWorkspaceShell and
+ProjectContextPanel. Project name/count, status and business IDs remain visible in
+the left column at 1024px+ (stacked on smaller screens). One dropdown contains View
+All Subsamples first, then every project Subsample; the separate View All link is
+removed. List mode shows Subsamples for [Project], a filtered Available Subsample(s) badge
+and cards with structured metadata, with the whole card linking to its Overview. Individual mode retains the
+existing heading, status, tabs and content. Dropdown navigation preserves the shared
+unsaved-changes guard. Routes, supplier scoping and Project redirects are unchanged.
+
+## Complete Project context
+
+The shared ProjectContextPanel now includes Project Status, Project ID (external
+surveyEventId), Job Book No°, Device Compatibility, Product Type, Research Type and
+all category paths. Device chips use check/X for supported/unsupported and a minus
+for unknown, with explicit accessible labels. Category paths wrap and use chevrons.
+Both All Subsamples and individual views receive the same Project data/sidebar.
+Project metadata fields are optional; missing values show Not Defined rather than
+fabricated values. InnoTest metadata and Job Book 171213254 follow the reference,
+including its two displayed category paths. Counts stay derived from child records:
+InnoTest currently has two Subsamples; the reference’s four is not hardcoded.
+
+## All Subsamples cards and filters
+
+Only the right-hand All Subsamples content now uses one bordered, fully clickable
+card per child; the Project sidebar/dropdown and breadcrumbs remain unchanged.
+Header shows Subsamples for [Project] and a filtered Available Subsample(s) badge.
+Name/ID search, supported status (Live/Pending/Canceled), dynamic language/router
+choices and shared DateRangePicker combine with AND. Date filtering uses inclusive
+Field End Date bounds; default is unbounded, matching Projects. Missing routers
+have a Not assigned filter. Clear search and Clear all filters restore results.
+Repository order is retained; local filters reset on navigation/reload and do not
+alter fixtures or the sidebar total. Cards show router plus ID/status/language/
+visitors/completes/incidence/LOI/start/end dates; details use a container-responsive
+grid, matching badge colors and existing date format. Names and long IDs wrap.
+A dynamically loaded card view uses card skeletons; a failed child-list read shows
+an inline retry action with Project metadata retained. Unknown Project/auth failures
+still use existing route boundaries. `tests/subsample-list-filters.test.ts` covers
+combined criteria, name/ID search, stable order and inclusive field-end boundaries.

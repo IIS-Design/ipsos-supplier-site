@@ -1,6 +1,5 @@
 import type { ProjectId, SubsampleId, SupplierId } from "./ids";
 import type { SettingOverride } from "./scopes";
-import type { SupplierContactRole } from "./supplier";
 import type { SubsampleStatus } from "./status";
 
 export type QuotaBreakdownRow = {
@@ -10,9 +9,7 @@ export type QuotaBreakdownRow = {
   sharedRemaining: number;
 };
 
-export type SubsampleContactOverrides = Partial<
-  Record<SupplierContactRole, string[]>
->;
+export type SubsampleContactOverrides = string[];
 
 export type SubsampleSettingsOverrides = {
   contacts?: SettingOverride<SubsampleContactOverrides>;

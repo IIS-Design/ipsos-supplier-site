@@ -10,7 +10,10 @@ import { useUnsavedChanges } from "@/features/contacts/use-unsaved-changes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FieldError } from "@/components/ui/field-error";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
+import { User as UserIcon, Shield, Home, ChevronRight } from "lucide-react";
+import { SettingsLayout } from "@/components/portal/settings-layout";
+import { SettingsSectionNavigation } from "@/components/portal/settings-section-navigation";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
 import type { User } from "@/types/user";
 import { withBasePath } from "@/lib/app-path";
@@ -36,8 +39,7 @@ function PersonalInformation({ user, onDirtyChange }: { user: User; onDirtyChang
     } catch { setError("Unable to connect to the service. Your changes are still available. Please try again."); }
   });
   return (
-    <form aria-busy={isSubmitting} className="max-w-xl space-y-5" noValidate onSubmit={submit}>
-      <h2 className="text-lg font-semibold">Personal Information</h2>
+    <form aria-busy={isSubmitting} className="max-w-3xl space-y-5" noValidate onSubmit={submit}>
       {error ? <FieldError>{error}</FieldError> : null}
       {success ? <p className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900" role="status">{success}</p> : null}
       {([{ name: "firstName", label: "First Name", autoComplete: "given-name" }, { name: "lastName", label: "Last Name", autoComplete: "family-name" }, { name: "email", label: "Email Address", autoComplete: "email" }] as const).map(field => (
@@ -69,10 +71,9 @@ function Security({ email }: { email: string }) {
     } catch { setError("Unable to connect to the service. Please try again."); }
     finally { setPending(false); }
   };
-  return <section aria-busy={pending} className="max-w-xl space-y-5">
-    <h2 className="text-lg font-semibold">Security</h2>
+  return <section aria-busy={pending} className="max-w-3xl space-y-5">
     {error ? <FieldError>{error}</FieldError> : null}
-    <div className="space-y-1"><h3 className="text-sm font-medium">Password</h3><p aria-label="Password is hidden" className="tracking-widest">************</p></div>
+    <div className="space-y-1"><h2 className="text-sm font-medium">Password</h2><p aria-label="Password is hidden" className="tracking-widest">************</p></div>
     <p className="text-sm text-muted-foreground">Use a reset link sent to your email address to change your password.</p>
     <Button disabled={pending} onClick={changePassword} type="button" variant="outline">{pending ? "Requesting Reset…" : "Change Password"}</Button>
     <span className="sr-only" role="status">{pending ? "Requesting your password reset. Please wait." : ""}</span>
@@ -85,18 +86,24 @@ export function AccountSettings({ user: initialUser }: { user: User }) {
   const [tab, setTab] = useState("personal");
   const [dirty, setDirty] = useState(false);
   const [pendingTab, setPendingTab] = useState<string | null>(null);
-  return <section className="space-y-5">
-    <h1 className="text-2xl font-semibold tracking-tight">Account Settings</h1>
-    <Tabs onValueChange={value => { if (dirty) setPendingTab(value); else setTab(value); }} value={tab}>
-      <TabsList aria-label="Account settings sections" variant="line"><TabsTrigger value="personal">Personal Information</TabsTrigger><TabsTrigger value="security">Security</TabsTrigger></TabsList>
-      <TabsContent className="pt-5" value="personal"><PersonalInformation user={current} onDirtyChange={setDirty} /></TabsContent>
-      <TabsContent className="pt-5" value="security"><Security email={current.email} /></TabsContent>
-    </Tabs>
+  const title = tab === "personal" ? "Personal Information" : "Security";
+  const selectSection = (value: string) => {
+    if (value === tab) return;
+    if (dirty) setPendingTab(value); else setTab(value);
+  };
+  return <SettingsLayout navigation={<SettingsSectionNavigation title="Account Settings" sections={[{ id: "personal", label: "Personal Information", Icon: UserIcon }, { id: "security", label: "Security", Icon: Shield }]} activeSection={tab} onSelect={selectSection} />}>
+    <section className="space-y-8">
+      <header className="space-y-2">
+        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        <nav aria-label="Breadcrumb"><ol className="flex flex-wrap items-center gap-2 text-sm"><li><Link aria-label="Home" href="/projects"><Home aria-hidden="true" className="size-4" /></Link></li><li aria-hidden="true"><ChevronRight className="size-4 text-muted-foreground" /></li><li><span className="text-muted-foreground">Account Settings</span></li><li aria-hidden="true"><ChevronRight className="size-4 text-muted-foreground" /></li><li aria-current="page">{title}</li></ol></nav>
+      </header>
+      {tab === "personal" ? <PersonalInformation user={current} onDirtyChange={setDirty} /> : <Security email={current.email} />}
     <AlertDialog open={Boolean(pendingTab)} onOpenChange={open => { if (!open) setPendingTab(null); }}>
       <AlertDialogContent>
         <AlertDialogHeader><AlertDialogTitle>Discard unsaved changes?</AlertDialogTitle><AlertDialogDescription>Your personal information has not been saved. Discard these changes and switch sections?</AlertDialogDescription></AlertDialogHeader>
         <AlertDialogFooter><AlertDialogCancel>Keep Editing</AlertDialogCancel><AlertDialogAction onClick={() => { if (pendingTab) setTab(pendingTab); setPendingTab(null); }}>Discard Changes</AlertDialogAction></AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  </section>;
+    </section>
+  </SettingsLayout>;
 }

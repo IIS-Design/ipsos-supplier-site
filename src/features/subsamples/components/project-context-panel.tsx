@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { Check, X, Minus, ChevronRight } from "lucide-react";
+import { Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { confirmContactNavigation } from "@/features/contacts/use-unsaved-changes";
@@ -34,7 +35,7 @@ export function ProjectContextPanel({
   subsamples,
 }: {
   project: Project;
-  subsample: Subsample;
+  subsample?: Subsample;
   subsamples: Subsample[];
 }) {
   const router = useRouter();
@@ -66,11 +67,9 @@ export function ProjectContextPanel({
         <Select
           onValueChange={(nextSubsampleId) => {
             if (!confirmContactNavigation()) return;
-            router.push(
-              `/projects/${project.id}/subsamples/${nextSubsampleId}/details`,
-            );
+            router.push(nextSubsampleId === "all" ? `/projects/${project.id}/subsamples` : `/projects/${project.id}/subsamples/${nextSubsampleId}/details`);
           }}
-          value={subsample.id}
+          value={subsample?.id ?? "all"}
         >
           <SelectTrigger
             aria-label="Select subsample"
@@ -80,6 +79,7 @@ export function ProjectContextPanel({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="all">View All Subsamples</SelectItem>
             {subsamples.map((item) => (
               <SelectItem className="text-base font-medium" key={item.id} value={item.id}>
                 {item.name}
@@ -88,13 +88,6 @@ export function ProjectContextPanel({
           </SelectContent>
         </Select>
       </div>
-
-      <Link
-        className="block text-sm font-medium text-primary underline-offset-4 hover:underline"
-        href={`/projects/${project.id}/subsamples`}
-      >
-        View All Subsamples
-      </Link>
 
       <dl className="grid grid-cols-2 gap-x-4 gap-y-4 border-t pt-4 text-sm">
         <div className="col-span-2 flex items-center justify-between gap-2">
@@ -109,7 +102,7 @@ export function ProjectContextPanel({
           </dd>
         </div>
         <div>
-          <dt className="font-medium">Survey Event ID</dt>
+          <dt className="font-medium">Project ID</dt>
           <dd className="mt-1 text-muted-foreground">
             {project.surveyEventId}
           </dd>
@@ -118,6 +111,24 @@ export function ProjectContextPanel({
           <dt className="font-medium">Job Book No°</dt>
           <dd className="mt-1 text-muted-foreground">
             {project.jobBookNumber}
+          </dd>
+        </div>
+        <div className="col-span-2">
+          <dt className="font-medium">Device Compatibility</dt>
+          <dd className="mt-2 flex flex-wrap gap-1.5">
+            {([ ["mobile", "Mobile"], ["tablet", "Tablet"], ["desktop", "Desktop"] ] as const).map(([key, label]) => {
+              const supported = project.deviceCompatibility?.[key];
+              const Icon = supported === undefined ? Minus : supported ? Check : X;
+              return <Badge key={key} variant={supported ? "outline" : "secondary"} aria-label={`${label}: ${supported === undefined ? "Not defined" : supported ? "Supported" : "Not supported"}`} className="gap-1"><Icon aria-hidden="true" className="size-3" />{label}<span className="sr-only">{supported === undefined ? " — Not defined" : supported ? " — Supported" : " — Not supported"}</span></Badge>;
+            })}
+          </dd>
+        </div>
+        <div className="col-span-2"><dt className="font-medium">Product Type</dt><dd className="mt-1 wrap-break-word text-muted-foreground">{project.productType || "Not Defined"}</dd></div>
+        <div className="col-span-2"><dt className="font-medium">Research Type</dt><dd className="mt-1 wrap-break-word text-muted-foreground">{project.researchType || "Not Defined"}</dd></div>
+        <div className="col-span-2 min-w-0">
+          <dt className="font-medium">Categories</dt>
+          <dd className="mt-2 space-y-3">
+            {project.categoryPaths?.length ? project.categoryPaths.map((path, pathIndex) => <ol key={pathIndex} aria-label={`Category path ${pathIndex + 1}`} className="flex flex-wrap items-center gap-x-1 gap-y-1">{path.map((level, index) => <Fragment key={index}><li className={`min-w-0 max-w-full wrap-break-word ${index === path.length - 1 ? "text-foreground" : "text-muted-foreground"}`}>{level}</li>{index < path.length - 1 && <li aria-hidden="true"><ChevronRight className="size-3.5 text-muted-foreground" /></li>}</Fragment>)}</ol>) : <p className="text-muted-foreground">Not Defined</p>}
           </dd>
         </div>
       </dl>

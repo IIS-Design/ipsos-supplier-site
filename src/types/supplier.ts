@@ -6,26 +6,21 @@ export type SupplierSettingSection =
   | "serverToServer"
   | "security";
 
-export type SupplierContactRole =
-  | "projectManager"
-  | "salesContact"
-  | "financeContact"
-  | "helpDesk";
-
 export type SupplierContact = {
   id: string;
   name: string;
   email: string;
+  userId?: string;
 };
 
-export type SupplierContacts = Record<SupplierContactRole, SupplierContact[]>;
+export type SupplierContacts = SupplierContact[];
 
 /**
  * Supplier-level defaults. Section payloads remain open until their business
  * fields are defined by the product contract.
  */
 export type SupplierSettings = Partial<
-  Record<SupplierSettingSection, Record<string, unknown>>
+  Record<Exclude<SupplierSettingSection, "contacts">, Record<string, unknown>>
 > & { contacts?: SupplierContacts };
 
 export type Supplier = {

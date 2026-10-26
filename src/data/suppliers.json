@@ -3,36 +3,28 @@
     "id": "supplier-northstar",
     "name": "Northstar Research Supply",
     "settings": {
-      "contacts": {
-        "projectManager": [
-          {
-            "id": "contact-pm-001",
-            "name": "Sarah Billingson",
-            "email": "sarah.billingson@supplier.com"
-          }
-        ],
-        "salesContact": [
-          {
-            "id": "contact-sales-001",
-            "name": "Alex Morgan",
-            "email": "alex.morgan@supplier.com"
-          }
-        ],
-        "financeContact": [
-          {
-            "id": "contact-finance-001",
-            "name": "Taylor Chen",
-            "email": "taylor.chen@supplier.com"
-          }
-        ],
-        "helpDesk": [
-          {
-            "id": "contact-help-001",
-            "name": "Supplier Help Desk",
-            "email": "helpdesk@supplier.com"
-          }
-        ]
-      },
+      "contacts": [
+        {
+          "id": "contact-pm-001",
+          "name": "Sarah Billingson",
+          "email": "sarah.billingson@supplier.com"
+        },
+        {
+          "id": "contact-sales-001",
+          "name": "Alex Morgan",
+          "email": "alex.morgan@supplier.com"
+        },
+        {
+          "id": "contact-finance-001",
+          "name": "Taylor Chen",
+          "email": "taylor.chen@supplier.com"
+        },
+        {
+          "id": "contact-help-001",
+          "name": "Supplier Help Desk",
+          "email": "helpdesk@supplier.com"
+        }
+      ],
       "redirects": {},
       "serverToServer": {},
       "security": {}

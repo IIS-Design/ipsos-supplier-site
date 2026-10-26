@@ -35,7 +35,7 @@ export function SubsampleWorkspaceShell({
 }: {
   children: ReactNode;
   project: Project;
-  subsample: Subsample;
+  subsample?: Subsample;
   subsamples: Subsample[];
 }) {
   return (
@@ -69,7 +69,7 @@ export function SubsampleWorkspaceShell({
             <ChevronRight />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbPage>{subsample.name}</BreadcrumbPage>
+            <BreadcrumbPage>{subsample?.name ?? "All Subsamples"}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -82,9 +82,10 @@ export function SubsampleWorkspaceShell({
         />
 
         <section
-          aria-labelledby="subsample-name-heading"
+          aria-labelledby={subsample ? "subsample-name-heading" : "all-subsamples-heading"}
           className="min-w-0 border-t pt-5 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0"
         >
+          {subsample ? <>
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">
@@ -118,6 +119,7 @@ export function SubsampleWorkspaceShell({
 
           <WorkspaceTabs projectId={project.id} subsampleId={subsample.id} />
           <div className="mt-6">{children}</div>
+          </> : children}
         </section>
       </div>
     </div>

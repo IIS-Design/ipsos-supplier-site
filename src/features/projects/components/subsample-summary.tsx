@@ -21,12 +21,12 @@ function formatDate(date: string): string {
   }).format(new Date(`${date}T00:00:00`));
 }
 
-export function SubsampleSummary({ subsample }: { subsample: Subsample }) {
+export function SubsampleSummary({ subsample, wholeRowLink = false }: { subsample: Subsample; wholeRowLink?: boolean }) {
   return (
     <li className="relative py-1.5 before:absolute before:-left-4 before:top-4 before:w-3 before:border-t before:border-border">
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
         <Link
-          className="min-w-0 text-base font-medium leading-5 text-foreground underline-offset-4 hover:text-primary hover:underline"
+          className={`min-w-0 text-base font-medium leading-5 text-foreground underline-offset-4 hover:text-primary hover:underline ${wholeRowLink ? "after:absolute after:inset-0 after:rounded-sm after:content-[''] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-ring" : ""}`}
           href={`/projects/${subsample.projectId}/subsamples/${subsample.id}`}
         >
           {subsample.name}

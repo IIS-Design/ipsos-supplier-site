@@ -12,7 +12,8 @@ keyboard navigation and dismissal; mobile account/sign-out targets are at least 
 
 ## Personal Information
 
-Line-style tabs expose Personal Information and Security. The personal form uses
+The shared Supplier Settings layout exposes Personal Information and Security through
+a left navigation column on desktop and a section selector on mobile. There are no top tabs. The personal form uses
 RHF/Zod and shared Input, FieldError and Button patterns. First/last names are trimmed,
 required and limited to 100 characters. Email is trimmed/lowercased, validated and
 limited to 254 characters. Save is disabled when unchanged/submitting; Cancel restores
@@ -20,7 +21,7 @@ the last saved values and clears feedback. Saving disables fields and actions, a
 progress, shows success/error feedback and retains failed edits.
 
 The shared unsaved-changes guard covers links, reload/unload, browser traversal and
-button-driven navigation/sign-out. Switching tabs uses the existing Radix AlertDialog to confirm discarding edits.
+button-driven navigation/sign-out. Switching Account sections uses the existing Radix AlertDialog to confirm discarding edits.
 Cancel or a successful save clears dirty state. Links/sign-out/traversal use the same browser-confirm guard as Contacts, with
 account-specific wording; section switching uses the shared in-app confirmation.
 
@@ -57,3 +58,14 @@ reset-link/preview invalidation. Browser checks cover menu navigation, form stat
 header synchronization and the reset-email handoff. Native confirmation automation
 was interrupted by an in-app browser dialog/CDP timeout; section switching now uses
 the shared AlertDialog and needs a final manual keyboard/mobile check.
+
+## Shared Settings layout
+
+Account and Supplier Settings use components/portal/settings-layout.tsx and
+settings-section-navigation.tsx: 260px desktop navigation at 1024px+, matching icons,
+muted selected state, spacing, divider and max-w-3xl content. Account items use User
+and Shield icons. Smaller screens use the same shared Select. Content uses the
+active section title and Home → Account Settings → section breadcrumb. Sections
+remain local state at /account (Personal Information initially); no new routes or API
+changes. Existing Save/Cancel, validation, feedback, recovery and draft confirmation
+are unchanged. Supplier navigation retains its existing routes and leave guard.

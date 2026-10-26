@@ -47,11 +47,9 @@
     "settingsOverrides": {
       "contacts": {
         "mode": "override",
-        "value": {
-          "helpDesk": [
-            "contact-help-001"
-          ]
-        }
+        "value": [
+          "contact-help-001"
+        ]
       },
       "redirects": {
         "mode": "inherit"

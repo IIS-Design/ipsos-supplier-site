@@ -53,17 +53,17 @@ optional quotaBreakdown and settingsOverrides.
 
 ## Contact inheritance
 
-`SupplierContact = { id, name, email }`.
-`SupplierContacts = Record<SupplierContactRole, SupplierContact[]>`.
-Roles: projectManager, salesContact, financeContact, helpDesk.
+`SupplierContact = { id, name, email, userId? }`.
+`SupplierContacts = SupplierContact[]`: one list of portal-user snapshots and
+standalone emails; there are no first-class contact roles.
 
 Current hierarchy: **Supplier defaults → Subsample**. No Project intermediary.
 
 - `SettingOverride<T> = { mode: "inherit" } | { mode: "override", value: T }`.
-- `SubsampleContactOverrides` is partial role → contact-ID array, not contact objects.
+- `SubsampleContactOverrides` is a flat contact-ID array, not contact objects.
 - Missing or inherit Contacts resolves latest saved Supplier contacts when read.
-- Override resolves role-scoped known IDs from supplier contact options. Missing/
-  empty role means no custom contacts, not fallback.
+- Override resolves known IDs from the supplier contact catalog. An empty array
+  means no custom contacts, not fallback.
 - Editing a default creates/reuses immutable identities; old options are retained
   so existing custom selections do not change or become unresolvable.
 - Settings save is Admin-only; Subsample save accepts either role for its supplier
@@ -118,3 +118,8 @@ before changing contracts or seed data.
 
 Project child counts span 1, 2, 3, 5 and 12. Synthetic metrics include zeros, large
 counts and incidence boundaries. See [prototype-status.md](prototype-status.md).
+
+Project also carries optional deviceCompatibility (mobile/tablet/desktop booleans),
+productType, researchType and categoryPaths (an array of non-empty label paths).
+These are Project-owned attributes shown in the shared list/overview sidebar. The
+UI label Project ID displays surveyEventId; internal branded project.id is unchanged.

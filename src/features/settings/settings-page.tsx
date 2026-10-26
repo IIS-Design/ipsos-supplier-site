@@ -9,7 +9,7 @@ import { emptyContacts } from "@/features/contacts/contact-model";
 import { settingsLabels, type SettingsSection } from "./settings-model";
 import { SettingsForm } from "./components/settings-form";
 import { SettingsUsers } from "./components/settings-users";
-import { OrganizationContacts } from "./components/organization-contacts";
+import { DefaultContacts } from "./components/default-contacts";
 
 export async function SettingsPage({ section }: { section: SettingsSection }) {
   const actor = await requireAdministrator();
@@ -25,7 +25,7 @@ export async function SettingsPage({ section }: { section: SettingsSection }) {
           <SettingsUsers users={await getUsers(actor.supplierId)} actorId={actor.id} />
         </section>
         <div className="max-w-3xl border-t pt-6">
-          <OrganizationContacts embedded supplierName={supplier.name} contacts={supplier.settings.contacts ?? emptyContacts()} />
+          <DefaultContacts users={await getUsers(actor.supplierId)} contacts={supplier.settings.contacts ?? emptyContacts()} />
         </div>
       </>
     ) : (

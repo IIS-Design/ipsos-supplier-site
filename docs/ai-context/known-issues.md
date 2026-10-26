@@ -26,7 +26,6 @@ Severity reflects operational impact, not implementation complexity.
 | A11Y-01 | High     | Cost selection/expansion names repeat the Project name for different Subsamples; expansion state is on the row rather than its button, with no detail-region association. | `src/features/costs/components/costs-workspace.tsx`                      |
 | A11Y-02 | Medium   | Report validation renders alerts without consistent `aria-invalid`/error associations or first-invalid-field focus.                                                       | `src/features/reports/components/report-create-form.tsx`                 |
 | A11Y-03 | Medium   | Costs date filter labels remain screen-reader-only; Projects uses an accessible named Field end date range trigger.                                                                       | Projects explorer and Costs workspace                                    |
-| A11Y-04 | Medium   | Organization Contacts Save/Cancel removes focused controls without restoring focus to Edit Defaults.                                                                      | `src/features/settings/components/organization-contacts.tsx`             |
 | A11Y-05 | Medium   | Route-driven Subsample tabs and Costs view tabs do not have corresponding tabpanel relationships. Reports activity does use TabsContent.                                  | `src/features/subsamples/components/workspace-tabs.tsx`, Costs workspace |
 
 No formal screen-reader/contrast/WCAG certification has been performed. Existing
@@ -79,6 +78,5 @@ Costs 768px filter overflow was corrected; recovery and contact saves are implem
 Settings has six implemented UI sections with process-local saves and user actions.
 No invitation acceptance/SMTP, external key rotation, endpoint execution, required-field
 enforcement or non-contact Subsample inheritance is implemented. The Time Zone list
-is curated. See settings.md. Existing Organization Contacts focus-restoration issue
-remains. A dev restart may be needed after repository interface changes (fresh builds
+is curated. See settings.md. The replacement Default Contacts editor keeps its Save/Cancel controls mounted. A dev restart may be needed after repository interface changes (fresh builds
 work); the existing demo process was left running to preserve its local data.

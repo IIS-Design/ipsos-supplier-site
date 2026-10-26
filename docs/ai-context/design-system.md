@@ -329,7 +329,7 @@ are unchanged; the pending fixture count is now six.
 mobile hamburger. Desktop Sign Out is inside the dropdown; mobile Account Settings
 follows Settings (or Docs for Users) with the same navigation styling. A single
 separator divides Account Settings from the icon Sign Out action at the bottom.
-Line tabs provide Personal Information (first/last name, email; Save/Cancel, validation,
+Shared Settings side navigation/mobile selector provides Personal Information (first/last name, email; Save/Cancel, validation,
 unsaved-change protection and async feedback) and Security (masked Password, Change
 Password via the existing recovery-email flow). PUT /api/account only edits the
 session actor, rejects protected fields and duplicate emails, and refreshes header
@@ -406,8 +406,59 @@ view and row expansion. It is visible only while a filter is active.
 
 Six icon navigation items follow the Settings reference screens, with a 260px
 left column/divider at 1024px+ and a shared section Select below. Content uses title/
-breadcrumbs, reference field groups and existing flat controls. Organization Contacts
+breadcrumbs, reference field groups and existing flat controls. Default Contacts
 sits below User Management in Users & Permissions with its original editor/inheritance behavior. Users
 uses a responsive shared table, dropdown actions and Radix invite/edit dialogs; forms
 reuse RHF/Zod, FieldError, async states and draft protection. Blue theme/two domain
 roles remain consistent with the portal. See settings.md for reference deviations.
+
+Default Contacts uses one shared contact-picker Popover: searchable portal-user
+choices, valid email creation, checkbox multi-selection and removable chips. Keyboard
+users can Tab through choices, Space to select, Enter to add an email, and Escape to
+close. The same picker renders Subsample custom choices without email creation.
+
+Account Settings shares the Supplier Settings shell and section navigation: 260px
+left column/right divider at 1024px+, shared mobile Select below, User/Shield icons,
+matching selected states and section title/breadcrumbs. Both use max-w-3xl forms.
+Account has no top tabs; its existing discard confirmation guards section changes.
+
+## Shared Project/Subsample workspace
+
+All Subsamples and individual Subsample pages reuse SubsampleWorkspaceShell and
+ProjectContextPanel. Project name/count, status and business IDs remain visible in
+the left column at 1024px+ (stacked on smaller screens). One dropdown contains View
+All Subsamples first, then every project Subsample; the separate View All link is
+removed. List mode shows Subsamples for [Project], a filtered Available Subsample(s) badge
+and cards with structured metadata, with the whole card linking to its Overview. Individual mode retains the
+existing heading, status, tabs and content. Dropdown navigation preserves the shared
+unsaved-changes guard. Routes, supplier scoping and Project redirects are unchanged.
+
+## Complete Project context
+
+The shared ProjectContextPanel now includes Project Status, Project ID (external
+surveyEventId), Job Book No°, Device Compatibility, Product Type, Research Type and
+all category paths. Device chips use check/X for supported/unsupported and a minus
+for unknown, with explicit accessible labels. Category paths wrap and use chevrons.
+Both All Subsamples and individual views receive the same Project data/sidebar.
+Project metadata fields are optional; missing values show Not Defined rather than
+fabricated values. InnoTest metadata and Job Book 171213254 follow the reference,
+including its two displayed category paths. Counts stay derived from child records:
+InnoTest currently has two Subsamples; the reference’s four is not hardcoded.
+
+## All Subsamples cards and filters
+
+Only the right-hand All Subsamples content now uses one bordered, fully clickable
+card per child; the Project sidebar/dropdown and breadcrumbs remain unchanged.
+Header shows Subsamples for [Project] and a filtered Available Subsample(s) badge.
+Name/ID search, supported status (Live/Pending/Canceled), dynamic language/router
+choices and shared DateRangePicker combine with AND. Date filtering uses inclusive
+Field End Date bounds; default is unbounded, matching Projects. Missing routers
+have a Not assigned filter. Clear search and Clear all filters restore results.
+Repository order is retained; local filters reset on navigation/reload and do not
+alter fixtures or the sidebar total. Cards show router plus ID/status/language/
+visitors/completes/incidence/LOI/start/end dates; details use a container-responsive
+grid, matching badge colors and existing date format. Names and long IDs wrap.
+A dynamically loaded card view uses card skeletons; a failed child-list read shows
+an inline retry action with Project metadata retained. Unknown Project/auth failures
+still use existing route boundaries. `tests/subsample-list-filters.test.ts` covers
+combined criteria, name/ID search, stable order and inclusive field-end boundaries.

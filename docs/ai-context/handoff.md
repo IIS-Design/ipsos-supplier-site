@@ -100,7 +100,7 @@ Global mock state keys:
 
 - `__ipsosSupplierMockReports`, `__ipsosSupplierMockCosts` — mutated lists.
 - `__ipsosAccountUsers` — saved self-service/managed users and statuses; `__ipsosReportSequences` — report ID reservations.
-- `__ipsosSupplierContacts` — cloned suppliers/Subsamples and role contact options.
+- `__ipsosSupplierContacts` — cloned suppliers/Subsamples and the historical contact catalog.
 - `__ipsosMockRecovery` — recovery store instance with tokens/inboxes/password hashes.
   Navigation/reload/HMR may retain state; restart resets all process-local changes.
   No API writes JSON. Newly added modules/interfaces have previously required a clean
@@ -125,7 +125,7 @@ Global mock state keys:
 - Explicit supplierId is the ownership boundary. Single-supplier seed data is not a
   reason to omit checks. Status unions and type locations: [domain-model.md](domain-model.md).
 - Contact inheritance is **Supplier → Subsample**, no intermediate Project layer.
-  Missing or inherit mode resolves current defaults. Override mode stores role ID arrays;
+  Missing or inherit mode resolves current defaults. Override mode stores a flat contact-ID array;
   empty means no contacts, never fallback. Replacing defaults preserves old immutable
   options so custom values remain independent. Save commits mode and selections;
   Cancel restores the saved draft baseline. See [contact-inheritance.md](contact-inheritance.md).
@@ -155,7 +155,7 @@ Global mock state keys:
 - Success: Reports passes returned ID via `created` query for verified confirmation;
   Costs announces count/outcome. In-dialog decision errors retain selections.
 - Draft protection is shared `useUnsavedChanges` (still under `features/contacts`),
-  used by Contacts, Organization Contacts and report options. Supported custom
+  used by Contacts, Default Contacts and report options. Supported custom
   navigation/sign-out dispatches `contacts:before-navigation`; successful report
   submission releases the guard immediately. Native confirms and popstate are not
   a fully tested router blocker.
@@ -431,7 +431,7 @@ are unchanged; the pending fixture count is now six.
 mobile hamburger. Desktop Sign Out is inside the dropdown; mobile Account Settings
 follows Settings (or Docs for Users) with the same navigation styling. A single
 separator divides Account Settings from the icon Sign Out action at the bottom.
-Line tabs provide Personal Information (first/last name, email; Save/Cancel, validation,
+Shared Settings side navigation/mobile selector provides Personal Information (first/last name, email; Save/Cancel, validation,
 unsaved-change protection and async feedback) and Security (masked Password, Change
 Password via the existing recovery-email flow). PUT /api/account only edits the
 session actor, rejects protected fields and duplicate emails, and refreshes header
@@ -446,4 +446,51 @@ All six reference sections are implemented behind the existing Admin guard. See
 reference deviations and verification. `__ipsosSupplierPreferences` stores per-supplier
 preferences; users reuse `__ipsosAccountUsers`. Invited/inactive users cannot sign in
 or use an existing session. Integration keys are synthetic; Subsample Configuration
-and non-contact inheritance remain unimplemented. Current complete suite: 30 TAP results.
+and non-contact inheritance remain unimplemented. Current complete suite: 35 TAP results.
+
+Default Contacts replaces contact role groups. SupplierContacts is now an array,
+SubsampleContactOverrides a flat ID array. Seed and HMR migration preserves IDs and
+saved custom choices. DefaultContacts lists active portal users plus standalone email
+creation; the adapter validates linked users and retains immutable historical contact
+snapshots. See contact-inheritance.md before changing contact schemas or persistence.
+
+## Shared Project/Subsample workspace
+
+All Subsamples and individual Subsample pages reuse SubsampleWorkspaceShell and
+ProjectContextPanel. Project name/count, status and business IDs remain visible in
+the left column at 1024px+ (stacked on smaller screens). One dropdown contains View
+All Subsamples first, then every project Subsample; the separate View All link is
+removed. List mode shows Subsamples for [Project], a filtered Available Subsample(s) badge
+and cards with structured metadata, with the whole card linking to its Overview. Individual mode retains the
+existing heading, status, tabs and content. Dropdown navigation preserves the shared
+unsaved-changes guard. Routes, supplier scoping and Project redirects are unchanged.
+
+## Complete Project context
+
+The shared ProjectContextPanel now includes Project Status, Project ID (external
+surveyEventId), Job Book No°, Device Compatibility, Product Type, Research Type and
+all category paths. Device chips use check/X for supported/unsupported and a minus
+for unknown, with explicit accessible labels. Category paths wrap and use chevrons.
+Both All Subsamples and individual views receive the same Project data/sidebar.
+Project metadata fields are optional; missing values show Not Defined rather than
+fabricated values. InnoTest metadata and Job Book 171213254 follow the reference,
+including its two displayed category paths. Counts stay derived from child records:
+InnoTest currently has two Subsamples; the reference’s four is not hardcoded.
+
+## All Subsamples cards and filters
+
+Only the right-hand All Subsamples content now uses one bordered, fully clickable
+card per child; the Project sidebar/dropdown and breadcrumbs remain unchanged.
+Header shows Subsamples for [Project] and a filtered Available Subsample(s) badge.
+Name/ID search, supported status (Live/Pending/Canceled), dynamic language/router
+choices and shared DateRangePicker combine with AND. Date filtering uses inclusive
+Field End Date bounds; default is unbounded, matching Projects. Missing routers
+have a Not assigned filter. Clear search and Clear all filters restore results.
+Repository order is retained; local filters reset on navigation/reload and do not
+alter fixtures or the sidebar total. Cards show router plus ID/status/language/
+visitors/completes/incidence/LOI/start/end dates; details use a container-responsive
+grid, matching badge colors and existing date format. Names and long IDs wrap.
+A dynamically loaded card view uses card skeletons; a failed child-list read shows
+an inline retry action with Project metadata retained. Unknown Project/auth failures
+still use existing route boundaries. `tests/subsample-list-filters.test.ts` covers
+combined criteria, name/ID search, stable order and inclusive field-end boundaries.

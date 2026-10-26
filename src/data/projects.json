@@ -5,7 +5,26 @@
     "surveyEventId": "1046192",
     "name": "InnoTest 1046192",
     "status": "live",
-    "jobBookNumber": "2600097701"
+    "jobBookNumber": "171213254",
+    "deviceCompatibility": {
+      "mobile": false,
+      "tablet": true,
+      "desktop": true
+    },
+    "productType": "Inno Test",
+    "researchType": "Not Defined",
+    "categoryPaths": [
+      [
+        "Health & Personal Care",
+        "Health Care",
+        "Pain Relief Rubs"
+      ],
+      [
+        "Health & Personal Care",
+        "Health Care",
+        "Pain Relief Rubs"
+      ]
+    ]
   },
   {
     "id": "project-1008301",

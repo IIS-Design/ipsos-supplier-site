@@ -7,7 +7,8 @@ import type { User } from "@/types/user";
 import { randomUUID } from "node:crypto";
 import {
   contactOverrideSchema,
-  contactRoles,
+  migrateContacts,
+  contactSelections,
   contactsSchema,
   emptyContacts,
 } from "@/features/contacts/contact-model";
@@ -78,6 +79,14 @@ const contactState = (contactGlobal.__ipsosSupplierContacts ??= {
   ),
 });
 
+// Flatten older process-local groups while preserving IDs and explicit overrides.
+for (const supplier of contactState.suppliers) supplier.settings.contacts = migrateContacts(supplier.settings.contacts);
+for (const key of Object.keys(contactState.options)) contactState.options[key] = migrateContacts(contactState.options[key]);
+for (const subsample of contactState.subsamples) {
+  const setting = subsample.settingsOverrides?.contacts;
+  if (setting?.mode === "override") setting.value = contactSelections(setting.value);
+}
+
 // HMR keeps process-local edits. Add newly seeded Subsamples without discarding
 // saved contact choices when the fixture catalogue grows during development.
 if (process.env.NODE_ENV === "development") {
@@ -92,8 +101,8 @@ function requireContactActor(
   actorId: UserId,
   adminOnly = false,
 ) {
-  const actor = users.find(
-    (user) => user.id === actorId && user.supplierId === supplierId,
+  const actor = userRecords.find(
+    (user) => user.id === actorId && user.supplierId === supplierId && (user.status ?? "active") === "active",
   );
   if (!actor || (adminOnly && actor.role !== "admin"))
     throw new Error("You do not have permission to update these contacts.");
@@ -122,20 +131,17 @@ const supplierRepository: SupplierRepository = {
     const options = structuredClone(
       contactState.options[supplierId] ?? emptyContacts(),
     );
-    const next = emptyContacts();
-    for (const { key } of contactRoles) {
-      next[key] = contacts[key].map((contact) => {
-        const existing = options[key].find(
-          (item) =>
-            item.name === contact.name &&
-            item.email.toLowerCase() === contact.email.toLowerCase(),
-        );
-        if (existing) return existing;
-        const created = { ...contact, id: `contact-${randomUUID()}` };
-        options[key].push(created);
-        return created;
-      });
-    }
+    const next = contacts.map(contact => {
+      const linkedUser = contact.userId ? userRecords.find(user => user.id === contact.userId && user.supplierId === supplierId) : undefined;
+      if (contact.userId && !linkedUser) throw new Error("The selected user is unavailable.");
+      const canonical = linkedUser ? { ...contact, name: `${linkedUser.firstName} ${linkedUser.lastName}`, email: linkedUser.email } : contact;
+      const existing = options.find(item => item.name === canonical.name && item.email.toLowerCase() === canonical.email.toLowerCase() && item.userId === canonical.userId);
+      if (existing) return existing;
+      const created = { ...canonical, id: `contact-${randomUUID()}` };
+      options.push(created);
+      return created;
+    });
+    contactsSchema.parse(next);
     supplier.settings = { ...supplier.settings, contacts: next };
     contactState.options[supplierId] = options;
     return structuredClone(next);
@@ -249,18 +255,11 @@ const subsampleRepository: SubsampleRepository = {
     if (!subsample) throw new Error("Subsample not found.");
     if (setting.mode === "override") {
       const options = contactState.options[supplierId] ?? emptyContacts();
-      for (const { key } of contactRoles) {
-        if (
-          setting.value[key].some(
-            (id) => !options[key].some((contact) => contact.id === id),
-          )
-        ) {
-          throw new Error(
-            "One or more contacts are unavailable for this role. Reload and try again.",
-          );
-        }
+      if (setting.value.some(id => !options.some(contact => contact.id === id))) {
+        throw new Error("One or more contacts are unavailable. Reload and try again.");
       }
     }
+
     subsample.settingsOverrides = {
       ...subsample.settingsOverrides,
       contacts: setting,

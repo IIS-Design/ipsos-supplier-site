@@ -16,7 +16,7 @@ references. Existing primary navigation, blue theme and 40px controls are retain
 - `/settings`: Organization company name and time zone only.
 - `/settings/users`: User Management search/status filter, responsive table,
   invite/edit dialogs, reset-password and deactivate/activate row actions, followed
-  by Organization Contacts with unchanged Supplier → Subsample inheritance.
+  by Default Contacts with unchanged Supplier → Subsample inheritance.
 - `/settings/survey-configuration`: five required-field choices.
 - `/settings/redirects`: four Survey Outcomes and four Other Outcomes URLs.
 - `/settings/server-to-server`: seven endpoints, four routing choices, custom
@@ -25,8 +25,8 @@ references. Existing primary navigation, blue theme and 40px controls are retain
   of a staged synthetic key. Save commits; Cancel restores the saved values.
 - `/settings/organization` redirects to `/settings`; unknown sections return 404.
 
-Organization Contacts appears only below User Management at `/settings/users`.
-Subsample contact-management links target `/settings/users#organization-contacts-heading`.
+Default Contacts appears only below User Management at `/settings/users`.
+Subsample contact-management links target `/settings/users#default-contacts-heading`.
 There is no separate Contacts navigation entry; contact saves revalidate the Users page. Account Settings stays at `/account`.
 Roles remain Administrator (`admin`) and User (`user`), replacing screenshot-only
 Project Manager/Finance roles. A small curated IANA time-zone list supports the demo.
@@ -74,7 +74,7 @@ Supplier → Subsample inheritance. No Project inheritance layer is introduced.
 
 Tests in `tests/settings.test.ts` cover schema boundaries, section isolation, cloned
 reads, cross-supplier/admin authorization, duplicates, statuses and self-lockout.
-All 30 existing/new TAP results, TypeScript, ESLint and webpack build passed. Fresh
+All 33 existing/new TAP results, TypeScript, ESLint and webpack build passed. Fresh
 production browser checks verified Organization save, invite validation, invalid URL
 feedback, routing controls and the five checkbox options. Development browser checks
 at 390px verified mobile section selection and no horizontal overflow. A running dev
@@ -87,3 +87,16 @@ used to verify saves without resetting the existing demo’s process-local data.
 Settings retain the local implementation under the deployment base path `/supplier`.
 Settings API requests, organization and subsample contact saves, and user email
 preview links include that prefix. Next.js links apply it automatically.
+
+## Default Contacts simplification
+
+Users & Permissions contains only User Management and Default Contacts. The latter
+replaces role-based contact rows with one shared user/email multi-select and removable
+chips. Supplier defaults, immutable saved identities, Subsample overrides, validation,
+draft protection and process-local storage remain operational; see contact-inheritance.md
+for payload migration and source validation. The old contact component was replaced
+by components/default-contacts.tsx and the shared Contacts picker.
+
+The Supplier Settings shell/navigation are shared with Account Settings through
+components/portal/settings-layout.tsx and settings-section-navigation.tsx. Supplier
+sections retain URL-based navigation; Account preserves its local section state.

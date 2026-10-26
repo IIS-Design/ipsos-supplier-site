@@ -1,3 +1,4 @@
+import { contactsSchema, contactOverrideSchema } from "@/features/contacts/contact-model";
 import { z } from "zod";
 import type {
   CostId,
@@ -25,22 +26,7 @@ const costIdSchema = id<CostId>();
 const surveyEventIdSchema = id<SurveyEventId>();
 const jobBookNumberSchema = id<JobBookNumber>();
 
-const contactSchema = z
-  .object({
-    id: z.string().min(1),
-    name: z.string().min(1),
-    email: z.email(),
-  })
-  .strict();
-
-const supplierContactsSchema = z
-  .object({
-    projectManager: z.array(contactSchema),
-    salesContact: z.array(contactSchema),
-    financeContact: z.array(contactSchema),
-    helpDesk: z.array(contactSchema),
-  })
-  .strict();
+const supplierContactsSchema = contactsSchema;
 
 const settingsSchema = z
   .object({
@@ -108,6 +94,10 @@ export const projectSchema = z
     name: z.string().min(1),
     status: z.enum(["live", "pending", "closed", "canceled"]),
     jobBookNumber: jobBookNumberSchema,
+    deviceCompatibility: z.object({ mobile: z.boolean(), tablet: z.boolean(), desktop: z.boolean() }).strict().optional(),
+    productType: z.string().trim().min(1).optional(),
+    researchType: z.string().trim().min(1).optional(),
+    categoryPaths: z.array(z.array(z.string().trim().min(1)).min(1)).optional(),
   })
   .strict();
 
@@ -145,7 +135,7 @@ export const subsampleSchema = z
       .optional(),
     settingsOverrides: z
       .object({
-        contacts: settingOverrideSchema.optional(),
+        contacts: contactOverrideSchema.optional(),
         redirects: settingOverrideSchema.optional(),
         serverToServer: settingOverrideSchema.optional(),
         security: settingOverrideSchema.optional(),

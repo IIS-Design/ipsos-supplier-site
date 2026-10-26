@@ -36,7 +36,7 @@ Implementation: `src/lib/auth/session.ts`.
 - `requireUser()` redirects unauthenticated portal access to `/login`.
   `requireAdministrator()` redirects non-admin users to `/projects`.
 - Both roles read operational pages, create reports and save owned Subsample Contacts.
-  Only Admin views Settings, saves Organization Contacts and decides Costs. APIs
+  Only Admin views Settings, saves Default Contacts and decides Costs. APIs
   independently validate access; hiding navigation is not the security boundary.
 - Sign-out DELETE clears this browser's cookie, then client navigates to Login.
   No server-side session registry or global invalidation. Expiry/failed-sign-out UX
@@ -158,7 +158,7 @@ semantics and existing input associations), including “Enter a valid email add
 mobile hamburger. Desktop Sign Out is inside the dropdown; mobile Account Settings
 follows Settings (or Docs for Users) with the same navigation styling. A single
 separator divides Account Settings from the icon Sign Out action at the bottom.
-Line tabs provide Personal Information (first/last name, email; Save/Cancel, validation,
+Shared Settings side navigation/mobile selector provides Personal Information (first/last name, email; Save/Cancel, validation,
 unsaved-change protection and async feedback) and Security (masked Password, Change
 Password via the existing recovery-email flow). PUT /api/account only edits the
 session actor, rejects protected fields and duplicate emails, and refreshes header

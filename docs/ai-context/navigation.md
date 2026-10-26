@@ -40,12 +40,12 @@ Use `P = /projects/[projectId]` and `S = P/subsamples/[subsampleId]` below.
 | `/projects`        | Both roles | Explorer plus switchable Costs/Reports Activity panel              |
 | `/account` | Both roles | Personal Information and Security; self account settings |
 | `P`                | Both roles | Redirect to `P/subsamples`                                               |
-| `P/subsamples`     | Both roles | Available Subsample list/count and breadcrumbs; no local filter controls |
+| `P/subsamples`     | Both roles | Cards, filtered count, search/status/language/router/date filters; shared Project sidebar |
 | `S`                | Both roles | Redirect to `S/details`                                                  |
 | `S/details`        | Both roles | Subsample metrics, attributes, saved custom-setting summary              |
 | `S/field-progress` | Both roles | Metrics and quota table/empty state                                      |
 | `S/costs`          | Both roles | Directly scoped informational cost summaries                             |
-| `S/contacts`       | Both roles | Saved inherited/custom contacts; Admin link to Organization Contacts     |
+| `S/contacts`       | Both roles | Saved inherited/custom contacts; Admin link to Default Contacts     |
 | `S/configuration`  | Both roles | Placeholder subsection content and Return to Subsample Details           |
 | `/reports`         | Both roles | History/Queue, creation links, activity filters                          |
 | `/reports/create`  | Both roles | Creation form for one of three report types                              |
@@ -69,9 +69,10 @@ Use `P = /projects/[projectId]` and `S = P/subsamples/[subsampleId]` below.
 
 - Projects groups expand to show Subsamples; selecting a Subsample enters Details.
   Landing exposes Live and Pending only, despite Closed/Canceled domain records.
-- Shared Subsample shell keeps Project context, business IDs, sibling selector,
-  View All Subsamples, breadcrumbs and section tabs. Sibling selection always
-  navigates to Details, not the currently active section.
+- Shared workspace shell keeps Project context and business IDs for both All
+  Subsamples and individual views. One dropdown starts with View All Subsamples,
+  followed by every sibling. Selecting a sibling opens Details; selecting View All
+  opens the list. Individual views retain breadcrumbs and section tabs.
 - Breadcrumb Home and Projects both target `/projects`. Project breadcrumb targets
   `P`, which redirects to All Subsamples.
 - Subsample Contacts/Settings/report drafts warn on supported leave paths. Guarded
@@ -134,7 +135,7 @@ Open Reset Password Email. See prototype-messaging.md for the action matrix.
 mobile hamburger. Desktop Sign Out is inside the dropdown; mobile Account Settings
 follows Settings (or Docs for Users) with the same navigation styling. A single
 separator divides Account Settings from the icon Sign Out action at the bottom.
-Line tabs provide Personal Information (first/last name, email; Save/Cancel, validation,
+Shared Settings side navigation/mobile selector provides Personal Information (first/last name, email; Save/Cancel, validation,
 unsaved-change protection and async feedback) and Security (masked Password, Change
 Password via the existing recovery-email flow). PUT /api/account only edits the
 session actor, rejects protected fields and duplicate emails, and refreshes header

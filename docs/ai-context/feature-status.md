@@ -17,7 +17,7 @@ production integration exists. Parent statuses include their missing subareas.
 | Projects area                                  | Partial     | Functional landing/list; limited status access and comparison tools          |
 | Projects landing                               | Complete    | Live/Pending, filters, 10/20/50 pagination, bulk expansion, horizontal Activity      |
 | Project context entry                          | Complete    | Redirects to existing All Subsamples list; no standalone overview            |
-| All Subsamples                                 | Partial     | List, count and navigation; no dedicated search/filter controls              |
+| All Subsamples                                 | Complete    | Shared Project sidebar, clickable cards and combined search/status/language/router/date filters              |
 | Subsample Workspace                            | Partial     | Shared context and four implemented sections; Configuration placeholders     |
 | Details                                        | Complete    | Attributes, metrics, configuration-mode indicators from saved state          |
 | Field Progress                                 | Complete    | Fixture metrics, quota table and no-quota state                              |
@@ -39,7 +39,7 @@ production integration exists. Parent statuses include their missing subareas.
 | Cost invoicing / allocations                   | Not Started | No invoice workflow or Project-to-Subsample allocation                       |
 | Account Settings (/account) | Complete | Both roles: self profile Save/Cancel, unsaved protection, Security reset-email action; process-local storage |
 | Settings area                                  | Partial     | Six reference sections; process-local saves/actions; see settings.md                                       |
-| Organization Contacts defaults                 | Complete    | Four roles; name/email collections; Administrator-only save                  |
+| Default Contacts defaults                 | Complete    | Portal users and standalone emails; chips; Administrator-only save                  |
 | Organization profile                           | Not Started | No page/editor/API                                                           |
 | Users & Permissions management                 | Partial     | Invite/edit/status/reset UI and API; no invitation acceptance or real delivery                                   |
 | Supplier survey/redirect/S2S/security settings | Partial     | Complete editable UI/mock saves; no execution or non-contact inheritance                                                    |

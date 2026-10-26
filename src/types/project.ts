@@ -14,4 +14,8 @@ export type Project = {
   name: string;
   status: ProjectStatus;
   jobBookNumber: JobBookNumber;
+  deviceCompatibility?: { mobile: boolean; tablet: boolean; desktop: boolean };
+  productType?: string;
+  researchType?: string;
+  categoryPaths?: string[][];
 };

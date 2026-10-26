@@ -9,7 +9,7 @@ B2B operational portal for sample suppliers participating in Ipsos research. Fre
 returning users need fieldwork monitoring, report requests, cost review and supported
 default management. Not a marketing site, BI product or training experience.
 
-- Administrator: operational access plus Organization Contacts and cost decisions.
+- Administrator: operational access plus Default Contacts and cost decisions.
 - User: monitoring, reports, read-only cost decisions, owned Subsample Contacts edits.
 - No self-registration or user-management lifecycle. Only fixture identities/roles exist.
 
@@ -36,7 +36,7 @@ default management. Not a marketing site, BI product or training experience.
 - Operational efficiency, clarity, hierarchy and familiar enterprise interactions over decoration.
 - Preserve supported roles/types; unsupported screenshot content is not authorized scope.
 - Make inherited/custom and pending/success/error states explicit. Empty custom
-  contact role is intentional, not fallback.
+  contact selection is intentional, not fallback.
 - Operational feedback stays inline; prototype instructions use contextual floating tools.
 - WCAG 2.2 AA/responsiveness remain targets with open gaps, not certifications.
 - Absent user administration, MFA/SSO, integrations and generated exports are inventory
