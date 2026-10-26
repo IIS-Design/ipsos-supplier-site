@@ -1,6 +1,7 @@
 "use client";
 
 import { ReportErrorDetails } from "@/components/report-error-details";
+import { withBasePath } from "@/lib/app-path";
 
 import Link from "next/link";
 import { PrototypeEmptyNotice, usePrototypeState } from "@/components/prototype-state";
@@ -133,7 +134,7 @@ function ReportList({
               {report.status === "finished" && report.downloadUrl ? (
                 <a
                   className="mt-1 inline-block text-xs font-medium text-primary underline-offset-4 hover:underline"
-                  href={report.downloadUrl}
+                  href={withBasePath(report.downloadUrl)}
                   download
                 >
                   Download report

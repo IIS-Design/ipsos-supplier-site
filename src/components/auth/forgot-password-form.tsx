@@ -9,6 +9,7 @@ import { FieldError } from "@/components/ui/field-error";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { recoveryRequestSchema } from "@/lib/auth/recovery-validation";
+import { withBasePath } from "@/lib/app-path";
 
 export function ForgotPasswordForm() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export function ForgotPasswordForm() {
   const submit = handleSubmit(async (values) => {
     setError(null);
     try {
-      const response = await fetch("/api/auth/password-recovery", {
+      const response = await fetch(withBasePath("/api/auth/password-recovery/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),

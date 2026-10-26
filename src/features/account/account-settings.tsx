@@ -13,6 +13,7 @@ import { FieldError } from "@/components/ui/field-error";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
 import type { User } from "@/types/user";
+import { withBasePath } from "@/lib/app-path";
 
 function PersonalInformation({ user, onDirtyChange }: { user: User; onDirtyChange: (dirty: boolean) => void }) {
   const { updateUser } = useMockAuth();
@@ -25,7 +26,7 @@ function PersonalInformation({ user, onDirtyChange }: { user: User; onDirtyChang
   const submit = handleSubmit(async (profile) => {
     setError(""); setSuccess("");
     try {
-      const response = await fetch("/api/account", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(profile), signal: AbortSignal.timeout(15000) });
+      const response = await fetch(withBasePath("/api/account/"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(profile), signal: AbortSignal.timeout(15000) });
       const payload = await response.json() as { user?: User; message?: string };
       if (!response.ok || !payload.user) { setError(payload.message || "Your account could not be saved. Please try again."); return; }
       updateUser(payload.user);
@@ -62,7 +63,7 @@ function Security({ email }: { email: string }) {
   const changePassword = async () => {
     setPending(true); setError("");
     try {
-      const response = await fetch("/api/auth/password-recovery", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }), signal: AbortSignal.timeout(15000) });
+      const response = await fetch(withBasePath("/api/auth/password-recovery/"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }), signal: AbortSignal.timeout(15000) });
       if (!response.ok) { const payload = await response.json() as { message?: string }; setError(payload.message || "Unable to request a password reset. Please try again."); return; }
       router.push("/forgot-password/confirmation");
     } catch { setError("Unable to connect to the service. Please try again."); }

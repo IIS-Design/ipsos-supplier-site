@@ -1,0 +1,18 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  deploy:
+    permissions:
+      contents: read
+      packages: write
+
+    uses: IIS-Design/.github/.github/workflows/container-deploy.yml@main
+
+    with:
+      app: ipsos-supplier-site
+      container-port: 3000
+      smoke-path: /supplier/_health/
+      deploy-branch: main

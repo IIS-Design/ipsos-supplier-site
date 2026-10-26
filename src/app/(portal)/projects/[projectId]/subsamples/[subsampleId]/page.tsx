@@ -6,5 +6,5 @@ export default async function SubsampleWorkspaceIndex({
   params: Promise<{ projectId: string; subsampleId: string }>;
 }) {
   const { projectId, subsampleId } = await params;
-  redirect(`/projects/${projectId}/subsamples/${subsampleId}/details`);
+  redirect(`/projects/${projectId}/subsamples/${subsampleId}/details/`);
 }

@@ -3,7 +3,7 @@ import { LoginForm } from "@/components/auth/login-form";
 import { getCurrentUser } from "@/lib/auth/session";
 
 export default async function LoginPage() {
-  if (await getCurrentUser()) redirect("/projects");
+  if (await getCurrentUser()) redirect("/projects/");
 
   return (
     <section

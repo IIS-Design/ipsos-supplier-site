@@ -11,6 +11,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { RecoveryPanel, SignInLink } from "@/components/auth/recovery-panel";
 import { ResetLinkState } from "@/components/auth/reset-link-state";
 import { resetPasswordSchema } from "@/lib/auth/recovery-validation";
+import { withBasePath } from "@/lib/app-path";
 
 export function ResetPasswordForm({ token }: { token: string }) {
   const router = useRouter();
@@ -30,7 +31,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
   const submit = handleSubmit(async (values) => {
     setError(null);
     try {
-      const response = await fetch("/api/auth/reset-password", {
+      const response = await fetch(withBasePath("/api/auth/reset-password/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, ...values }),

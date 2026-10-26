@@ -116,12 +116,12 @@ export async function getCurrentUser(): Promise<User | null> {
 
 export async function requireUser(): Promise<User> {
   const user = await getCurrentUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/login/");
   return user;
 }
 
 export async function requireAdministrator(): Promise<User> {
   const user = await requireUser();
-  if (user.role !== "admin") redirect("/projects");
+  if (user.role !== "admin") redirect("/projects/");
   return user;
 }

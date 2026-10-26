@@ -4,6 +4,7 @@ import {
   recoveryRequestSchema,
 } from "@/lib/auth/recovery-validation";
 import { requestPasswordRecovery } from "@/services/password-recovery-service";
+import { withBasePath } from "@/lib/app-path";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
-      path: "/email-preview",
+      path: withBasePath("/email-preview"),
       maxAge: 86400,
     });
     return response;

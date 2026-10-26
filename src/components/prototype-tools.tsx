@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { PrototypeStateProvider, usePrototypeState } from "@/components/prototype-state";
+import { withBasePath } from "@/lib/app-path";
 
 export function PrototypeEnvironment({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -103,11 +104,11 @@ export function PrototypeTools() {
   const passwordUpdated = pathname === "/reset-password/success";
   const reports = pathname === "/reports" || pathname.startsWith("/reports/");
   const actions = resetWorkflow
-    ? [{ href: "/email-preview/reset-password", label: "Open Reset Password Email" }]
+    ? [{ href: withBasePath("/email-preview/reset-password/"), label: "Open Reset Password Email" }]
     : passwordUpdated
-      ? [{ href: "/email-preview/password-changed", label: "Open Password Changed Email" }]
+      ? [{ href: withBasePath("/email-preview/password-changed/"), label: "Open Password Changed Email" }]
       : reports
-        ? [{ href: "/mock-reports/RPT-2026-1045.csv", label: "Open Sample Report" }]
+        ? [{ href: withBasePath("/mock-reports/RPT-2026-1045.csv"), label: "Open Sample Report" }]
         : [];
   const emptyModule = pathname === "/reports" ? "Reports" : pathname === "/costs" ? "Costs" : null;
   const projects = pathname === "/projects";

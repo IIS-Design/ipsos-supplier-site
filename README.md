@@ -74,8 +74,13 @@ Open [localhost:3000](http://localhost:3000). Sign in with a demo account below 
 
 ```sh
 npm run build
+cp -r public .next/standalone/
+mkdir -p .next/standalone/.next
+cp -r .next/static .next/standalone/.next/
 npm run start
 ```
+
+The standalone server needs the public and generated static assets copied beside it when running outside the Containerfile.
 
 If a restricted environment blocks Turbopack worker-port access, the webpack build is available:
 
@@ -142,6 +147,7 @@ Server pages read through services and repositories. Interactive forms submit to
 | [Authentication](docs/ai-context/authentication.md)     | Sign-in, recovery, and session behavior                                             |
 | [Account Settings](docs/ai-context/account-settings.md) | Profile editing and password-change behavior                                        |
 | [Email assets](public/emails/README.md)                 | HTML template variables and engineering integration notes                           |
+| [Production deployment handoff](docs/deployment/production-handoff.md) | IIS-Design container platform configuration and production checks |
 
 ## Prototype Limitations
 

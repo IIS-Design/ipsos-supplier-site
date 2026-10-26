@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { withBasePath } from "@/lib/app-path";
 import {
   Select,
   SelectContent,
@@ -360,7 +361,7 @@ export function CostsWorkspace({
     setError(null);
     setSuccess(null);
     try {
-      const response = await fetch("/api/costs/decisions", {
+      const response = await fetch(withBasePath("/api/costs/decisions/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ decision, costIds: visibleIds }),

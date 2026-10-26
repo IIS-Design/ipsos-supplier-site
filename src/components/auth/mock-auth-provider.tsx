@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { User } from "@/types/user";
+import { withBasePath } from "@/lib/app-path";
 
 type SignInResult = { success: true } | { success: false; message: string };
 
@@ -41,7 +42,7 @@ export function MockAuthProvider({
       keepMeSignedIn: boolean,
     ): Promise<SignInResult> => {
       try {
-        const response = await fetch("/api/auth/mock-session", {
+        const response = await fetch(withBasePath("/api/auth/mock-session/"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password, keepMeSignedIn }),
@@ -69,7 +70,7 @@ export function MockAuthProvider({
   );
 
   const signOut = useCallback(async () => {
-    await fetch("/api/auth/mock-session", { method: "DELETE" });
+    await fetch(withBasePath("/api/auth/mock-session/"), { method: "DELETE" });
     setUser(null);
   }, []);
 
