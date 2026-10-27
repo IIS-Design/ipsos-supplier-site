@@ -90,6 +90,12 @@ for (const subsample of contactState.subsamples) {
 // HMR keeps process-local edits. Add newly seeded Subsamples without discarding
 // saved contact choices when the fixture catalogue grows during development.
 if (process.env.NODE_ENV === "development") {
+  const fixtureById = new Map(subsamples.map((item) => [item.id, item]));
+  for (const item of contactState.subsamples) {
+    if (!item.configurationSummary) {
+      item.configurationSummary = structuredClone(fixtureById.get(item.id)?.configurationSummary);
+    }
+  }
   const knownIds = new Set(contactState.subsamples.map(({ id }) => id));
   contactState.subsamples.push(
     ...structuredClone(subsamples.filter(({ id }) => !knownIds.has(id))),
@@ -253,16 +259,30 @@ const subsampleRepository: SubsampleRepository = {
         item.supplierId === supplierId,
     );
     if (!subsample) throw new Error("Subsample not found.");
+    let savedSetting: NonNullable<Subsample["settingsOverrides"]>["contacts"] = { mode: "inherit" };
     if (setting.mode === "override") {
-      const options = contactState.options[supplierId] ?? emptyContacts();
+      const options = structuredClone(contactState.options[supplierId] ?? emptyContacts());
       if (setting.value.some(id => !options.some(contact => contact.id === id))) {
         throw new Error("One or more contacts are unavailable. Reload and try again.");
       }
+      const selected = setting.value.map(id => options.find(contact => contact.id === id)!);
+      for (const email of setting.emails ?? []) {
+        if (selected.some(contact => contact.email.toLowerCase() === email)) throw new Error("Select each email address only once.");
+        let contact = options.find(item => item.email.toLowerCase() === email);
+        if (!contact) {
+          contact = { id: `contact-${randomUUID()}`, name: "", email };
+          options.push(contact);
+        }
+        selected.push(contact);
+      }
+      contactsSchema.parse(selected);
+      savedSetting = { mode: "override", value: selected.map(contact => contact.id) };
+      contactState.options[supplierId] = options;
     }
 
     subsample.settingsOverrides = {
       ...subsample.settingsOverrides,
-      contacts: setting,
+      contacts: savedSetting,
     };
     return structuredClone(subsample);
   },

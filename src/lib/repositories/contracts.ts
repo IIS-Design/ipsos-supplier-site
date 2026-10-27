@@ -1,3 +1,4 @@
+import type { ContactOverrideInput } from "@/features/contacts/contact-model";
 import type { SettingsValues, EditableSettingsSection, UserManagementRequest } from "@/features/settings/settings-model";
 import type { AccountProfile } from "@/features/account/account-model";
 import type {
@@ -13,8 +14,6 @@ import type { Project } from "@/types/project";
 import type { Report } from "@/types/report";
 import type { Subsample } from "@/types/subsample";
 import type { Supplier, SupplierContacts } from "@/types/supplier";
-import type { SubsampleContactOverrides } from "@/types/subsample";
-import type { SettingOverride } from "@/types/scopes";
 import type { User } from "@/types/user";
 
 export interface SupplierRepository {
@@ -58,7 +57,7 @@ export interface SubsampleRepository {
     supplierId: SupplierId,
     projectId: ProjectId,
     subsampleId: SubsampleId,
-    setting: SettingOverride<SubsampleContactOverrides>,
+    setting: ContactOverrideInput,
     actorId: UserId,
   ): Promise<Subsample>;
 }

@@ -18,16 +18,16 @@ production integration exists. Parent statuses include their missing subareas.
 | Projects landing                               | Complete    | Live/Pending, filters, 10/20/50 pagination, bulk expansion, horizontal Activity      |
 | Project context entry                          | Complete    | Redirects to existing All Subsamples list; no standalone overview            |
 | All Subsamples                                 | Complete    | Shared Project sidebar, clickable cards and combined search/status/language/router/date filters              |
-| Subsample Workspace                            | Partial     | Shared context and four implemented sections; Configuration placeholders     |
+| Subsample Workspace                            | Partial     | Shared context and populated sections; Configuration is read-only     |
 | Details                                        | Complete    | Attributes, metrics, configuration-mode indicators from saved state          |
 | Field Progress                                 | Complete    | Fixture metrics, quota table and no-quota state                              |
 | Subsample Costs                                | Complete    | Directly scoped information only, no approvals or Project roll-up            |
 | Subsample Contacts                             | Complete    | Persisted inherit/custom mode, selections, save/cancel and feedback          |
 | Configuration navigation                       | Partial     | Query-selected subsections and return path only                              |
-| Entry Links editor                             | Placeholder | Unavailable-content panel                                                    |
-| Subsample Redirects editor                     | Placeholder | Unavailable-content panel                                                    |
-| Subsample Server-to-Server editor              | Placeholder | Unavailable-content panel                                                    |
-| Subsample Security editor                      | Placeholder | Unavailable-content panel                                                    |
+| Entry Links editor                             | Partial | Populated read-only configuration UI                                                    |
+| Subsample Redirects editor                     | Partial | Populated read-only configuration UI                                                    |
+| Subsample Server-to-Server editor              | Partial | Populated read-only configuration UI                                                    |
+| Subsample Security editor                      | Partial | Reference no-rules UI and scenario controls                                                    |
 | Reports area                                   | Partial     | Creation/activity work; execution and real outputs absent                    |
 | Three report creation flows                    | Complete    | Existing options, scope validation, queued save, draft warning, confirmation |
 | History / Queue                                | Partial     | Search/status/date filters; static execution state; no pagination/retry      |
@@ -104,3 +104,7 @@ download the sample, queued/executing names/icons select Queue locally, and erro
 icons open dismissible details on click/tap or keyboard (hover is optional). Report
 icons and the outlined Download report button provide 44px touch targets. Scope,
 identifier, timestamp and status remain visible in the full-width list.
+
+Subsample Overview supports contextual, non-persistent state previews in all five
+tabs. Configuration defaults and previews are read-only; saving is not implemented. See
+[subsample-state-audit.md](subsample-state-audit.md).

@@ -75,7 +75,7 @@ See [navigation.md](navigation.md) for full page/API tables. Key routes:
 - `/projects/[projectId]/subsamples/[subsampleId]` → `/details`; siblings:
   `/field-progress`, `/costs`, `/contacts`, `/configuration?section=…`.
 - Admin-only `/settings` renders Organization profile; `/settings/users` includes Contacts below User Management; `/settings/[section]`
-  renders Users, Survey Configuration, Redirects, Server-to-Server or Security. `/docs` and Configuration subsection content are placeholders.
+  renders Users, Survey Configuration, Redirects, Server-to-Server or Security. `/docs` is a placeholder; Configuration subsection content is populated and read-only.
 
 ## Repository contracts and runtime state
 
@@ -494,3 +494,96 @@ A dynamically loaded card view uses card skeletons; a failed child-list read sho
 an inline retry action with Project metadata retained. Unknown Project/auth failures
 still use existing route boundaries. `tests/subsample-list-filters.test.ts` covers
 combined criteria, name/ID search, stable order and inclusive field-end boundaries.
+
+## Subsample Overview hierarchy
+
+The workspace header shows the Subsample name at the same 20px semibold scale
+as the Project name, followed by Status and ID metadata. Details omits duplicate
+name, status and ID fields. The five workspace sections use wrapping line-style
+tabs; route navigation and unsaved-change protection remain unchanged.
+
+## Details reference alignment
+
+Details follows `docs/references/Subsample Overview -_ Details.png`: substantial
+Details and Configuration Summary columns with a vertical divider on desktop,
+stacked sections on smaller screens, standalone metrics, paired field dates,
+then Language, Router, Invoice Entity and Ipsos Contact. Summary rows are Custom
+CPI, Custom Redirects, Custom Contacts, Personal Identifiable Info (PII), Facial
+Coding and Marketplace Enabled. The summary has no card border or badges.
+Contacts and Redirects reflect saved override modes; the other four indicators
+are explicit read-only fixture flags (No/Off), not implemented configuration
+editors. Missing fixture indicators display Not provided. Earlier requested
+line tabs, header metadata order and removal of duplicate fields are retained.
+
+## Overview navigation and Field Progress alignment
+
+The shared Project/Subsample shell provides a desktop-only PanelLeft toggle that
+collapses the project column horizontally. On stacked mobile/tablet layouts the
+control is hidden and project context remains visible, including after resizing
+from a collapsed desktop layout. The Overview header groups its title, toggle
+and View All Subsamples action. The selector lists individual Subsamples first,
+then a separator and View All Subsamples last. Contact draft protection remains
+in place. Field Progress uses three compact label/value rows alongside the
+Visitors, Incidence and LOI metrics, separated vertically on desktop and stacked
+on smaller screens, following the Field Progress reference.
+
+## Project panel collapse correction
+
+Keep the Project context grid item mounted in its zero-width desktop track when
+collapsed; hiding it with display:none caused auto-placement to put the Overview
+in that zero-width track. The Overview explicitly occupies column 2, whose
+minmax(0,1fr) track takes all available width. The hidden context is clipped and
+invisible (not focusable) at desktop widths, with stable internal width during
+horizontal animation. Column gap and content padding also collapse. Below the
+1024px side-by-side breakpoint, context returns to normal stacked flow and the
+toggle is hidden, regardless of desktop collapse state.
+
+## Shared horizontal panel pattern
+
+`components/ui/horizontal-panels.tsx` owns collapse state, zero-width grid tracks,
+200ms horizontal transitions with reduced-motion support, and accessible triggers.
+Icons follow panel position: left panels use PanelLeftClose / PanelLeftOpen,
+right panels use PanelRightClose / PanelRightOpen. Close points toward the panel
+edge; Open points back toward the content. Triggers
+live in the primary content header, never the collapsible panel. Projects places
+its Activity trigger at the far right of the Projects header and removes the
+entire Activity width/gap on collapse. The Subsample shell uses the same pattern
+for Project context. Breakpoints match side-by-side layouts (Projects xl,
+Subsamples lg); stacked layouts always show panel content and hide the trigger.
+Mounted content retains Activity tab state through collapse/expand.
+
+The Subsample count uses the primary blue badge. View All Subsamples uses the
+shared extra-small button size (24px height, 12px text).
+
+## Subsample Overview scenarios
+
+Contextual Prototype Tools now offers Details, Field Progress, Costs, Contacts
+and Configuration previews with descriptions and Restore Current Data. State
+is temporary, resets on pathname change/reload and never writes fixtures or
+saved data. Contact and Configuration previews are read-only; Configuration
+editors remain unfinished. See [subsample-state-audit.md](subsample-state-audit.md)
+for the reference comparison, exact scenarios and remaining gaps. Costs fixtures
+contain only three direct pending records across 180 Subsamples; published,
+discounted and rejected records are now available as local previews.
+
+## Subsample standalone contact emails
+
+Custom Subsample contacts reuse the Default Contacts picker: search/select known
+contacts, add valid standalone emails by button or Enter, and remove chips.
+Save submits known IDs plus new normalized emails. The supplier-scoped repository
+validates the full selection atomically, reuses matching contacts or assigns
+canonical IDs, and stores only the independent override IDs. Supplier defaults
+remain unchanged. Cancel discards additions; invalid/duplicate emails and
+unavailable contact IDs are rejected. Existing inheritance and permissions remain.
+
+## Configuration default experience update
+
+Entry Links, Redirects, Server-to-Server and Security now immediately render the
+same populated read-only UI previously available through All Defaults. Generic
+placeholder and return-to-Details messages are removed. Prototype Tools offers
+Show Defaults, a section-specific custom scenario, and Show Empty State; Restore
+Current Data returns to the normal defaults UI. Security retains the approved
+“No security rules defined” display, including for an independent custom scope;
+no unapproved rule fields are introduced. Values remain mock display data with
+no configuration save/integration behavior. This supersedes earlier notes that
+the normal Configuration view is a placeholder.

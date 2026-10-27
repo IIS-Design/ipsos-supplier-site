@@ -19,8 +19,10 @@ export const contactsSchema = z.array(contactSchema).max(80, "Select up to 80 co
 export const contactSelectionsSchema = z.array(z.string().min(1).max(100)).max(80).refine(ids => new Set(ids).size === ids.length, "Select each contact only once.");
 export const contactOverrideSchema = z.discriminatedUnion("mode", [
   z.object({ mode: z.literal("inherit") }).strict(),
-  z.object({ mode: z.literal("override"), value: contactSelectionsSchema }).strict(),
+  z.object({ mode: z.literal("override"), value: contactSelectionsSchema, emails: z.array(contactEmailSchema).max(80).optional() }).strict(),
 ]);
+
+export type ContactOverrideInput = z.infer<typeof contactOverrideSchema>;
 
 /** Read old process-local role groups without losing saved contact identities. */
 export function migrateContacts(value: unknown): SupplierContacts {

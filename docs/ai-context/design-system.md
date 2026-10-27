@@ -462,3 +462,76 @@ A dynamically loaded card view uses card skeletons; a failed child-list read sho
 an inline retry action with Project metadata retained. Unknown Project/auth failures
 still use existing route boundaries. `tests/subsample-list-filters.test.ts` covers
 combined criteria, name/ID search, stable order and inclusive field-end boundaries.
+
+## Subsample Overview hierarchy
+
+The workspace header shows the Subsample name at the same 20px semibold scale
+as the Project name, followed by Status and ID metadata. Details omits duplicate
+name, status and ID fields. The five workspace sections use wrapping line-style
+tabs; route navigation and unsaved-change protection remain unchanged.
+
+## Details reference alignment
+
+Details follows `docs/references/Subsample Overview -_ Details.png`: substantial
+Details and Configuration Summary columns with a vertical divider on desktop,
+stacked sections on smaller screens, standalone metrics, paired field dates,
+then Language, Router, Invoice Entity and Ipsos Contact. Summary rows are Custom
+CPI, Custom Redirects, Custom Contacts, Personal Identifiable Info (PII), Facial
+Coding and Marketplace Enabled. The summary has no card border or badges.
+Contacts and Redirects reflect saved override modes; the other four indicators
+are explicit read-only fixture flags (No/Off), not implemented configuration
+editors. Missing fixture indicators display Not provided. Earlier requested
+line tabs, header metadata order and removal of duplicate fields are retained.
+
+## Overview navigation and Field Progress alignment
+
+The shared Project/Subsample shell provides a desktop-only PanelLeft toggle that
+collapses the project column horizontally. On stacked mobile/tablet layouts the
+control is hidden and project context remains visible, including after resizing
+from a collapsed desktop layout. The Overview header groups its title, toggle
+and View All Subsamples action. The selector lists individual Subsamples first,
+then a separator and View All Subsamples last. Contact draft protection remains
+in place. Field Progress uses three compact label/value rows alongside the
+Visitors, Incidence and LOI metrics, separated vertically on desktop and stacked
+on smaller screens, following the Field Progress reference.
+
+## Project panel collapse correction
+
+Keep the Project context grid item mounted in its zero-width desktop track when
+collapsed; hiding it with display:none caused auto-placement to put the Overview
+in that zero-width track. The Overview explicitly occupies column 2, whose
+minmax(0,1fr) track takes all available width. The hidden context is clipped and
+invisible (not focusable) at desktop widths, with stable internal width during
+horizontal animation. Column gap and content padding also collapse. Below the
+1024px side-by-side breakpoint, context returns to normal stacked flow and the
+toggle is hidden, regardless of desktop collapse state.
+
+## Shared horizontal panel pattern
+
+`components/ui/horizontal-panels.tsx` owns collapse state, zero-width grid tracks,
+200ms horizontal transitions with reduced-motion support, and accessible triggers.
+Icons follow panel position: left panels use PanelLeftClose / PanelLeftOpen,
+right panels use PanelRightClose / PanelRightOpen. Close points toward the panel
+edge; Open points back toward the content. Triggers
+live in the primary content header, never the collapsible panel. Projects places
+its Activity trigger at the far right of the Projects header and removes the
+entire Activity width/gap on collapse. The Subsample shell uses the same pattern
+for Project context. Breakpoints match side-by-side layouts (Projects xl,
+Subsamples lg); stacked layouts always show panel content and hide the trigger.
+Mounted content retains Activity tab state through collapse/expand.
+
+The Subsample count uses the primary blue badge. View All Subsamples uses the
+shared extra-small button size (24px height, 12px text).
+
+All Subsamples places its Project panel trigger immediately before the list title
+in the same header row; individual Overview screens retain their own header row.
+
+Subsample scenario controls use contextual Prototype Tools buttons with concise
+visible-state descriptions and Restore Current Data. Previews reuse tab layouts;
+Contacts and Configuration previews expose no save action.
+
+Subsample Contacts uses the standard uppercase muted section heading. The mode
+indicator reads “On · Inherited from Default Contacts”; Default Contacts links to
+the management section for Administrators only. No duplicate inheritance badge
+or introductory explanation is shown. Subsample Costs omits the redundant
+approval-management footer message.

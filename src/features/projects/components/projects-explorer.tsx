@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, Search, SlidersHorizontal, X } from "lucide-react";
 import { Badge, ViewCountBadge } from "@/components/ui/badge";
+import { HorizontalPanelTrigger } from "@/components/ui/horizontal-panels";
 import { Button } from "@/components/ui/button";
 import { ListPagination } from "@/components/ui/list-pagination";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
@@ -181,6 +182,7 @@ export function ProjectsExplorer({
             <ViewCountBadge active={view === "pending"}>{pendingProjects.length}</ViewCountBadge>
           </Button>
         </div>
+        <HorizontalPanelTrigger className="ml-auto" />
       </header>
 
       <div className="project-filters grid min-w-0 gap-2 sm:grid-cols-2">

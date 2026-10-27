@@ -59,3 +59,14 @@ under public/emails/; email links open a new tab with noopener/noreferrer.
 Account Created and User Invitation assets remain engineering assets until those
 workflows exist. Login credentials, mock lifecycle and persistence constraints are
 engineering documentation concerns, not Tools content.
+
+## Subsample Overview scenarios
+
+Contextual Prototype Tools now offers Details, Field Progress, Costs, Contacts
+and Configuration previews with descriptions and Restore Current Data. State
+is temporary, resets on pathname change/reload and never writes fixtures or
+saved data. Contact and Configuration previews are read-only; Configuration
+editors remain unfinished. See [subsample-state-audit.md](subsample-state-audit.md)
+for the reference comparison, exact scenarios and remaining gaps. Costs fixtures
+contain only three direct pending records across 180 Subsamples; published,
+discounted and rejected records are now available as local previews.

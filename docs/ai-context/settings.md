@@ -100,3 +100,13 @@ by components/default-contacts.tsx and the shared Contacts picker.
 The Supplier Settings shell/navigation are shared with Account Settings through
 components/portal/settings-layout.tsx and settings-section-navigation.tsx. Supplier
 sections retain URL-based navigation; Account preserves its local section state.
+
+## Subsample standalone contact emails
+
+Custom Subsample contacts reuse the Default Contacts picker: search/select known
+contacts, add valid standalone emails by button or Enter, and remove chips.
+Save submits known IDs plus new normalized emails. The supplier-scoped repository
+validates the full selection atomically, reuses matching contacts or assigns
+canonical IDs, and stores only the independent override IDs. Supplier defaults
+remain unchanged. Cancel discards additions; invalid/duplicate emails and
+unavailable contact IDs are rejected. Existing inheritance and permissions remain.

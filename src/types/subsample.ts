@@ -30,6 +30,13 @@ export type Subsample = {
   router: string | null;
   fieldStartDate: string;
   fieldEndDate: string;
+  /** Read-only prototype configuration indicators shown in the approved Details design. */
+  configurationSummary?: {
+    customCpi: boolean;
+    personalIdentifiableInfo: boolean;
+    facialCoding: boolean;
+    marketplaceEnabled: boolean;
+  };
   invoiceEntity?: string;
   ipsosContact?: string;
   incidence: number;

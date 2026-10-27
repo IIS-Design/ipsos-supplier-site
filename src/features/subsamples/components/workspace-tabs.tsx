@@ -41,11 +41,12 @@ export function WorkspaceTabs({
     >
       <TabsList
         aria-label="Subsample workspace sections"
-        className="h-auto w-full flex-wrap justify-start gap-1 rounded-lg bg-muted p-1"
+        variant="line"
+        className="h-auto w-full flex-wrap justify-start gap-x-4 gap-y-3 p-0"
       >
         {tabs.map((tab) => (
           <TabsTrigger
-            className="flex-none px-3"
+            className="flex-none rounded-none px-0"
             key={tab.value}
             value={tab.value}
           >

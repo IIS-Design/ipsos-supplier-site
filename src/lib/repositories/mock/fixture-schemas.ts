@@ -113,6 +113,12 @@ export const subsampleSchema = z
     router: z.string().nullable(),
     fieldStartDate: z.iso.date(),
     fieldEndDate: z.iso.date(),
+    configurationSummary: z.object({
+      customCpi: z.boolean(),
+      personalIdentifiableInfo: z.boolean(),
+      facialCoding: z.boolean(),
+      marketplaceEnabled: z.boolean(),
+    }).strict().optional(),
     invoiceEntity: z.string().optional(),
     ipsosContact: z.string().optional(),
     incidence: z.number().nonnegative(),

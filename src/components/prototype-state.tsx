@@ -6,19 +6,22 @@ import { Button } from "@/components/ui/button";
 type ActivityModule = "Reports" | "Costs";
 type ActivityEmpty = Record<ActivityModule, boolean>;
 type PrototypeState = {
+  scenario: string;
+  setScenario: (scenario: string) => void;
   empty: boolean;
   setEmpty: (empty: boolean) => void;
   activityEmpty: ActivityEmpty;
   setActivityEmpty: (module: ActivityModule, empty: boolean) => void;
 };
-const PrototypeContext = createContext<PrototypeState>({ empty: false, setEmpty: () => {}, activityEmpty: { Reports: false, Costs: false }, setActivityEmpty: () => {} });
+const PrototypeContext = createContext<PrototypeState>({ scenario: "", setScenario: () => {}, empty: false, setEmpty: () => {}, activityEmpty: { Reports: false, Costs: false }, setActivityEmpty: () => {} });
 
 /** Page-scoped preview state. No storage, requests or fixture mutations. */
 export function PrototypeStateProvider({ children }: { children: ReactNode }) {
+  const [scenario, setScenario] = useState("");
   const [empty, setEmpty] = useState(false);
   const [activityEmpty, setActivity] = useState<ActivityEmpty>({ Reports: false, Costs: false });
   const setActivityEmpty = (module: ActivityModule, empty: boolean) => setActivity(current => ({ ...current, [module]: empty }));
-  return <PrototypeContext.Provider value={{ empty, setEmpty, activityEmpty, setActivityEmpty }}>{children}</PrototypeContext.Provider>;
+  return <PrototypeContext.Provider value={{ scenario, setScenario, empty, setEmpty, activityEmpty, setActivityEmpty }}>{children}</PrototypeContext.Provider>;
 }
 
 export function usePrototypeState() { return useContext(PrototypeContext); }

@@ -1,7 +1,6 @@
+import type { ContactOverrideInput } from "@/features/contacts/contact-model";
 import { getRepositories } from "@/lib/repositories";
 import type { ProjectId, SubsampleId, SupplierId, UserId } from "@/types/ids";
-import type { SettingOverride } from "@/types/scopes";
-import type { SubsampleContactOverrides } from "@/types/subsample";
 
 export const getSubsamples = (supplierId: SupplierId) =>
   getRepositories().subsamples.listForSupplier(supplierId);
@@ -20,7 +19,7 @@ export const saveSubsampleContacts = (
   supplierId: SupplierId,
   projectId: ProjectId,
   subsampleId: SubsampleId,
-  setting: SettingOverride<SubsampleContactOverrides>,
+  setting: ContactOverrideInput,
   actorId: UserId,
 ) =>
   getRepositories().subsamples.saveContacts(

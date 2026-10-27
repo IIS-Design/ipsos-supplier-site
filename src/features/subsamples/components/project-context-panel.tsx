@@ -9,6 +9,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -56,7 +57,7 @@ export function ProjectContextPanel({
 
       <div>
         <div className="mb-2 flex items-center gap-2 text-sm font-medium">
-          <Badge className="rounded-full px-2" variant="secondary">
+          <Badge className="rounded-full bg-primary px-2 text-primary-foreground" variant="default">
             {subsamples.length}
           </Badge>
           <span>Subsample(s)</span>
@@ -79,12 +80,13 @@ export function ProjectContextPanel({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">View All Subsamples</SelectItem>
             {subsamples.map((item) => (
               <SelectItem className="text-base font-medium" key={item.id} value={item.id}>
                 {item.name}
               </SelectItem>
             ))}
+            <SelectSeparator />
+            <SelectItem value="all">View All Subsamples</SelectItem>
           </SelectContent>
         </Select>
       </div>

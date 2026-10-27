@@ -1,5 +1,7 @@
 "use client";
 
+import { HorizontalPanelTrigger } from "@/components/ui/horizontal-panels";
+
 import Link from "next/link";
 import { useState } from "react";
 import { Search, X } from "lucide-react";
@@ -26,7 +28,7 @@ export function AllSubsamples({ projectName, subsamples }: { projectName: string
   const routers = [...new Set(subsamples.map(item => item.router).filter((value): value is string => !!value))].sort();
   function clear() { setQuery(""); setStatus("all"); setLanguage("all"); setRouter("all"); setDates({ from: "", to: "" }); }
   return <section className="@container min-w-0 space-y-5">
-    <header className="flex flex-wrap items-center justify-between gap-3"><h1 id="all-subsamples-heading" className="min-w-0 text-2xl font-semibold tracking-tight wrap-break-word">Subsamples for {projectName}</h1><p className="flex shrink-0 items-center gap-2 text-sm" role="status" aria-live="polite" aria-atomic="true"><Badge>{results.length}</Badge>Available Subsample(s)</p></header>
+    <header className="flex flex-wrap items-center justify-between gap-3"><div className="flex min-w-0 items-center gap-2"><HorizontalPanelTrigger /><h1 id="all-subsamples-heading" className="min-w-0 text-2xl font-semibold tracking-tight wrap-break-word">Subsamples for {projectName}</h1></div><p className="flex shrink-0 items-center gap-2 text-sm" role="status" aria-live="polite" aria-atomic="true"><Badge>{results.length}</Badge>Available Subsample(s)</p></header>
     <div className="relative"><Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search subsamples by name or ID" placeholder="Search by name or ID..." value={query} onChange={event => setQuery(event.target.value)} className="pl-9 pr-11" />{query && <Button aria-label="Clear subsample search" type="button" variant="ghost" className="absolute right-0 top-0 size-10 px-0" onClick={() => setQuery("")}><X aria-hidden="true" className="size-4" /></Button>}</div>
     <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 @2xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(200px,1.5fr)]">
       <Select value={status} onValueChange={setStatus}><SelectTrigger aria-label="Filter subsamples by status"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">Status: All</SelectItem>{Object.entries(statuses).map(([value, option]) => <SelectItem key={value} value={value}>{option.label}</SelectItem>)}</SelectContent></Select>

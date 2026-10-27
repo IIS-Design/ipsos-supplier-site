@@ -71,3 +71,22 @@ test("supplier defaults → custom override → changed defaults → inherit", a
     assert.equal((await repositories.suppliers.getById(supplierId))!.settings.contacts!.length, original.length);
   });
 });
+
+test("standalone subsample emails save independently and reject invalid or cross-supplier selections atomically", async () => {
+  const before = (await repositories.subsamples.getById(supplierId, subsampleId))!;
+  const defaults = (await repositories.suppliers.getById(supplierId))!.settings.contacts;
+  const saved = await repositories.subsamples.saveContacts(supplierId, projectId, subsampleId, { mode: "override", value: [], emails: ["  PROJECT.TEST@example.test  "] }, userId);
+  const options = await repositories.suppliers.listContactOptions(supplierId);
+  const selected = resolveContacts([], options, saved.settingsOverrides?.contacts);
+  assert.equal(selected.length, 1);
+  assert.equal(selected[0].email, "project.test@example.test");
+  assert.deepEqual((await repositories.suppliers.getById(supplierId))!.settings.contacts, defaults);
+  for (const input of [
+    { mode: "override" as const, value: [], emails: ["invalid"] },
+    { mode: "override" as const, value: [], emails: ["duplicate@example.test", "DUPLICATE@example.test"] },
+    { mode: "override" as const, value: ["unavailable-other-supplier"], emails: ["should-not-save@example.test"] },
+  ]) await assert.rejects(repositories.subsamples.saveContacts(supplierId, projectId, subsampleId, input, userId));
+  assert.deepEqual((await repositories.subsamples.getById(supplierId, subsampleId))!.settingsOverrides?.contacts, saved.settingsOverrides?.contacts);
+  assert.equal((await repositories.suppliers.listContactOptions(supplierId)).some(contact => contact.email === "should-not-save@example.test"), false);
+  await repositories.subsamples.saveContacts(supplierId, projectId, subsampleId, before.settingsOverrides?.contacts ?? { mode: "inherit" }, userId);
+});
