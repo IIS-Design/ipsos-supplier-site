@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 type ActivityModule = "Reports" | "Costs";
@@ -17,7 +18,10 @@ const PrototypeContext = createContext<PrototypeState>({ scenario: "", setScenar
 
 /** Page-scoped preview state. No storage, requests or fixture mutations. */
 export function PrototypeStateProvider({ children }: { children: ReactNode }) {
-  const [scenario, setScenario] = useState("");
+  const pathname = usePathname();
+  const [scenarioState, setScenarioState] = useState({ pathname, value: "" });
+  const scenario = scenarioState.pathname === pathname ? scenarioState.value : "";
+  const setScenario = (value: string) => setScenarioState({ pathname, value });
   const [empty, setEmpty] = useState(false);
   const [activityEmpty, setActivity] = useState<ActivityEmpty>({ Reports: false, Costs: false });
   const setActivityEmpty = (module: ActivityModule, empty: boolean) => setActivity(current => ({ ...current, [module]: empty }));

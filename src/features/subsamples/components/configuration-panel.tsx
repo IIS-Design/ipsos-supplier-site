@@ -1,5 +1,10 @@
 "use client";
 
+import { SecurityRules } from "./security-rules";
+import { useEffect } from "react";
+import { Switch } from "@/components/ui/switch";
+import { useConfigurationState, type ConfigKey } from "./configuration-state";
+import { redirectFields, endpointFields, fieldLabels } from "@/features/settings/settings-model";
 import { usePrototypeState } from "@/components/prototype-state";
 import { ScenarioEmpty } from "./scenario-preview";
 import { Input } from "@/components/ui/input";
@@ -34,7 +39,21 @@ export function ConfigurationPanel({
   subsampleId: string;
   activeSection: ConfigurationSection;
 }) {
-  const { scenario } = usePrototypeState();
+  const { scenario, setScenario } = usePrototypeState();
+  const config = useConfigurationState();
+  const key: ConfigKey = activeSection === "server-to-server" ? "server-to-server" : "redirects";
+  const inherited = config.sections[key].inherited;
+  const values = inherited ? config.defaults[key] : config.sections[key].values;
+  useEffect(() => {
+    if (activeSection === "entry-links") return;
+    if (activeSection === "security") {
+      if (scenario === "security-rules" || scenario === "security-empty") config.setSecurityRulesDefined(scenario === "security-rules");
+      return;
+    }
+    if (scenario === "defaults" || scenario === "custom") config.toggle(key, scenario === "defaults");
+    // Scenario selection changes mode once, leaving subsequent edits independent.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scenario, activeSection]);
   const base = `/projects/${projectId}/subsamples/${subsampleId}/configuration`;
   const active =
     sections.find((section) => section.id === activeSection) ?? sections[0];
@@ -53,6 +72,7 @@ export function ConfigurationPanel({
               "flex min-h-10 items-center gap-2 rounded-md px-3 text-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               activeSection === id && "bg-muted font-medium text-foreground",
             )}
+            onClick={() => setScenario("")}
             href={`${base}?section=${id}`}
             key={id}
           >
@@ -69,12 +89,13 @@ export function ConfigurationPanel({
         <h2 id="configuration-section-title" className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">
           {active.label}
         </h2>
-        {scenario === "empty" ? <div className="mt-4"><ScenarioEmpty title="No configuration available" message="No values have been configured for this section." /></div> : <div className="mt-5 space-y-5">
-          <Badge variant="outline">{scenario === "custom" || (scenario === "overrides" && activeSection === "redirects") ? "Custom configuration" : "Using supplier defaults"}</Badge>
-          {activeSection === "entry-links" ? <div className="space-y-2"><h3 className="text-sm font-medium">Entry Link</h3><p className="break-all text-sm text-muted-foreground">https://survey.example.test/entry?subsample={subsampleId}{scenario === "custom" ? "&configuration=custom" : ""}</p></div> : activeSection === "security" ? <p className="rounded-md border p-4 text-sm text-muted-foreground">No security rules defined</p> : <>
-            {activeSection === "server-to-server" && <label className="block space-y-2 text-sm font-medium">Pixel HTML<textarea className="min-h-24 w-full rounded-md border bg-background p-3 text-sm font-normal" readOnly value="" placeholder="Insert your code here…" /></label>}
-            {(activeSection === "redirects" ? ["Completes", "Screen Outs", "Quota Full / Survey Closed", "Sniff Out", "Long Term Redirect", "Suspicious / Unengaged", "Platform (mobile or not) Redirect", "Security Redirect"] : ["Complete", "Termination", "Quota Full", "Server Load", "Sniff Out", "Fraud", "Opt Out"]).map((label, index) => <label key={label} className="block space-y-2 text-sm font-medium">{label}<Input readOnly value={`https://survey.example.test/${scenario === "custom" || (scenario === "overrides" && activeSection === "redirects") ? "custom" : "default"}/outcome-${index + 1}`} /></label>)}
+        {activeSection === "security" ? <SecurityRules defined={config.securityRulesDefined} projectId={projectId} subsampleId={subsampleId} /> : scenario === "empty" ? <div className="mt-4"><ScenarioEmpty title="No configuration available" message="No values have been configured for this section." /></div> : <div className="mt-5 space-y-5">
+          {activeSection === "entry-links" ? <div className="space-y-2"><h3 className="text-sm font-medium">Entry Link</h3><p className="break-all text-sm text-muted-foreground">https://survey.example.test/entry?subsample={subsampleId}</p></div> : <>
+            <div className="flex flex-wrap items-center gap-3"><label className="text-sm font-medium" htmlFor={`inherit-${key}`}>Use Supplier Defaults</label><Switch id={`inherit-${key}`} checked={inherited} onCheckedChange={checked => { setScenario(""); config.toggle(key, checked); }} /><Badge variant="outline">{inherited ? "Inherited" : "Custom Override"}</Badge></div>
+            {activeSection === "server-to-server" && <label className="block space-y-2 text-sm font-medium">Pixel HTML<textarea className="min-h-24 w-full rounded-md border bg-background p-3 text-sm font-normal read-only:bg-muted/40" readOnly={inherited} value={values.pixel ?? ""} onChange={event => config.edit(key, "pixel", event.target.value)} placeholder="Insert your code here…" /></label>}
+            {(activeSection === "redirects" ? [...redirectFields] : [...endpointFields]).map(field => <label key={field} className="block space-y-2 text-sm font-medium">{fieldLabels[field]}<Input readOnly={inherited} className="read-only:bg-muted/40" value={values[field] ?? ""} onChange={event => config.edit(key, field, event.target.value)} /></label>)}
           </>}
+
         </div>}
       </section>
     </div>

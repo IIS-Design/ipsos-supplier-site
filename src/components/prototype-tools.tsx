@@ -13,7 +13,8 @@ import { withBasePath } from "@/lib/app-path";
 
 export function PrototypeEnvironment({ children }: { children: ReactNode }) {
   const pathname = usePathname().replace(/\/$/, "") || "/";
-  return <PrototypeStateProvider key={pathname}>{children}<Suspense fallback={null}><PrototypeTools /></Suspense></PrototypeStateProvider>;
+  const scopeKey = pathname.match(/^(\/projects\/[^/]+\/subsamples\/[^/]+)/)?.[1] ?? pathname;
+  return <PrototypeStateProvider key={scopeKey}>{children}<Suspense fallback={null}><PrototypeTools /></Suspense></PrototypeStateProvider>;
 }
 
 export function FloatingPrototypeTools({
@@ -116,10 +117,13 @@ export function PrototypeTools() {
   const projects = pathname === "/projects";
   const tab = scenarioTab(pathname);
   const section = useSearchParams().get("section") ?? "entry-links";
-  const customLabel = section === "server-to-server" ? "Show Custom S2S" : section === "security" ? "Show Custom Security" : section === "redirects" ? "Show Custom Overrides" : "Show Custom Entry Link";
-  const scenarios = tab === "configuration" ? [
-    ["defaults", "Show Defaults", "Displays supplier configuration values."],
-    ["custom", customLabel, section === "security" ? "Displays independent security configuration with no rules defined." : "Displays independent configuration values."],
+  const customLabel = section === "server-to-server" ? "Show Custom S2S" : section === "security" ? "Show Custom Security" : section === "redirects" ? "Show Custom Redirects" : "Show Custom Entry Link";
+  const scenarios = tab === "configuration" && section === "security" ? [
+    ["security-rules", "Show Security Rules", "Shows traffic filtering grouped by Survey, Research Type, Category, Job Book and Event."],
+    ["security-empty", "Show No Security Rules", "Shows a subsample without security filtering rules."],
+  ] : tab === "configuration" ? [
+    ["defaults", section === "entry-links" ? "Show Entry Link" : "Show Supplier Defaults", section === "entry-links" ? "Displays the system-assigned read-only link." : "Displays supplier configuration values."],
+    ...(section === "entry-links" ? [] : [["custom", customLabel, "Enables editable Subsample overrides."]]),
     ["empty", "Show Empty State", "Displays this section without configured values."],
   ] : tab ? subsampleScenarios[tab] : [];
   const badgeCount = scenarios.length + (projects ? 2 : 0) + actions.length + (credentials ? 1 : 0) + (emptyModule ? 1 : 0);
@@ -134,8 +138,8 @@ export function PrototypeTools() {
       key={pathname}
       title="Prototype Tools"
     >
-      {tab && <section className="space-y-3"><h3 className="font-medium capitalize text-foreground">{tab.replaceAll("-", " ")}</h3>
-        <Button className="w-full" variant="outline" size="sm" onClick={() => setScenario("")} disabled={!scenario}>Restore Current Data</Button>
+      {tab && <section className="space-y-3"><h3 className="font-medium capitalize text-foreground">{tab === "configuration" && section === "security" ? "Security" : tab.replaceAll("-", " ")}</h3>
+        <Button className="w-full" variant="outline" size="sm" onClick={() => setScenario(tab === "configuration" && section === "security" ? "security-empty" : "")} disabled={!scenario || (tab === "configuration" && section === "security" && scenario === "security-empty")}>Restore Current Data</Button>
         {scenarios.map(([id, label, description]) => <div key={id} className="space-y-1"><Button className="w-full justify-start" aria-pressed={scenario === id} variant="outline" size="sm" onClick={() => { if (tab !== "contacts" || confirmContactNavigation()) setScenario(id); }}>{label}</Button><p className="text-xs">{description}</p></div>)}
       </section>}
       {credentials ? (

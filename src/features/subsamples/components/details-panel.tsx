@@ -1,10 +1,12 @@
 "use client";
 
+import { useConfigurationState } from "./configuration-state";
 import { usePrototypeState } from "@/components/prototype-state";
 import { ScenarioEmpty } from "./scenario-preview";
 import type { Subsample } from "@/types/subsample";
 
 function ConfigurationSummary({ subsample }: { subsample: Subsample }) {
+  const { sections, securityRulesDefined } = useConfigurationState();
   const flags = subsample.configurationSummary;
   const yesNo = (value: boolean | undefined) =>
     value === undefined ? "Not provided" : value ? "Yes" : "No";
@@ -12,7 +14,9 @@ function ConfigurationSummary({ subsample }: { subsample: Subsample }) {
     value === undefined ? "Not provided" : value ? "On" : "Off";
   const items = [
     { label: "Custom CPI", value: yesNo(flags?.customCpi) },
-    { label: "Custom Redirects", value: yesNo(subsample.settingsOverrides?.redirects?.mode === "override") },
+    { label: "Redirects", value: sections.redirects.inherited ? "Supplier Defaults" : "Custom" },
+    { label: "Security", value: securityRulesDefined ? "Rules Defined" : "No Rules Defined" },
+    { label: "Server-to-Server", value: sections["server-to-server"].inherited ? "Supplier Defaults" : "Custom" },
     { label: "Custom Contacts", value: yesNo(subsample.settingsOverrides?.contacts?.mode === "override") },
     { label: "Personal Identifiable Info (PII)", value: onOff(flags?.personalIdentifiableInfo) },
     { label: "Facial Coding", value: onOff(flags?.facialCoding) },

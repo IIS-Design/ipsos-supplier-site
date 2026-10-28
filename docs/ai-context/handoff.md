@@ -587,3 +587,41 @@ Current Data returns to the normal defaults UI. Security retains the approved
 no unapproved rule fields are introduced. Values remain mock display data with
 no configuration save/integration behavior. This supersedes earlier notes that
 the normal Configuration view is a placeholder.
+
+## Configuration inheritance controls
+
+Redirects, Server-to-Server and Security now use the shared Switch pattern:
+Use Supplier Defaults on shows actual Supplier Settings values read-only;
+off exposes editable Subsample-local values with a Custom Override indicator.
+Supplier preferences come from the supplier-scoped settings service. Empty
+supplier values remain empty rather than being replaced with fabricated URLs.
+Security reuses Source Key and masked Secret Key from Supplier Settings.
+Entry Links remains system-assigned and read-only, with no toggle/custom action.
+Details summary now reports Redirects, Security and Server-to-Server as Supplier
+Defaults or Custom. Prototype Tools switches these actual modes per section.
+Workspace-local edits survive section/tab navigation, are isolated by Subsample,
+and reset on reload/leaving the workspace; no save API or durable persistence is
+introduced. Supplier defaults and fixtures remain unchanged. Prototype scenarios
+remain route-scoped while configuration state spans the Subsample workspace.
+This supersedes the earlier entirely read-only Configuration description.
+
+## Effective Subsample Security (supersedes credential inheritance)
+
+Subsample Security no longer displays Source Key, Secret Key or Use Supplier
+Defaults. Integration credentials remain supplier-level concerns and are not
+passed into the Subsample configuration provider. Security is a read-only view
+of effective filtering with two display states: Rules Defined and No Rules
+Defined. The empty state explicitly says no security rules have been configured.
+Prototype Tools offers Show Security Rules and Show No Security Rules. Rule
+examples group Survey, Research Type, Category, Job Book and Event matches, with
+status lists and time spans. These are display-only examples, not fixture edits,
+saved configuration or an enforcement engine. The local selection survives
+workspace tabs so Details summary agrees, resets for another Subsample/reload,
+and does not persist. Redirects/S2S retain their existing inheritance controls.
+
+## Responsive Subsample section navigation
+
+Below lg (1024px), the five workspace tabs are replaced with a labeled Section
+Select, matching Settings/Account responsive navigation. It reflects the active
+route and uses the same guarded navigation as desktop tabs. At lg and above,
+existing line tabs remain on one row. Hidden navigation is not keyboard-focusable.
