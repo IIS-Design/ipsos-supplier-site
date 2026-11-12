@@ -13,7 +13,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+RUN npm run build \
+    && find .next -mindepth 1 -maxdepth 1 ! -name standalone ! -name static -exec rm -rf {} +
 
 FROM node:24-bookworm-slim AS runner
 
