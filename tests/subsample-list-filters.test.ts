@@ -20,3 +20,21 @@ test("date bounds are inclusive and use field end, not start dates", () => {
   assert.equal(filterSubsamples([item], { ...defaults, from: item.fieldEndDate, to: item.fieldEndDate }).length, 1);
   assert.equal(filterSubsamples([item], { ...defaults, to: item.fieldStartDate }).length, 0);
 });
+
+test("multi-select values use OR within a filter and AND across filters", () => {
+  const first = subsamples[0];
+  const second = { ...first, id: "multi-second" as typeof first.id, status: first.status === "live" ? "pending" as const : "live" as const, language: "Another language", languages: ["Another language"], router: null };
+  const items = [first, second];
+  const selected = { ...defaults, status: [first.status, second.status], language: [first.language, second.language], router: [] };
+  assert.deepEqual(filterSubsamples(items, selected), items);
+  assert.deepEqual(filterSubsamples(items, { ...selected, language: [first.language] }), [first]);
+  assert.deepEqual(filterSubsamples(items, { ...selected, router: ["unassigned"] }), items.filter(item => !item.router));
+  assert.deepEqual(filterSubsamples(items, { ...selected, status: [], language: [], router: [] }), items);
+  assert.deepEqual(filterSubsamples(items, { ...selected, language: ["missing"] }), []);
+});
+
+test("a subsample can match any of its languages", () => {
+  const item = { ...subsamples[0], country: "Canada", language: "en-CA", languages: ["en-CA", "fr-CA"] };
+  assert.deepEqual(filterSubsamples([item], { ...defaults, language: ["fr-CA"] }), [item]);
+  assert.deepEqual(filterSubsamples([item], { ...defaults, language: ["ro-RO"] }), []);
+});

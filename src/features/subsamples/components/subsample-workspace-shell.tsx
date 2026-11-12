@@ -1,5 +1,8 @@
 "use client";
 
+
+import { statusBadgeStyles, statusLabels } from "@/types/status";
+
 import { type ReactNode } from "react";
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
@@ -19,17 +22,8 @@ import { WorkspaceTabs } from "@/features/subsamples/components/workspace-tabs";
 import type { Project } from "@/types/project";
 import type { Subsample } from "@/types/subsample";
 
-const subsampleStatusStyle: Record<Subsample["status"], string> = {
-  live: "border-emerald-200 bg-emerald-50 text-emerald-800",
-  pending: "border-amber-200 bg-amber-50 text-amber-900",
-  canceled: "border-rose-200 bg-rose-50 text-rose-800",
-};
-
-const subsampleStatusLabel: Record<Subsample["status"], string> = {
-  live: "Live",
-  pending: "Pending",
-  canceled: "Canceled",
-};
+const subsampleStatusStyle = statusBadgeStyles;
+const subsampleStatusLabel = statusLabels;
 
 export function SubsampleWorkspaceShell({
   children,
@@ -89,7 +83,9 @@ export function SubsampleWorkspaceShell({
               <HorizontalPanelTrigger />
               {subsample && <p className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">Subsample Overview</p>}
             </div>
-            {subsample && <Button asChild size="xs" variant="outline"><Link href={`/projects/${project.id}/subsamples`}>View All Subsamples</Link></Button>}
+            <div className="ml-auto flex items-center gap-2">
+              <Button asChild size="xs" variant="outline"><Link href={`/projects/${project.id}/subsamples`}>View All Subsamples</Link></Button>
+            </div>
           </div>}
           {subsample ? <>
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
@@ -110,12 +106,7 @@ export function SubsampleWorkspaceShell({
                     {subsampleStatusLabel[subsample.status]}
                   </Badge>
                 </span>
-                <span className="text-muted-foreground">
-                  Subsample ID:{" "}
-                  <span className="font-medium text-foreground">
-                    {subsample.id}
-                  </span>
-                </span>
+
               </div>
             </div>
           </div>

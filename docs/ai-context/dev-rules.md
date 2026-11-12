@@ -23,7 +23,7 @@ JSON seed/process state. Clients submit through route handlers. Do not import JS
 
 - Actual service example: `src/services/project-service.ts`, not lib/api/projects.
 - Preserve supplier ownership, canonical Subsample.projectId, branded IDs and
-  exclusive Project-or-Subsample scope. Validate access at API and mutation boundaries.
+  exclusive Project-or-Subsample Cost scope; Reports also supports multiple subsamples and supplier-wide scope (see handoff). Validate access at API and mutation boundaries.
 - Schema/type changes require matching fixtures and relationship checks. Runtime
   saves do not rewrite JSON. Do not store real credentials/respondent data in mocks.
 - Only Contacts has saved inheritance. Reserved technical override types are not editors.
@@ -42,7 +42,7 @@ JSON seed/process state. Clients submit through route handlers. Do not import JS
 - Desktop-first: validate affected layouts at desktop/laptop/tablet and narrow widths.
   Distinguish nested container space from viewport breakpoints.
 - Branding/messaging: [design-system.md](design-system.md),
-  [prototype-messaging.md](prototype-messaging.md). Keep floating guidance dismissible/re-openable; no prototype toasts.
+  [prototype-messaging.md](prototype-messaging.md). Keep floating guidance dismissible/re-openable; no unsolicited prototype toasts. The explicitly approved Reports duplicate-request preview uses a top-center operational toast.
 
 ## Verification and documentation
 

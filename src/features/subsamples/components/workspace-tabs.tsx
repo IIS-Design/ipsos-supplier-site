@@ -15,7 +15,8 @@ const tabs = [
   },
   { value: "costs", label: "Costs", suffix: "/costs" },
   { value: "contacts", label: "Contacts", suffix: "/contacts" },
-  { value: "configuration", label: "Configuration", suffix: "/configuration" },
+  { value: "links", label: "Links", suffix: "/links" },
+  { value: "security", label: "Security Rules", suffix: "/security" },
 ] as const;
 
 export function WorkspaceTabs({
@@ -55,7 +56,7 @@ export function WorkspaceTabs({
       <TabsList
         aria-label="Subsample workspace sections"
         variant="line"
-        className="h-auto w-full flex-nowrap justify-start gap-x-4 p-0"
+        className="h-auto w-full flex-wrap justify-start gap-x-4 p-0"
       >
         {tabs.map((tab) => (
           <TabsTrigger

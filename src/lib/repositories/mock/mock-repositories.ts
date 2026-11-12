@@ -1,3 +1,4 @@
+import { refreshSubsampleFixtures } from "./refresh-subsample-fixtures";
 import { defaultSettings, settingsSchema, userManagementSchema } from "@/features/settings/settings-model";
 import type { SettingsValues } from "@/features/settings/settings-model";
 import "server-only";
@@ -90,16 +91,7 @@ for (const subsample of contactState.subsamples) {
 // HMR keeps process-local edits. Add newly seeded Subsamples without discarding
 // saved contact choices when the fixture catalogue grows during development.
 if (process.env.NODE_ENV === "development") {
-  const fixtureById = new Map(subsamples.map((item) => [item.id, item]));
-  for (const item of contactState.subsamples) {
-    if (!item.configurationSummary) {
-      item.configurationSummary = structuredClone(fixtureById.get(item.id)?.configurationSummary);
-    }
-  }
-  const knownIds = new Set(contactState.subsamples.map(({ id }) => id));
-  contactState.subsamples.push(
-    ...structuredClone(subsamples.filter(({ id }) => !knownIds.has(id))),
-  );
+  refreshSubsampleFixtures(contactState.subsamples, subsamples);
 }
 
 function requireContactActor(
@@ -313,6 +305,8 @@ const reportRepository: ReportRepository = {
         record.supplierId === report.supplierId,
     );
     const scopeTarget =
+      report.scope.scopeType === "supplier" ? supplier :
+      report.scope.scopeType === "subsamples" ? (report.scope.subsampleIds.length > 0 && report.scope.subsampleIds.length <= 10 && new Set(report.scope.subsampleIds).size === report.scope.subsampleIds.length && report.scope.subsampleIds.every(id => subsamples.some(s => s.id === id && s.supplierId === report.supplierId))) :
       report.scope.scopeType === "project"
         ? projects.find(
             (project) =>

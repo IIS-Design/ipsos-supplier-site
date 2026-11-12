@@ -89,12 +89,13 @@ function targetFor(
   subsamples: Map<string, Subsample>,
 ): Target {
   if (cost.scope.scopeType === "project") {
-    const project = projects.get(cost.scope.projectId);
+    const projectId = cost.scope.projectId;
+    const project = projects.get(projectId);
     return {
       project: project?.name ?? "Project",
       survey: project?.surveyEventId ?? cost.scope.projectId,
       supplierProjectId: cost.supplierProjectId,
-      jobBookId: project?.jobBookNumber ?? "—",
+      jobBookId: [...new Set([...subsamples.values()].filter(item => item.projectId === projectId).map(item => item.jobBookNumber).filter(Boolean))].join(", ") || "—",
       surveyEventId: project?.surveyEventId ?? "—",
     };
   }
@@ -105,7 +106,7 @@ function targetFor(
     project: project?.name ?? "Project",
     survey: subsample?.name ?? cost.scope.subsampleId,
     supplierProjectId: cost.supplierProjectId,
-    jobBookId: project?.jobBookNumber ?? "—",
+    jobBookId: subsample?.jobBookNumber ?? "—",
     surveyEventId: project?.surveyEventId ?? "—",
   };
 }

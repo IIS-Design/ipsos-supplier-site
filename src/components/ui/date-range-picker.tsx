@@ -15,14 +15,21 @@ const asValue = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() 
 const firstOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1, 12);
 const shortDate = (value: string) => new Intl.DateTimeFormat("en", { month: "short", day: "2-digit", year: "numeric" }).format(asDate(value));
 
-export function DateRangePicker({ value, onChange, label = "Date range" }: {
+export function DateRangePicker({ value, onChange, label = "Date range", compact = false, placeholder = "Date Range", showPeriod = false, initialPresetLabel, minDate, currentDate, periodSuffix }: {
+  minDate?: string;
+  currentDate?: string;
+  periodSuffix?: string;
   value: DateRange;
   onChange: (range: DateRange) => void;
   label?: string;
+  compact?: boolean;
+  initialPresetLabel?: string;
+  placeholder?: string;
+  showPeriod?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [custom, setCustom] = useState(false);
-  const [preset, setPreset] = useState<{ label: string; from: string; to: string } | null>(null);
+  const [preset, setPreset] = useState<{ label: string; from: string; to: string } | null>(() => initialPresetLabel && value.from && value.to ? { label: initialPresetLabel, ...value } : null);
   const [draft, setDraft] = useState(value);
   const [month, setMonth] = useState(() => firstOfMonth(value.from ? asDate(value.from) : new Date()));
   const [focused, setFocused] = useState(() => value.from || asValue(new Date()));
@@ -30,7 +37,7 @@ export function DateRangePicker({ value, onChange, label = "Date range" }: {
   const monthLabel = new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(month);
   const offset = month.getDay();
   const days = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
-  const today = asValue(new Date());
+  const today = currentDate ?? asValue(new Date());
   const hasRange = Boolean(value.from || value.to);
   const currentYear = new Date().getFullYear();
   const firstYear = Math.min(currentYear - 100, month.getFullYear());
@@ -48,6 +55,7 @@ export function DateRangePicker({ value, onChange, label = "Date range" }: {
     setFocused(asValue(next));
   };
   const selectDate = (date: string) => {
+    if (minDate && date < minDate) return;
     if (!draft.from || draft.to) setDraft({ from: date, to: "" });
     else setDraft(date < draft.from ? { from: date, to: draft.from } : { from: draft.from, to: date });
   };
@@ -59,6 +67,7 @@ export function DateRangePicker({ value, onChange, label = "Date range" }: {
     else if (event.key === "End") next.setDate(next.getDate() + 6 - next.getDay());
     else return;
     event.preventDefault();
+    if (minDate && asValue(next) < minDate) next.setTime(asDate(minDate).getTime());
     const nextValue = asValue(next);
     setFocused(nextValue);
     setMonth(firstOfMonth(next));
@@ -66,6 +75,7 @@ export function DateRangePicker({ value, onChange, label = "Date range" }: {
   };
 
   return (
+    <div className="min-w-0 space-y-1">
     <Popover open={open} onOpenChange={(next) => {
       if (next) {
         setCustom(false);
@@ -78,7 +88,7 @@ export function DateRangePicker({ value, onChange, label = "Date range" }: {
     }}>
       <PopoverTrigger asChild>
         <Button aria-label={`${label}${value.from ? `: ${shortDate(value.from)}${value.to ? ` – ${shortDate(value.to)}` : " onward"}` : ": All dates"}`} className={cn(formControlStyles, "w-full min-w-0 justify-between gap-2 font-normal")} type="button" variant="outline">
-          <span className="truncate">{preset && preset.from === value.from && preset.to === value.to ? preset.label : value.from ? `${shortDate(value.from)}${value.to ? ` – ${shortDate(value.to)}` : " onward"}` : "Date Range"}</span>
+          <span className="truncate">{compact ? "Date Range" : preset && preset.from === value.from && preset.to === value.to ? preset.label : value.from ? `${shortDate(value.from)}${value.to ? ` – ${shortDate(value.to)}` : " onward"}` : placeholder}</span>
           <ChevronDown aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
         </Button>
       </PopoverTrigger>
@@ -90,13 +100,15 @@ export function DateRangePicker({ value, onChange, label = "Date range" }: {
       }}>
         {!custom ? (
           <div className="flex flex-col gap-1" aria-label="Date range presets">
-            {["Last Month", "Last 3 Months", "Last 6 Months", "Last 12 Months", "This Year"].map((name, index) => (
+            {(minDate ? ["Last Week", "Last 2 Weeks", "Last Month", "Last 3 Months"] : ["Last Month", "Last 3 Months", "Last 6 Months", "Last 12 Months", "This Year"]).map((name, index) => (
               <Button className="justify-start font-normal" id={`${id}-preset-${index}`} key={name} type="button" variant="ghost" onClick={() => {
-                const now = new Date();
-                const months = [1, 3, 6, 12][index];
-                const from = index === 4 ? new Date(now.getFullYear(), 0, 1, 12) : new Date(now.getFullYear(), now.getMonth() - months, 1, 12);
-                const to = index === 4 ? now : new Date(now.getFullYear(), now.getMonth(), 0, 12);
-                const range = { from: asValue(from), to: asValue(to) };
+                const now = asDate(today);
+                const shortRange = name === "Last Week" || name === "Last 2 Weeks";
+                const months = name === "Last Month" ? 1 : name === "Last 3 Months" ? 3 : name === "Last 6 Months" ? 6 : 12;
+                const from = shortRange ? new Date(now) : name === "This Year" ? new Date(now.getFullYear(), 0, 1, 12) : new Date(now.getFullYear(), now.getMonth() - months, 1, 12);
+                if (shortRange) from.setDate(from.getDate() - (name === "Last Week" ? 7 : 14));
+                const to = shortRange || name === "This Year" ? now : new Date(now.getFullYear(), now.getMonth(), 0, 12);
+                const range = { from: minDate && asValue(from) < minDate ? minDate : asValue(from), to: asValue(to) };
                 setPreset({ label: name, ...range });
                 onChange(range);
                 setOpen(false);
@@ -142,7 +154,8 @@ export function DateRangePicker({ value, onChange, label = "Date range" }: {
                       <button
                         aria-current={date === today ? "date" : undefined}
                         aria-label={new Intl.DateTimeFormat("en", { dateStyle: "full" }).format(asDate(date))}
-                        className={cn("flex h-9 w-full items-center justify-center rounded-md text-sm hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", date === today && "font-semibold", endpoint && "bg-primary text-primary-foreground hover:bg-primary/90")}
+                        className={cn("flex h-9 w-full items-center justify-center rounded-md text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", date === today && "font-semibold", endpoint && "bg-primary text-primary-foreground hover:bg-primary/90")}
+                        disabled={Boolean(minDate && date < minDate)}
                         id={`${id}-${date}`}
                         onClick={() => selectDate(date)}
                         onFocus={() => setFocused(date)}
@@ -178,5 +191,7 @@ export function DateRangePicker({ value, onChange, label = "Date range" }: {
         </>}
       </PopoverContent>
     </Popover>
+    {showPeriod && hasRange && <p className="text-xs text-muted-foreground">{preset && preset.from === value.from && preset.to === value.to ? `From ${value.from ? shortDate(value.from) : "any date"} to ${value.to ? shortDate(value.to) : "any date"}${periodSuffix ? ` · ${periodSuffix}` : ""}` : periodSuffix}</p>}
+    </div>
   );
 }

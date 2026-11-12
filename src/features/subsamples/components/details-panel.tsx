@@ -1,8 +1,11 @@
 "use client";
 
+import type { JobBookNumber } from "@/types/ids";
+import { IpsosContacts } from "./ipsos-contacts";
+import { CopyValue } from "@/components/ui/copy-value";
 import { useConfigurationState } from "./configuration-state";
 import { usePrototypeState } from "@/components/prototype-state";
-import { ScenarioEmpty } from "./scenario-preview";
+import { subsampleLanguages } from "@/types/subsample";
 import type { Subsample } from "@/types/subsample";
 
 function ConfigurationSummary({ subsample }: { subsample: Subsample }) {
@@ -71,8 +74,7 @@ function formatDate(value: string | null | undefined): string {
 
 export function DetailsPanel({ subsample: original }: { subsample: Subsample }) {
   const { scenario } = usePrototypeState();
-  if (scenario === "empty") return <ScenarioEmpty title="No subsample details available" message="Details will appear when this subsample is configured." />;
-  const subsample = scenario === "populated" ? { ...original, router: original.router || "Main Router", invoiceEntity: original.invoiceEntity || "Ipsos Interactive Services", ipsosContact: original.ipsosContact || "supplier.support@example.test" } : scenario === "minimal" ? { ...original, router: null, invoiceEntity: undefined, ipsosContact: undefined, configurationSummary: undefined } : original;
+  const subsample = scenario === "multilingual" ? { ...original, country: "Canada", language: "en-CA", languages: ["en-CA", "fr-CA"], jobBookNumber: "260001000002" as JobBookNumber, researchType: "Product testing" } : scenario === "populated" ? { ...original, ipsosContact: original.ipsosContact || "supplier.support@example.test" } : scenario === "minimal" ? { ...original, ipsosContact: undefined, ipsosContacts: [], jobBookNumber: undefined, researchType: undefined, configurationSummary: undefined } : original;
   return (
     <div className="grid gap-8 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
       <section aria-labelledby="subsample-details-heading">
@@ -113,13 +115,19 @@ export function DetailsPanel({ subsample: original }: { subsample: Subsample }) 
         </dl>
         <dl className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
+            <DetailField label="Subsample ID" value={subsample.id} />
+            <div className="min-w-0 space-y-1"><dt className="text-sm font-medium">Job Book Number</dt><dd className="flex flex-wrap items-center gap-2 wrap-break-word text-sm text-muted-foreground">{subsample.jobBookNumber || "Not provided"}{subsample.jobBookNumber && <CopyValue value={subsample.jobBookNumber} label="Job Book Number" />}</dd></div>
+          </div>
+          <div className="grid grid-cols-2 gap-6">
             <DetailField label="Field Start Date" value={formatDate(subsample.fieldStartDate)} />
             <DetailField label="Field End Date" value={formatDate(subsample.fieldEndDate)} />
           </div>
-          <DetailField label="Language" value={subsample.language} />
-          <DetailField label="Router" value={subsample.router} />
-          <DetailField label="Invoice Entity" value={subsample.invoiceEntity} />
-          <DetailField label="Ipsos Contact" value={subsample.ipsosContact} />
+          <div className="grid grid-cols-2 gap-6">
+            <DetailField label="Country" value={subsample.country} />
+            <DetailField label="Languages" value={subsampleLanguages(subsample).join(", ")} />
+          </div>
+          <DetailField label="Research Type" value={subsample.researchType} />
+          <div><dt className="sr-only">Ipsos Contacts</dt><dd><IpsosContacts subsample={subsample} /></dd></div>
         </dl>
       </section>
       <ConfigurationSummary subsample={subsample} />

@@ -80,3 +80,8 @@ No invitation acceptance/SMTP, external key rotation, endpoint execution, requir
 enforcement or non-contact Subsample inheritance is implemented. The Time Zone list
 is curated. See settings.md. The replacement Default Contacts editor keeps its Save/Cancel controls mounted. A dev restart may be needed after repository interface changes (fresh builds
 work); the existing demo process was left running to preserve its local data.
+
+
+## Member Info review — November 12, 2026
+
+Current Reports behavior supersedes older entries here: see [Approved Member Info review](handoff.md#approved-member-info-review--november-12-2026). Supports 1–10 owned subsamples or all, Project child selection, Organization-zone dates (two-week default, three-month limit), multiple status/substatus codes, both link types by default and optional respondent deduplication. Upload URL/partial responses removed. Duplicate toast and unavailable-file states are reversible Prototype Tools previews only. Queue execution, emails and file generation remain absent; static CSV sample retained. Child suppliers remain pending.

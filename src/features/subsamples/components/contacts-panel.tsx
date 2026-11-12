@@ -1,6 +1,7 @@
 "use client";
 
 import { usePrototypeState } from "@/components/prototype-state";
+import { IpsosContacts } from "./ipsos-contacts";
 import { ScenarioEmpty } from "./scenario-preview";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -40,7 +41,7 @@ function ContactsEditor({ defaults, options, subsample, canEditDefaults = false 
       reset(draft, { keepDirtyValues: false }); setSuccess(draft.useDefaults ? "Saved. This Subsample now inherits Default Contacts." : "Custom contacts saved. Supplier default changes will not change these selections."); router.refresh();
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Unable to save contacts."); }
   });
-  return <section aria-labelledby="contacts-heading" className="max-w-4xl space-y-5"><div><h2 id="contacts-heading" className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">Contacts</h2></div>
+  return <section aria-labelledby="contacts-heading" className="max-w-4xl space-y-5"><div><h2 id="contacts-heading" className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">Supplier Contacts</h2></div>
     <form className="space-y-5" noValidate onSubmit={save} aria-busy={isSubmitting}>{error && <FieldError>{error}</FieldError>}{success && <p role="status" className="text-emerald-800">{success}</p>}
       <div className="flex flex-wrap items-center gap-3"><label htmlFor="use-default-contacts" className="font-medium">Use Default Contacts</label><Switch id="use-default-contacts" checked={useDefaults} disabled={isSubmitting} onCheckedChange={checked => { setValue("useDefaults", checked, { shouldDirty: true }); setSuccess(""); }} /><ContactModeBadge inherited={useDefaults} canEditDefaults={canEditDefaults} /></div>
       {useDefaults ? <ContactValues inherited contacts={resolveContacts(defaults, options, { mode: "inherit" })} /> : <><ContactPicker allowEmail value={pickerOptions.filter(contact => selections.includes(contact.id))} options={pickerOptions} disabled={isSubmitting} onChange={next => { setDraftContacts(next.filter(contact => !options.some(option => option.id === contact.id))); setValue("selections", next.map(contact => contact.id), { shouldDirty: true, shouldValidate: true }); setSuccess(""); }} /><p className="text-sm text-muted-foreground">Custom selections are independent. Selecting no contacts does not fall back to defaults.</p></>}
@@ -50,14 +51,23 @@ function ContactsEditor({ defaults, options, subsample, canEditDefaults = false 
   </section>;
 }
 
-export function ContactsPanel(props: Parameters<typeof ContactsEditor>[0]) {
+function SupplierContactsPanel(props: Parameters<typeof ContactsEditor>[0]) {
   const { scenario } = usePrototypeState();
   if (!scenario) return <ContactsEditor {...props} />;
   if (scenario === "empty") return <ScenarioEmpty title="No contacts configured" message="No email recipients are selected for this subsample." />;
   const contacts = scenario === "defaults"
     ? [{ id: "preview-default", name: "Jordan Lee", email: "admin@supplier.com" }, { id: "preview-finance", name: "Finance", email: "finance@supplier.com" }]
     : [{ id: "preview-custom", name: "Project Contact", email: "projects@supplier.com" }];
-  return <section className="space-y-5"><h2 className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">Contacts</h2><ContactModeBadge inherited={scenario === "defaults"} canEditDefaults={props.canEditDefaults} /><ContactValues inherited={scenario === "defaults"} contacts={contacts} /><p className="text-sm text-muted-foreground">{scenario === "defaults" ? "Using Default Contacts" : "Custom contacts configured"}</p></section>;
+  return <section className="space-y-5"><h2 className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">Supplier Contacts</h2><ContactModeBadge inherited={scenario === "defaults"} canEditDefaults={props.canEditDefaults} /><ContactValues inherited={scenario === "defaults"} contacts={contacts} /><p className="text-sm text-muted-foreground">{scenario === "defaults" ? "Using Default Contacts" : "Custom contacts configured"}</p></section>;
+}
+
+export function ContactsPanel(props: Parameters<typeof ContactsEditor>[0]) {
+  const { scenario } = usePrototypeState();
+  const ipsosPreview = scenario.startsWith("ipsos-");
+  return <div className="space-y-8">
+    <IpsosContacts subsample={props.subsample} />
+    <div className="border-t pt-6">{ipsosPreview ? <ContactsEditor {...props} /> : <SupplierContactsPanel {...props} />}</div>
+  </div>;
 }
 
 function ContactModeBadge({ inherited, canEditDefaults = false }: { inherited: boolean; canEditDefaults?: boolean }) {

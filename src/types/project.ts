@@ -1,5 +1,4 @@
 import type {
-  JobBookNumber,
   ProjectId,
   SupplierId,
   SurveyEventId,
@@ -13,9 +12,7 @@ export type Project = {
   surveyEventId: SurveyEventId;
   name: string;
   status: ProjectStatus;
-  jobBookNumber: JobBookNumber;
+  billingEntity?: string;
   deviceCompatibility?: { mobile: boolean; tablet: boolean; desktop: boolean };
-  productType?: string;
-  researchType?: string;
   categoryPaths?: string[][];
 };

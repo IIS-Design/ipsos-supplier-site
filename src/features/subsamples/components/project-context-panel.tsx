@@ -1,5 +1,7 @@
 "use client";
 
+import { statusBadgeStyles, statusLabels } from "@/types/status";
+
 import { Check, X, Minus, ChevronRight } from "lucide-react";
 import { Fragment } from "react";
 import { useRouter } from "next/navigation";
@@ -16,19 +18,8 @@ import {
 import type { Project } from "@/types/project";
 import type { Subsample } from "@/types/subsample";
 
-const projectStatusLabel: Record<Project["status"], string> = {
-  live: "Live",
-  pending: "Pending",
-  closed: "Closed",
-  canceled: "Canceled",
-};
-
-const projectStatusStyle: Record<Project["status"], string> = {
-  live: "border-emerald-200 bg-emerald-50 text-emerald-800",
-  pending: "border-amber-200 bg-amber-50 text-amber-900",
-  closed: "border-slate-200 bg-slate-100 text-slate-700",
-  canceled: "border-rose-200 bg-rose-50 text-rose-800",
-};
+const projectStatusStyle = statusBadgeStyles;
+const projectStatusLabel = statusLabels;
 
 export function ProjectContextPanel({
   project,
@@ -82,7 +73,7 @@ export function ProjectContextPanel({
           <SelectContent>
             {subsamples.map((item) => (
               <SelectItem className="text-base font-medium" key={item.id} value={item.id}>
-                {item.name}
+                {item.name} — {item.country}
               </SelectItem>
             ))}
             <SelectSeparator />
@@ -104,17 +95,12 @@ export function ProjectContextPanel({
           </dd>
         </div>
         <div>
-          <dt className="font-medium">Project ID</dt>
+          <dt className="font-medium">SID</dt>
           <dd className="mt-1 text-muted-foreground">
             {project.surveyEventId}
           </dd>
         </div>
-        <div>
-          <dt className="font-medium">Job Book No°</dt>
-          <dd className="mt-1 text-muted-foreground">
-            {project.jobBookNumber}
-          </dd>
-        </div>
+        <div className="col-span-2"><dt className="font-medium">Billing Entity</dt><dd className="mt-1 text-muted-foreground">{project.billingEntity || "Not provided"}</dd></div>
         <div className="col-span-2">
           <dt className="font-medium">Device Compatibility</dt>
           <dd className="mt-2 flex flex-wrap gap-1.5">
@@ -125,8 +111,6 @@ export function ProjectContextPanel({
             })}
           </dd>
         </div>
-        <div className="col-span-2"><dt className="font-medium">Product Type</dt><dd className="mt-1 wrap-break-word text-muted-foreground">{project.productType || "Not Defined"}</dd></div>
-        <div className="col-span-2"><dt className="font-medium">Research Type</dt><dd className="mt-1 wrap-break-word text-muted-foreground">{project.researchType || "Not Defined"}</dd></div>
         <div className="col-span-2 min-w-0">
           <dt className="font-medium">Categories</dt>
           <dd className="mt-2 space-y-3">

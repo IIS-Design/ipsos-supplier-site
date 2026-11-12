@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import type { Report } from "@/types/report";
 
 const reportTypeLabels: Record<Report["type"], string> = {
-  respondent_info: "Respondent Info Report",
+  respondent_info: "Member Info Report",
   survey_duration: "Survey Duration Report",
   mini_router_quota: "Mini-Router Quota Report",
 };

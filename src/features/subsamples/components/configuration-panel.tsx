@@ -1,7 +1,7 @@
 "use client";
 
-import { SecurityRules } from "./security-rules";
-import { useEffect } from "react";
+import { EntryLinks } from "./entry-links";
+import type { Subsample } from "@/types/subsample";
 import { Switch } from "@/components/ui/switch";
 import { useConfigurationState, type ConfigKey } from "./configuration-state";
 import { redirectFields, endpointFields, fieldLabels } from "@/features/settings/settings-model";
@@ -10,14 +10,13 @@ import { ScenarioEmpty } from "./scenario-preview";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { ArrowLeftRight, Link2, Route, ShieldCheck } from "lucide-react";
+import { ArrowLeftRight, Link2, Route } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type ConfigurationSection =
   | "entry-links"
   | "redirects"
-  | "server-to-server"
-  | "security";
+  | "server-to-server";
 
 const sections: {
   id: ConfigurationSection;
@@ -27,44 +26,40 @@ const sections: {
   { id: "entry-links", label: "Entry Links", Icon: Link2 },
   { id: "redirects", label: "Redirects", Icon: Route },
   { id: "server-to-server", label: "Server-to-Server", Icon: ArrowLeftRight },
-  { id: "security", label: "Security", Icon: ShieldCheck },
 ];
 
 export function ConfigurationPanel({
   projectId,
   subsampleId,
   activeSection,
+  subsample,
 }: {
   projectId: string;
   subsampleId: string;
   activeSection: ConfigurationSection;
+  subsample: Subsample;
 }) {
   const { scenario, setScenario } = usePrototypeState();
   const config = useConfigurationState();
   const key: ConfigKey = activeSection === "server-to-server" ? "server-to-server" : "redirects";
-  const inherited = config.sections[key].inherited;
+  const inherited = scenario === "defaults" ? true : scenario === "custom" ? false : config.sections[key].inherited;
   const values = inherited ? config.defaults[key] : config.sections[key].values;
-  useEffect(() => {
-    if (activeSection === "entry-links") return;
-    if (activeSection === "security") {
-      if (scenario === "security-rules" || scenario === "security-empty") config.setSecurityRulesDefined(scenario === "security-rules");
-      return;
-    }
-    if (scenario === "defaults" || scenario === "custom") config.toggle(key, scenario === "defaults");
-    // Scenario selection changes mode once, leaving subsequent edits independent.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scenario, activeSection]);
-  const base = `/projects/${projectId}/subsamples/${subsampleId}/configuration`;
+  const edit = (field: string, value: string) => {
+    config.toggle(key, false);
+    config.edit(key, field, value);
+    setScenario("");
+  };
+  const base = `/projects/${projectId}/subsamples/${subsampleId}/links`;
   const active =
     sections.find((section) => section.id === activeSection) ?? sections[0];
 
   return (
     <div className="grid gap-6 md:grid-cols-[220px_minmax(0,1fr)]">
       <nav
-        aria-label="Configuration sections"
+        aria-label="Links sections"
         className="space-y-1 border-b pb-4 md:border-b-0 md:border-r md:pb-0 md:pr-5"
       >
-        <h2 className="mb-3 text-sm font-semibold">Configuration</h2>
+        <h2 className="mb-3 text-sm font-semibold">Links</h2>
         {sections.map(({ id, label, Icon }) => (
           <Link
             aria-current={activeSection === id ? "page" : undefined}
@@ -89,11 +84,11 @@ export function ConfigurationPanel({
         <h2 id="configuration-section-title" className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">
           {active.label}
         </h2>
-        {activeSection === "security" ? <SecurityRules defined={config.securityRulesDefined} projectId={projectId} subsampleId={subsampleId} /> : scenario === "empty" ? <div className="mt-4"><ScenarioEmpty title="No configuration available" message="No values have been configured for this section." /></div> : <div className="mt-5 space-y-5">
-          {activeSection === "entry-links" ? <div className="space-y-2"><h3 className="text-sm font-medium">Entry Link</h3><p className="break-all text-sm text-muted-foreground">https://survey.example.test/entry?subsample={subsampleId}</p></div> : <>
+        {activeSection === "entry-links" && scenario === "empty" ? <div className="mt-4"><ScenarioEmpty title="No links available" message="No values have been configured for this section." /></div> : <div className="mt-5 space-y-5">
+          {activeSection === "entry-links" ? <EntryLinks subsample={subsample} /> : <>
             <div className="flex flex-wrap items-center gap-3"><label className="text-sm font-medium" htmlFor={`inherit-${key}`}>Use Supplier Defaults</label><Switch id={`inherit-${key}`} checked={inherited} onCheckedChange={checked => { setScenario(""); config.toggle(key, checked); }} /><Badge variant="outline">{inherited ? "Inherited" : "Custom Override"}</Badge></div>
-            {activeSection === "server-to-server" && <label className="block space-y-2 text-sm font-medium">Pixel HTML<textarea className="min-h-24 w-full rounded-md border bg-background p-3 text-sm font-normal read-only:bg-muted/40" readOnly={inherited} value={values.pixel ?? ""} onChange={event => config.edit(key, "pixel", event.target.value)} placeholder="Insert your code here…" /></label>}
-            {(activeSection === "redirects" ? [...redirectFields] : [...endpointFields]).map(field => <label key={field} className="block space-y-2 text-sm font-medium">{fieldLabels[field]}<Input readOnly={inherited} className="read-only:bg-muted/40" value={values[field] ?? ""} onChange={event => config.edit(key, field, event.target.value)} /></label>)}
+            {activeSection === "server-to-server" && <label className="block space-y-2 text-sm font-medium">Pixel HTML<textarea className="min-h-24 w-full rounded-md border bg-background p-3 text-sm font-normal read-only:bg-muted/40" readOnly={inherited} value={values.pixel ?? ""} onChange={event => edit("pixel", event.target.value)} placeholder="Insert your code here…" /></label>}
+            {(activeSection === "redirects" ? [...redirectFields] : [...endpointFields]).map(field => <label key={field} className="block space-y-2 text-sm font-medium">{fieldLabels[field]}<Input readOnly={inherited} className="read-only:bg-muted/40" value={values[field] ?? ""} onChange={event => edit(field, event.target.value)} /></label>)}
           </>}
 
         </div>}

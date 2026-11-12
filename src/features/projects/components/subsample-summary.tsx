@@ -1,17 +1,7 @@
+import { statusLabels, statusTextStyles as statusStyles } from "@/types/status";
 import Link from "next/link";
+import { subsampleLanguages } from "@/types/subsample";
 import type { Subsample } from "@/types/subsample";
-
-const statusLabels: Record<Subsample["status"], string> = {
-  live: "Live",
-  pending: "Pending",
-  canceled: "Canceled",
-};
-
-const statusStyles: Record<Subsample["status"], string> = {
-  live: "text-emerald-800",
-  pending: "text-slate-600",
-  canceled: "text-slate-600",
-};
 
 function formatDate(date: string): string {
   return new Intl.DateTimeFormat("en", {
@@ -38,13 +28,14 @@ export function SubsampleSummary({ subsample, wholeRowLink = false }: { subsampl
         >
           <span
             aria-hidden="true"
-            className={`size-2 rounded-full ${subsample.status === "live" ? "bg-emerald-700" : "bg-slate-500"}`}
+            className={`size-2 rounded-full bg-current`}
           />
           {statusLabels[subsample.status]}
         </span></dd></div>
+        <div className="flex gap-1"><dt className="text-muted-foreground">Country:</dt><dd>{subsample.country}</dd></div>
         <div className="flex gap-1">
-          <dt className="text-muted-foreground">Language:</dt>
-          <dd className="text-foreground">{subsample.language}</dd>
+          <dt className="text-muted-foreground">Languages:</dt>
+          <dd className="text-foreground">{subsampleLanguages(subsample).join(", ")}</dd>
         </div>
         <div className="flex gap-1">
           <dt className="text-muted-foreground">Field End Date:</dt>

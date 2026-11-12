@@ -15,7 +15,7 @@ export type SubsampleScope = {
 
 export type RecordScope = ProjectScope | SubsampleScope;
 
-export type ReportScope = RecordScope;
+export type ReportScope = RecordScope | { scopeType: "subsamples"; subsampleIds: string[]; projectId?: never; subsampleId?: never } | { scopeType: "supplier"; projectId?: never; subsampleId?: never };
 export type CostScope = RecordScope;
 
 /**

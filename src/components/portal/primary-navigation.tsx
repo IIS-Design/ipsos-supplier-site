@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { confirmContactNavigation } from "@/features/contacts/use-unsaved-changes";
+import { PortalWidthToggle } from "@/components/portal/portal-width";
 import { IpsosLogo } from "@/components/ipsos-logo";
 
 const baseNavigation = [
@@ -47,7 +48,7 @@ export function PrimaryNavigation() {
         menuButton.current?.focus();
       }
     }}>
-      <div className="mx-auto flex min-h-16 max-w-300 flex-wrap items-center gap-3 px-4 py-2 sm:gap-4 sm:px-6">
+      <div className="mx-auto flex min-h-16 max-w-(--portal-max-width) flex-wrap items-center gap-3 px-4 py-2 sm:gap-4 sm:px-6">
         <Link
           aria-label="Ipsos Supplier Portal home"
           className="mr-2 flex shrink-0 items-center gap-2"
@@ -115,6 +116,7 @@ export function PrimaryNavigation() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+        <div className="hidden shrink-0 items-center lg:flex"><PortalWidthToggle /></div>
         <Button
           aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={menuOpen}

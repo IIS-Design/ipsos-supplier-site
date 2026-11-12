@@ -7,6 +7,56 @@ Verified against source on 2026-10-23. This is a running Next.js prototype, not 
 earlier docs/data-only foundation. Prefer current code over historical summaries,
 screenshots or session memory. No business-data persistence exists outside one process.
 
+## Information hierarchy updated November 12
+
+Project labels use SID (`surveyEventId`). Billing Entity is project-level. Job Book Number and Research Type are subsample-level; Product Type has been removed. Subsample `languages` supports multiple values; `language` is retained for compatibility with older fixtures. Use `subsampleLanguages` for displays and filtering, with Country before Languages. Mock migration preserves existing identifiers; synthetic demo scenarios demonstrate differing JBN/research types and multiple languages. Cost target summaries derive JBN from their subsamples.
+
+## Field Progress updated November 12
+
+Field Progress compares In field, Expected and Difference for LOI, Incidence, Conversion and Total Abandon. Conversion uses completes / visitors × 100 as an explicitly unverified legacy Clicks=Visitors assumption. Zero visitors means unavailable conversion. Abandon is a supplied rate, not calculated from Visitors. Optional expectedMetrics use percentage values on a 0–100 scale; difference is actual minus expected in minutes or percentage points. Missing values display an em dash, not zero. Estimates and Abandon added to demo fixtures are synthetic examples. quotaTables defines explicit grouping and variable names; combined tables stay unified. Older quotaBreakdown remains a fallback. Field Progress Prototype Tools includes Actual vs Expected (positive/negative/zero differences), Missing Expected / Abandon, Zero Visitors, and Separate and Combined Quotas. These previews work on any subsample without fixture mutations; The grouped Preview scenario dropdown uses Current data to clear the preview, with the selected scenario description below. This control replaces scenario button lists across subsample pages; independent actions remain buttons. Existing empty/no-quota/low/nearly cases remain available. Add or adjust prototype scenarios whenever new UI states are implemented.
+
+## Links and Security Rules updated November 12
+
+Subsample Configuration is now Links at `/links`; Security Rules has its own `/security` tab. Old `/configuration` URLs redirect, including `?section=security`. Entry Links uses optional `entryLinks` grouped by language with Live and Testing URLs and copy confirmation; demo fixture URLs use example.test. Missing links render explicit empty states. Redirects and Server-to-Server retain existing defaults/custom behavior. Security Rules currently has no real data integration: its default is empty; Prototype Tools offers the supplied Research Type × Client example, many rules and empty rules. Accordions are read-only with per-row days and status names/codes; all start collapsed. The full Product criteria catalogue remains pending. Prototype Tools supports the new routes and link previews.
+
+## Prototype preview coverage audit November 12
+
+Entry Links previews: single language, multiple languages, missing Testing, missing Live, long URL wrapping/copy and empty. Details: populated, multilingual identifiers, minimal optional fields and empty. Field Progress: complete/missing/zero metrics, combined/simple quotas, no quotas, low/healthy/nearly and empty. Security: one/many/empty rules, with collapse state reset on scenario changes. Redirect/S2S has no empty-state preview: configuration fields always remain visible, including blank values. Redirect/S2S scenarios derive preview modes without mutating actual configuration; choosing Current data restores the baseline. Deliberate edits still update the prototype configuration. Copy failures are handled by CopyValue; browser clipboard permissions must be verified in-browser. These are representative supported UI cases, not a complete business rules catalogue.
+
+## Ipsos contact presentation updated November 12
+
+Optional `ipsosContacts` stores read-only name/email pairs. `getIpsosContacts` falls back to legacy `ipsosContact` only when the list is absent; an explicitly empty list stays empty. Overview and Contacts show the list with CopyValue buttons; Supplier Contacts remains a separate editable section with unchanged permissions and notification behavior. Shared ContactValues also exposes email copying, including inherited supplier contacts/settings. Prototype Tools includes one/many/no Ipsos contacts in Contacts and many/none in Details. Demo names and example.test emails are synthetic. Actual assignment/origin remains pending Daniela validation.
+
+## Report cleanup updated November 12
+
+Member Info Report is the only currently available report type. Its internal identifier remains `respondent_info` for fixture/API compatibility. Retired `survey_duration` and `mini_router_quota` records remain in the historical fixture schema but are filtered by getReports, so history, queue and project widgets exclude them. The create form, API and service reject retired types. No Reconciliation report existed to remove. Monthly Billing Report has a Not available yet entry and a selectable report-type option that displays a pending-definition view with creation disabled; requirements and cost-workshop decisions remain pending. Existing Member Info parameters are preserved until Daniela supplies validated requirements. Report execution is still a mock queue, not a new export engine.
+
+## Member Info selector updated November 12
+
+Report creation uses a searchable project/subsample picker with name, SID, subsample ID, country and language matching, explicit scope labels and parent-project information. Project uses surveyEventId as SID; subsample ID remains a distinct identifier. Both scopes remain supported as before. Date Range reuses the dashboard DateRangePicker, including presets/custom calendar, Please select... when empty and the exact From/To period below the preset label. Advanced Options defaults to collapsed; report-specific date semantics remain unchanged. Manually verify long labels, no matches, keyboard arrows/Enter/Escape and selection, presets/custom/clear dates with the available demo catalogue.
+
+## Reports listing previews updated November 12
+
+Reports history/queue uses DateRangePicker, initially Last 3 Months (same completed-calendar-month bounds as dashboard presets), filtering createdAt inclusively. Monthly Billing placeholder strip has been removed; the pending report type remains available in creation. Download buttons are compact with a Download icon. Prototype Tools now uses a scenario dropdown for all/queued/executing/finished/error/empty Reports with sample records inside the default date range. Empty Reports does not show the old gray preview notice. Current data restores source records; previews do not mutate report storage.
+
+## Unified Reports updated November 12
+
+History and Queue tabs are removed. Reports shows all statuses together in one filterable list; status badges precede report names. Empty results say no reports are available for the selected filters. Old view=queue links still resolve to Reports but do not select a separate view. Created-report feedback points to the unified list. Footer update and Changelog links are left aligned.
+
+## Browser verification November 12
+
+Verified against the running localhost /supplier app at the default 1280px viewport using the admin mock account. Checked dashboard Country=Canada limits Languages to en-CA/fr-CA; filter overlays work inside the sidebar. Verified actual fixture quota grouping/tags and the Actual vs Expected scenario (+1 min, -5 pp, 0 pp, -7 pp), multiple Entry Links and successful clipboard feedback, Security many-rules expand all (6) / collapse all (0), and S2S Custom preview → Current data restoring inherited mode without editing values. Confirmed overview hierarchy, Contacts read-only list and separate supplier editor, standard/full width (1200/1280px), unified Reports status ordering, all-status preview, no-match message, searchable report scope selecting by ID with Enter, empty selector placeholders, date preset period and collapsed Advanced Options. No console warnings/errors appeared in the inspected tab logs. No new functional blocker was observed in these sampled flows. This is not exhaustive: no mobile viewport, real backend/report generation, real email sending, permission matrix, all date-calendar keyboard paths or browser clipboard denial was verified. No reports or contacts were saved during this review.
+
+## Portal width preference persistence
+
+The width toggle lives in PrimaryNavigation, shared by every authenticated portal page. Do not add duplicate local toggles to page headers. Login/recovery pages remain outside the portal shell.
+
+PortalWidthProvider uses useSyncExternalStore with a standard-width server snapshot and browser localStorage key `ipsos-supplier-portal:full-width`. Both true/full and false/standard are saved by the toggle. Same-tab subscribers and other tabs update via events; navigation/remount/reload reads the preference again. Storage denial falls back to an in-memory session preference. This is a browser-level appearance preference, not an account setting.
+
+## Daily change history
+
+Read `src/data/changelog.ts` (also displayed at `/changelog`) for the latest implemented changes and pending decisions. This history includes November 12 updates that supersede older descriptions below. After implementing changes, update the corresponding daily entry or add a new date at the top, describing behavior, validation and any material remaining dependencies. Do not record planned work as implemented. The portal footer derives Last Update from the newest entry; do not use build time or the current clock.
+
 ## What a new AI must know before making changes
 
 1. Read root `AGENTS.md`: this Next.js version has local documentation in
@@ -625,3 +675,25 @@ Below lg (1024px), the five workspace tabs are replaced with a labeled Section
 Select, matching Settings/Account responsive navigation. It reflects the active
 route and uses the same guarded navigation as desktop tabs. At lg and above,
 existing line tabs remain on one row. Hidden navigation is not keyboard-focusable.
+
+
+## Approved Member Info review — November 12, 2026
+
+This section supersedes older Reports descriptions above. Member Info remains the only executable creation type; Monthly Billing is a disabled pending-definition view. Project selection reveals a searchable multiple Subsample selector: 1–10 children are preselected, >10 starts empty; changing Project resets selection. Select all adds matching search results only when the total stays <=10; Deselect all clears selection. Direct single-Subsample, cross-Project selections and explicit All my subsamples are supported. All scope is limited to the authenticated supplier; child suppliers are deferred.
+
+Dates default to two weeks before today through today in Organization.timeZone. Both dates are required, start must be within three calendar months, and start <= end. The calendar disables older days and limits presets; the API repeats validation and rejects stale organization time zones. Requests use local midnight through end-of-day converted to UTC with IANA/DST rules and retain the zone. The From/To summary includes city and UTC offset; ranges spanning offset changes show both offsets.
+
+Advanced Options stays collapsed initially. Status and Substatus use searchable multiple code selections (empty means all). The catalogue is provisional from the supplied guide; no unverified status/substatus dependency is invented. Live and Proofing are independent checkboxes, both initially checked; at least one is required. Final Status remains default and now describes outcomes on selected subsamples, including screenouts/abandons; Entered Survey includes reallocated traffic. One row per respondent defaults off and saves deduplicateSessions only; which session to retain is pending backend definition. Upload to URL and Include partial responses were removed from form/API.
+
+ReportScope retains legacy Project/Subsample records and adds {scopeType: "subsamples", subsampleIds: string[]} (1–10 unique owned IDs) and {scopeType: "supplier"} (all owned subsamples). CostScope remains unchanged. The repository validates every selected subsample at mutation time. Activity displays the selected count or single subsample name, supports searching selected IDs/names, and includes today after successful creation so the new report remains visible.
+
+Prototype Tools on Reports adds Duplicate request (top-center informational toast, dismissible, View report scrolls to the queued preview) and File no longer available (Finished remains, no download, explanatory text and Create report action). These scenarios never detect duplicates, delete files or mutate records. Requests still enter the mock queue; no execution, immediate download, email, retention job or automatic deduplication exists. The downloadable sample remains a fixed synthetic CSV; the optional four-sheet Excel was deferred. History is not limited to 10.
+
+Validation: four focused MIR tests cover DST, month-end date boundaries, request validation and mutation ownership. Browser checks covered a 12-child project starting empty, search/Select all results, a two-child project starting fully selected, default advanced values, successful two-subsample creation, unavailable-file preview and duplicate toast/action. The inspected viewport was narrow; no desktop-specific visual pass is claimed for this task.
+
+
+## Member Info UI refinement — November 12, 2026
+
+Supersedes the earlier all/cross-project UI: removed All my subsamples and Select subsamples from the scope dropdown; users choose a Project (then its children) or a direct Subsample. The underlying supplier scope is retained for compatibility but is no longer offered by this form. Missing child selection errors now appear directly below the Subsamples selector, with an accessible error association and focused message. Status/Substatus dropdowns have no search and show Name (code), e.g. In Router (1). Link Type uses Live Users (Real Respondents) and Proofing Users (Test Users), with muted parenthetical text.
+
+The restricted report date picker offers Last Week and Last 2 Weeks in addition to Last Month/Last 3 Months; Last 2 Weeks is initially selected. Presets show their name in the control and exact dates/zone below. Custom ranges show dates in the control and only the zone below, avoiding duplicate dates. Removed the three-month helper sentence; the picker disables dates before the minimum, while API validation remains. Rolling presets use the current Organization-local date. Other unrestricted shared date pickers retain their existing presets.

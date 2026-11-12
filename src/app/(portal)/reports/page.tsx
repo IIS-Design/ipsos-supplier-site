@@ -20,7 +20,6 @@ export default async function ReportsRoute({
 
   return (
     <ReportWorkspace
-      initialView={query.view === "queue" ? "queue" : "history"}
       createdReportId={
         reports.some((report) => report.id === query.created)
           ? query.created

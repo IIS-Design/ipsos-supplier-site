@@ -1,20 +1,24 @@
 "use client";
 
-import { Suspense, useId, useRef, useState, type ReactNode } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Toaster } from "@/components/ui/sonner";
+import { Suspense, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Wrench, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectGroup, SelectLabel, SelectItem, SelectTrigger, SelectValue, SelectSeparator } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { PrototypeStateProvider, usePrototypeState } from "@/components/prototype-state";
 import { confirmContactNavigation } from "@/features/contacts/use-unsaved-changes";
-import { scenarioTab, subsampleScenarios } from "@/features/subsamples/scenarios";
+import { scenarioTab, subsampleScenarios, reportScenarios } from "@/features/subsamples/scenarios";
 import { withBasePath } from "@/lib/app-path";
 
 export function PrototypeEnvironment({ children }: { children: ReactNode }) {
   const pathname = usePathname().replace(/\/$/, "") || "/";
   const scopeKey = pathname.match(/^(\/projects\/[^/]+\/subsamples\/[^/]+)/)?.[1] ?? pathname;
-  return <PrototypeStateProvider key={scopeKey}>{children}<Suspense fallback={null}><PrototypeTools /></Suspense></PrototypeStateProvider>;
+  return <PrototypeStateProvider key={scopeKey}>{children}<Suspense fallback={null}><PrototypeTools /></Suspense><Toaster /></PrototypeStateProvider>;
 }
 
 export function FloatingPrototypeTools({
@@ -99,6 +103,8 @@ export function FloatingPrototypeTools({
 }
 
 export function PrototypeTools() {
+  const router = useRouter();
+  useEffect(() => () => { toast.dismiss("report-duplicate-preview"); }, []);
   const pathname = usePathname().replace(/\/$/, "") || "/";
   const { scenario, setScenario, empty, setEmpty, activityEmpty, setActivityEmpty } = usePrototypeState();
   const confirmation = pathname === "/forgot-password/confirmation";
@@ -113,19 +119,24 @@ export function PrototypeTools() {
       : reports
         ? [{ href: withBasePath("/mock-reports/RPT-2026-1045.csv"), label: "Open Sample Report" }]
         : [];
-  const emptyModule = pathname === "/reports" ? "Reports" : pathname === "/costs" ? "Costs" : null;
+  const emptyModule = pathname === "/costs" ? "Costs" : null;
   const projects = pathname === "/projects";
   const tab = scenarioTab(pathname);
   const section = useSearchParams().get("section") ?? "entry-links";
   const customLabel = section === "server-to-server" ? "Show Custom S2S" : section === "security" ? "Show Custom Security" : section === "redirects" ? "Show Custom Redirects" : "Show Custom Entry Link";
-  const scenarios = tab === "configuration" && section === "security" ? [
-    ["security-rules", "Show Security Rules", "Shows traffic filtering grouped by Survey, Research Type, Category, Job Book and Event."],
-    ["security-empty", "Show No Security Rules", "Shows a subsample without security filtering rules."],
-  ] : tab === "configuration" ? [
-    ["defaults", section === "entry-links" ? "Show Entry Link" : "Show Supplier Defaults", section === "entry-links" ? "Displays the system-assigned read-only link." : "Displays supplier configuration values."],
-    ...(section === "entry-links" ? [] : [["custom", customLabel, "Enables editable Subsample overrides."]]),
-    ["empty", "Show Empty State", "Displays this section without configured values."],
-  ] : tab ? subsampleScenarios[tab] : [];
+  const scenarios = tab === "links" && section === "entry-links" ? subsampleScenarios.links : tab === "links" ? [
+    ["defaults", "Supplier defaults", "Displays inherited read-only values without changing the current settings."],
+    ["custom", customLabel, "Previews editable Subsample overrides."],
+  ] : tab ? subsampleScenarios[tab] : pathname === "/reports" ? reportScenarios : [];
+  const selectedScenario = scenarios.find(([id]) => id === scenario);
+  const scenarioGroup = (id: string) => {
+    if (id === "empty" || id === "security-empty" || id === "reports-empty") return "Empty states";
+    if (tab !== "field-progress") return "Scenarios";
+    if (id.startsWith("metrics-")) return "Metrics";
+    if (id === "no-quota" || id.startsWith("quotas-")) return "Quotas";
+    return "Progress";
+  };
+  const scenarioGroups = [...new Set(scenarios.map(([id]) => scenarioGroup(id)))];
   const badgeCount = scenarios.length + (projects ? 2 : 0) + actions.length + (credentials ? 1 : 0) + (emptyModule ? 1 : 0);
   const availabilityKey = credentials ? "credentials" : actions.map(({ href }) => href).join(",") + (emptyModule ? `:${emptyModule}:${empty}` : "") + (projects ? `:activity:${activityEmpty.Reports}:${activityEmpty.Costs}` : "");
   if (!badgeCount) return null;
@@ -138,9 +149,26 @@ export function PrototypeTools() {
       key={pathname}
       title="Prototype Tools"
     >
-      {tab && <section className="space-y-3"><h3 className="font-medium capitalize text-foreground">{tab === "configuration" && section === "security" ? "Security" : tab.replaceAll("-", " ")}</h3>
-        <Button className="w-full" variant="outline" size="sm" onClick={() => setScenario(tab === "configuration" && section === "security" ? "security-empty" : "")} disabled={!scenario || (tab === "configuration" && section === "security" && scenario === "security-empty")}>Restore Current Data</Button>
-        {scenarios.map(([id, label, description]) => <div key={id} className="space-y-1"><Button className="w-full justify-start" aria-pressed={scenario === id} variant="outline" size="sm" onClick={() => { if (tab !== "contacts" || confirmContactNavigation()) setScenario(id); }}>{label}</Button><p className="text-xs">{description}</p></div>)}
+      {(tab || pathname === "/reports") && <section className="space-y-3"><h3 className="font-medium capitalize text-foreground">{tab === "links" && section === "security" ? "Security" : tab ? tab.replaceAll("-", " ") : "Reports"}</h3>
+        <Select value={selectedScenario ? scenario : "current-data"} onValueChange={value => {
+          if (tab !== "contacts" || confirmContactNavigation()) {
+            setScenario(value === "current-data" ? "" : value);
+            toast.dismiss("report-duplicate-preview");
+            if (value === "reports-duplicate") toast.info("Report already requested", { id: "report-duplicate-preview", description: "An identical report is already queued or running.", position: "top-center", duration: 12000, action: { label: "View report", onClick: () => router.push("/reports#report-RPT-PREVIEW-1") } });
+          }
+        }}>
+          <SelectTrigger id="prototype-scenario" aria-label="Preview scenario" aria-describedby="prototype-scenario-description"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="current-data">Current data</SelectItem>
+            <SelectSeparator />
+            {scenarioGroups.map((group, index) => <SelectGroup key={group}>
+              {index > 0 && <SelectSeparator />}
+              <SelectLabel>{group}</SelectLabel>
+              {scenarios.filter(([id]) => scenarioGroup(id) === group).map(([id, label]) => <SelectItem key={id} value={id}>{label}</SelectItem>)}
+            </SelectGroup>)}
+          </SelectContent>
+        </Select>
+        <p id="prototype-scenario-description" className="text-xs leading-5">{selectedScenario?.[2] ?? "Displays current data without a scenario preview."}</p>
       </section>}
       {credentials ? (
         <section className="space-y-2">

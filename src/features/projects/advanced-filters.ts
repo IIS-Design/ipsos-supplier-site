@@ -4,8 +4,8 @@ export type StatusFilter = "any" | Subsample["status"];
 export type RemainingFilter = "any" | "zero" | "1-50" | "51-200" | "200+";
 
 /** Remaining is the total of exclusive and shared capacity; buckets do not overlap. */
-export function matchesAdvancedFilters(subsample: Pick<Subsample, "status" | "exclusiveRemaining" | "sharedRemaining">, status: StatusFilter, range: RemainingFilter): boolean {
-  if (status !== "any" && subsample.status !== status) return false;
+export function matchesAdvancedFilters(subsample: Pick<Subsample, "status" | "exclusiveRemaining" | "sharedRemaining">, status: StatusFilter | readonly Subsample["status"][], range: RemainingFilter): boolean {
+  if (Array.isArray(status) ? status.length > 0 && !status.includes(subsample.status) : status !== "any" && subsample.status !== status) return false;
   const remaining = subsample.exclusiveRemaining + subsample.sharedRemaining;
   switch (range) {
     case "zero": return remaining === 0;

@@ -47,7 +47,7 @@ export function ProjectRow({
             </Link>
           </p>
           <span className="shrink-0 text-sm text-muted-foreground">
-            ID:{" "}
+            SID:{" "}
             <span className="font-medium text-foreground">
               {project.surveyEventId}
             </span>
@@ -64,7 +64,7 @@ export function ProjectRow({
             </span>
           ) : null}
           {pendingCount > 0 ? (
-            <span className="text-muted-foreground">
+            <span className="text-sky-700">
               {pendingCount} Pending
             </span>
           ) : null}

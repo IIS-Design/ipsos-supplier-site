@@ -1,4 +1,4 @@
-import type { ProjectId, SubsampleId, SupplierId } from "./ids";
+import type { JobBookNumber, ProjectId, SubsampleId, SupplierId } from "./ids";
 import type { SettingOverride } from "./scopes";
 import type { SubsampleStatus } from "./status";
 
@@ -26,6 +26,10 @@ export type Subsample = {
   name: string;
   status: SubsampleStatus;
   language: string;
+  /** Multiple fieldwork languages; language remains a compatibility fallback. */
+  languages?: string[];
+  jobBookNumber?: JobBookNumber;
+  researchType?: string;
   country: string;
   router: string | null;
   fieldStartDate: string;
@@ -37,11 +41,16 @@ export type Subsample = {
     facialCoding: boolean;
     marketplaceEnabled: boolean;
   };
-  invoiceEntity?: string;
   ipsosContact?: string;
+  ipsosContacts?: { name: string; email: string }[];
+  entryLinks?: { language: string; live?: string; testing?: string }[];
   incidence: number;
   visitors: number;
   loi: number;
+  /** Supplied rate, not derived from Visitors. Percentages use the 0–100 scale. */
+  abandonRate?: number;
+  expectedMetrics?: { incidence?: number; loi?: number; conversion?: number; abandonRate?: number };
+  quotaTables?: { id: string; name: string; variables: string[]; rows: QuotaBreakdownRow[] }[];
   achievedCompletes: number;
   exclusiveRemaining: number;
   sharedRemaining: number;
@@ -49,3 +58,11 @@ export type Subsample = {
   /** Missing sections inherit Supplier defaults; present sections may override. */
   settingsOverrides?: SubsampleSettingsOverrides;
 };
+
+export function subsampleLanguages(subsample: Pick<Subsample, "language" | "languages">): string[] {
+  return subsample.languages?.length ? subsample.languages : [subsample.language];
+}
+
+export function getIpsosContacts(subsample: Pick<Subsample, "ipsosContact" | "ipsosContacts">) {
+  return subsample.ipsosContacts ?? (subsample.ipsosContact ? [{ name: "", email: subsample.ipsosContact }] : []);
+}

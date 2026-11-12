@@ -155,3 +155,11 @@ Admin-only `/settings/users`, `/settings/survey-configuration`, `/settings/redir
 a mobile selector. Unknown sections return 404. PUT `/api/settings/preferences`
 saves one section; POST `/api/settings/users` manages supplier users. Both require an
 active same-supplier Administrator. Existing Contacts API remains unchanged.
+
+
+## Member Info review — November 12, 2026
+
+Current Reports behavior supersedes older entries here: see [Approved Member Info review](handoff.md#approved-member-info-review--november-12-2026). Supports 1–10 owned subsamples or all, Project child selection, Organization-zone dates (two-week default, three-month limit), multiple status/substatus codes, both link types by default and optional respondent deduplication. Upload URL/partial responses removed. Duplicate toast and unavailable-file states are reversible Prototype Tools previews only. Queue execution, emails and file generation remain absent; static CSV sample retained. Child suppliers remain pending.
+
+
+Member Info form refinement: all/cross-project scope choices removed; child-selection error is inline; status/substatus search removed and labels use Name (code); Link Type parentheticals are muted. Report dates default to Last 2 Weeks with Last Week available; custom dates are not repeated below, and the calendar enforces the three-month start limit without helper copy. See [handoff](handoff.md#member-info-ui-refinement--november-12-2026).

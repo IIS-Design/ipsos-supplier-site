@@ -5,9 +5,10 @@ import { ReportErrorDetails } from "@/components/report-error-details";
 import { withBasePath } from "@/lib/app-path";
 
 import Link from "next/link";
-import { PrototypeEmptyNotice, usePrototypeState } from "@/components/prototype-state";
+import { usePrototypeState } from "@/components/prototype-state";
 import { useMemo, useState } from "react";
 import {
+  Download,
   CircleAlert,
   FileCheck2,
   Hourglass,
@@ -15,8 +16,9 @@ import {
   Plus,
   Search,
 } from "lucide-react";
-import { Badge, ViewCountBadge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -25,13 +27,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Project } from "@/types/project";
 import type { Report, ReportType } from "@/types/report";
 import type { Subsample } from "@/types/subsample";
 
 const reportTypeLabels: Record<ReportType, string> = {
-  respondent_info: "Respondent Info Report",
+  respondent_info: "Member Info Report",
   survey_duration: "Survey Duration Report",
   mini_router_quota: "Mini-Router Quota Report",
 };
@@ -69,6 +70,8 @@ function reportScopeName(
   projects: Map<string, Project>,
   subsamples: Map<string, Subsample>,
 ) {
+  if (report.scope.scopeType === "supplier") return "All my subsamples";
+  if (report.scope.scopeType === "subsamples") return report.scope.subsampleIds.length === 1 ? (subsamples.get(report.scope.subsampleIds[0])?.name ?? "Subsample") : `${report.scope.subsampleIds.length} subsamples`;
   return report.scope.scopeType === "project"
     ? (projects.get(report.scope.projectId)?.name ?? "Project")
     : (subsamples.get(report.scope.subsampleId)?.name ?? "Subsample");
@@ -79,13 +82,11 @@ function ReportList({
   projects,
   subsamples,
   emptyMessage,
-  onViewQueue,
 }: {
   reports: Report[];
   projects: Project[];
   subsamples: Subsample[];
   emptyMessage: string;
-  onViewQueue: () => void;
 }) {
   const projectById = new Map(projects.map((project) => [project.id, project]));
   const subsampleById = new Map(
@@ -105,12 +106,11 @@ function ReportList({
       {reports.map((report) => {
         const StatusIcon = statusIcons[report.status];
         return (
-          <li className="flex gap-3 py-3" key={report.id}>
+          <li id={`report-${report.id}`} className="flex scroll-mt-24 gap-3 py-3" key={report.id}>
             {report.status === "error" ? <ReportErrorDetails reportId={report.id} message={report.errorMessage} className="mt-0.5 grid size-11 shrink-0 place-items-center rounded-md bg-rose-100 text-rose-700 hover:bg-rose-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><StatusIcon aria-hidden="true" className="size-4" /></ReportErrorDetails> : (
             <ReportAction
               report={report}
-              onViewQueue={onViewQueue}
-              label={`${report.status === "finished" ? "Download" : "View in queue:"} ${reportTypeLabels[report.type]} (${report.id})`}
+              label={`${report.status === "finished" ? "Download" : "View report:"} ${reportTypeLabels[report.type]} (${report.id})`}
               className="mt-0.5 grid size-11 shrink-0 place-items-center rounded-md bg-muted text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <StatusIcon
@@ -120,14 +120,14 @@ function ReportList({
             </ReportAction>
             )}
             <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-base font-medium leading-5"><ReportAction report={report} onViewQueue={onViewQueue} className="text-left underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{reportTypeLabels[report.type]}</ReportAction></p>
+              <div className="flex flex-wrap items-center gap-2">
                 <Badge
                   className={`text-sm ${statusStyles[report.status]}`}
                   variant="outline"
                 >
                   {reportStatusLabels[report.status]}
                 </Badge>
+                <p className="text-base font-medium leading-5"><ReportAction report={report} className="text-left underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{reportTypeLabels[report.type]}</ReportAction></p>
               </div>
               <p className="mt-1 truncate text-sm text-muted-foreground">
                 {reportScopeName(report, projectById, subsampleById)}
@@ -135,13 +135,14 @@ function ReportList({
               <p className="mt-0.5 text-sm text-muted-foreground">
                 ID {report.id} · {formatDate(report.createdAt)}
               </p>
+              {report.status === "finished" && !report.downloadUrl && <div className="mt-2 space-y-1"><p className="text-sm font-medium">File no longer available</p><p className="text-xs text-muted-foreground">Create a new report to download an updated file.</p><Button asChild size="sm" variant="outline"><Link href="/reports/create">Create report</Link></Button></div>}
               {report.status === "finished" && report.downloadUrl ? (
-                <Button asChild variant="outline" className="mt-2 min-h-11">
+                <Button asChild size="sm" variant="outline" className="mt-2 h-7 gap-1.5 px-2 text-xs">
                 <a
                   href={withBasePath(report.downloadUrl)}
                   download
                 >
-                  Download report
+                  <Download aria-hidden="true" className="size-3.5" />Download report
                 </a>
                 </Button>
               ) : null}
@@ -157,21 +158,30 @@ export function ReportWorkspace({
   reports: sourceReports,
   projects,
   subsamples,
-  initialView = "history",
   createdReportId,
 }: {
   reports: Report[];
   projects: Project[];
   subsamples: Subsample[];
-  initialView?: "history" | "queue";
   createdReportId?: string;
 }) {
-  const [view, setView] = useState<"history" | "queue">(initialView);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [dateFilter, setDateFilter] = useState("3m");
-  const { empty } = usePrototypeState();
-  const reports = useMemo(() => empty ? [] : sourceReports, [empty, sourceReports]);
+  const [dates, setDates] = useState(() => {
+    const now = new Date();
+    const format = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    return { from: format(new Date(now.getFullYear(), now.getMonth() - 3, 1)), to: format(createdReportId ? now : new Date(now.getFullYear(), now.getMonth(), 0)) };
+  });
+  const { scenario } = usePrototypeState();
+  const empty = scenario === "reports-empty";
+  const reports = useMemo(() => {
+    if (empty) return [];
+    if (!scenario.startsWith("reports-") || !sourceReports.length) return sourceReports;
+    const statuses: Report["status"][] = scenario === "reports-unavailable" ? ["finished"] : scenario === "reports-duplicate" ? ["queued"] : scenario === "reports-all" ? ["queued", "executing", "finished", "error"] : [scenario.slice(8) as Report["status"]];
+    const now = new Date();
+    const createdAt = new Date(now.getFullYear(), now.getMonth() - 1, 15, 12).toISOString();
+    return statuses.map((status, index) => ({ ...sourceReports[0], id: `RPT-PREVIEW-${index + 1}` as Report["id"], type: "respondent_info" as const, status, createdAt, downloadUrl: status === "finished" && scenario !== "reports-unavailable" ? "/mock-reports/RPT-2026-1045.csv" : undefined, errorMessage: status === "error" ? "The report could not be generated. Please try again." : undefined }));
+  }, [empty, scenario, sourceReports]);
   const normalizedQuery = query.trim().toLocaleLowerCase();
   const sortedReports = useMemo(
     () =>
@@ -182,11 +192,9 @@ export function ReportWorkspace({
   );
   const matchesFilters = (report: Report) => {
     if (statusFilter !== "all" && report.status !== statusFilter) return false;
-    if (dateFilter === "3m") {
-      const cutoff = new Date();
-      cutoff.setMonth(cutoff.getMonth() - 3);
-      if (Date.parse(report.createdAt) < cutoff.getTime()) return false;
-    }
+    const createdDate = report.createdAt.slice(0, 10);
+    if (dates.from && createdDate < dates.from) return false;
+    if (dates.to && createdDate > dates.to) return false;
     if (!normalizedQuery) return true;
     const project =
       report.scope.scopeType === "project"
@@ -199,17 +207,14 @@ export function ReportWorkspace({
     return [
       reportTypeLabels[report.type],
       report.id,
+      reportScopeName(report, new Map(projects.map(p => [p.id, p])), new Map(subsamples.map(s => [s.id, s]))),
+      ...(report.scope.scopeType === "subsamples" ? report.scope.subsampleIds.flatMap(id => [id, subsamples.find(s => s.id === id)?.name]) : []),
       project?.name,
       subsample?.name,
       reportStatusLabels[report.status],
     ].some((value) => value?.toLocaleLowerCase().includes(normalizedQuery));
   };
   const history = sortedReports.filter(matchesFilters);
-  const queue = sortedReports
-    .filter(
-      (report) => report.status === "queued" || report.status === "executing",
-    )
-    .filter(matchesFilters);
   const queuedCount = reports.filter(
     (report) => report.status === "queued",
   ).length;
@@ -218,15 +223,12 @@ export function ReportWorkspace({
   ).length;
 
   return (
-    <Tabs className="gap-0 space-y-5" value={view} onValueChange={(value) => setView(value as "history" | "queue")}>
+    <div className="space-y-5">
       <header className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <h1 className="text-2xl font-semibold tracking-tight">Reports</h1>
-            <TabsList aria-label="Report views">
-              <TabsTrigger value="history">Report History</TabsTrigger>
-              <TabsTrigger value="queue">Report Queue<ViewCountBadge active={view === "queue"} className="ml-2">{queuedCount + executingCount}</ViewCountBadge></TabsTrigger>
-            </TabsList>
+
           </div>
         </div>
         <Button asChild>
@@ -237,15 +239,12 @@ export function ReportWorkspace({
         </Button>
       </header>
 
-      <PrototypeEmptyNotice module="Reports" />
-
       {createdReportId && !empty ? (
         <p
           className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900"
           role="status"
         >
-          Report {createdReportId} was successfully queued. You can find it in
-          Report Queue.
+          Report {createdReportId} was successfully queued. Track its status in the list below.
         </p>
       ) : null}
 
@@ -289,44 +288,16 @@ export function ReportWorkspace({
                 <SelectItem value="error">Error</SelectItem>
               </SelectContent>
             </Select>
-            <Select onValueChange={setDateFilter} value={dateFilter}>
-              <SelectTrigger aria-label="Filter reports by date">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="3m">Last 3 months</SelectItem>
-                <SelectItem value="all">All Time</SelectItem>
-              </SelectContent>
-            </Select>
+            <DateRangePicker label="Filter reports by creation date" initialPresetLabel="Last 3 Months" value={dates} onChange={setDates} />
           </div>
-            <TabsContent value="history" className="mt-3">
-              <ReportList
-                emptyMessage={
-                  !empty && normalizedQuery
-                    ? "No reports match your search."
-                    : "No reports have been created yet."
-                }
-                projects={projects}
-                onViewQueue={() => setView("queue")}
-                reports={history}
-                subsamples={subsamples}
-              />
-            </TabsContent>
-            <TabsContent value="queue" className="mt-3">
-              <ReportList
-                emptyMessage={
-                  !empty && normalizedQuery
-                    ? "No queued or executing reports match your search."
-                    : "There are no reports in the queue."
-                }
-                projects={projects}
-                onViewQueue={() => setView("queue")}
-                reports={queue}
-                subsamples={subsamples}
-              />
-            </TabsContent>
+            <ReportList
+              emptyMessage="No reports are available for the selected filters."
+              projects={projects}
+              reports={history}
+              subsamples={subsamples}
+            />
         </div>
       </section>
-    </Tabs>
+    </div>
   );
 }

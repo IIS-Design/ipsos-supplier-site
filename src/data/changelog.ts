@@ -1,0 +1,82 @@
+/** Newest day first. Add implemented changes here when shipping work; do not use build time as the update date. */
+export const changelog = [
+  {
+    date: "2026-11-12",
+    title: "Dashboard filters and consistent project statuses",
+    changes: [
+      "Refined Member Info form: removed all/cross-project scope choices, placed missing-subsample feedback below the selector, added Last Week/Last 2 Weeks presets (two weeks by default), and removed duplicate custom-range dates and the three-month helper copy. Status/Substatus now use Name (code) without search; Link Type uses muted parenthetical descriptions.",
+      "Updated Member Info setup from the approved guide review: searchable Project-to-Subsample multiselect (up to 10, automatic child selection), cross-project selection and explicit All my subsamples. Dates default to two weeks and use Organization time zone with a three-month start limit. Added multiple status/substatus codes, both Live/Proofing checked initially, corrected Final Status guidance, and optional One row per respondent; removed Upload URL and partial responses.",
+      "Added reversible Duplicate request (top-center toast with View report) and File no longer available previews in Reports Prototype Tools. New reports remain queued; generated output, duplicate detection, retention and child suppliers remain deferred. The optional Excel sample was deferred; the static synthetic CSV remains available.",
+      "Replaced Live/Pending project tabs with a multi-select Project Status filter. Live is selected initially; clearing the filter includes all statuses.",
+      "Moved Languages to Advanced Filters, added Country, and enabled multiple Subsample Status selections. Country precedes Languages and limits available languages; incompatible language selections are removed when countries change.",
+      "Added removable selection chips and selection counts to dashboard and subsample list filters. Search and date ranges can also be removed individually; Clear Filters resets all filters.",
+      "Enabled multiple Status, Language and Router selections in the subsample list. Filters use OR within a selection and AND between different filters.",
+      "Unified filter borders and labels, compacted the dashboard date control, and fixed dropdown menus appearing behind Advanced Filters. Moved the separator below the active-filter chips and compacted Clear Filters, Expand All and Collapse All actions.",
+      "Standardized project and subsample status colors in lists and detail views: Live green, Pending light blue, Cancelled red and Closed gray. Status dropdown options and filter chips use neutral colors. Added Closed to the subsample model, validation and filters, and updated closed demo examples.",
+      "Added a full-width toggle beside the dashboard side-panel control and at the far right of the header in the subsample list and all subsample subpages. It switches the shared header, content and footer between the standard maximum width and available screen width, and retains the choice during portal navigation.",
+      "Renamed project ID labels to SID. Added Country before Languages in subsample lists, the selector and overview; multi-language subsamples now display and filter all their languages.",
+      "Refined overview layout: Billing Entity spans a full project-context row below SID; Subsample ID/Job Book Number appear first in the overview detail fields, followed by dates and Country/Languages in paired columns. Removed Router fields and filtering from subsample overview and lists; Router reports remain pending the separate report cleanup.",
+      "Moved Job Book Number and Research Type to subsamples, added Job Book Number copying, moved Billing Entity to project context and removed Product Type. Preserved existing demo identifiers during migration and added explicitly synthetic examples with different JBN/research types and multiple languages. Costs now reads JBN from subsamples without changing approval workflows.",
+      "Updated Field Progress with In field/Expected/Difference columns for LOI, Incidence, Conversion and Total Abandon. Conversion assumes Visitors equals Clicks; zero visitors or missing values display an em dash. Differences use minutes or percentage points and neutral colors. Expected and Abandon values are explicit synthetic examples only in demo fixtures.",
+      "Separated quotas into named blocks with original variable names shown as purple tags alongside each table title and support for combined-variable tables; retained a fallback for older flat quota data. Added metric calculation and missing-data tests. Prototype Tools now offers Actual vs Expected, Missing Expected / Abandon, Zero Visitors and Separate and Combined Quotas previews on any subsample, with Current data to restore the baseline. Replaced scenario button lists across subsample pages with a grouped scenario dropdown with separators between sections, an accessible label and a description of the selected scenario; independent actions remain buttons.",
+      "Renamed Configuration to Links and added an independent Security Rules tab, preserving redirects from old Configuration URLs. Entry Links are grouped by language with Live/Testing URLs, per-link copy confirmation and missing-link states. Redirect and Server-to-Server behavior is preserved.",
+      "Added read-only Security Rules accordions with expand/collapse all, per-row timespans and status codes based on the supplied Research Type × Client reference. The full criteria catalogue and real rule data remain pending; examples are available via Prototype Tools, including many/empty rules and multiple/partial entry links.",
+      "Refined quota tables with aligned fixed-width numeric columns and no divider below Quota Breakdown. Audited Prototype Tools: added single-language, missing-Live and long-URL Entry Link cases, plus multilingual overview; Redirect/S2S previews no longer change the restored baseline, and Security Rule expansion resets between scenarios.",
+      "Fixed stale development subsample data after fixture updates: HMR now refreshes quota grouping, languages, metrics and links while preserving saved contact selections, so existing subsamples use the updated quota layout without a server restart.",
+      "Unified copy feedback: the shared copy icon changes to a check for three seconds, with a generic Copied to clipboard tooltip that fades when the icon resets. Repeated copies restart the timer; failures retain the copy icon and announce an error.",
+      "Removed invalid empty-state previews from Redirects and Server-to-Server: their configuration fields remain visible even when values are blank. Entry Links and Security Rules retain their valid empty states.",
+      "Added a read-only Ipsos Contacts list in overview and Contacts with per-email copying, separate from editable supplier recipients. Supports multiple contacts and explicit empty lists, with legacy single-email fallback. Added one/many/none Prototype Tools previews; supplier permissions, assignment and notification behavior are unchanged.",
+      "Removed the invalid Empty Details preview and tightened spacing between the Ipsos Contacts label and its contact information to match overview fields.",
+      "Simplified Reports to Member Info Report (retaining the respondent_info internal identifier). Retired Survey Duration and Mini-Router report creation and excluded retired reports from history, queue and recent-report widgets. Monthly Billing Report is listed as not available yet; its requirements and billing workflow remain pending. No Reconciliation report existed in the current implementation.",
+      "Added searchable project/subsample selection to Member Info Report with keyboard navigation, no-results feedback and explicit Project/SID versus Subsample/Country/Languages/ID/parent information. Reused the dashboard date-range picker with presets and a custom calendar, preserving report date validation and submission semantics.",
+      "Refined report setup: empty date range says Please select..., presets retain their label with the exact From/To period below, and Advanced Options starts collapsed. Added selectable Monthly Billing Report with a pending-definition view and disabled creation, without inventing billing fields or enabling API submission.",
+      "Report scope now starts unselected with Please select...; custom date ranges show their dates only in the control, while presets retain the secondary From/To period.",
+      "Refined Reports listing: removed the Monthly Billing placeholder strip and empty-preview banner, compacted Download report with an icon, and reused the dashboard date picker with Last 3 Months initially. Added Prototype Tools previews for all report statuses, individual queued/executing/finished/error states and clean empty history/queue. Monthly Billing remains selectable in report creation only.",
+      "Aligned footer update/history links left. Unified Report History and Queue into one filterable list, moved report status badges before names, and made the empty message apply to the selected filters. Queue links now open the unified Reports view.",
+      "Completed a desktop browser pass of dashboard dependent filters, subsample hierarchy/quotas/metrics, copy feedback, Links/S2S previews, Security expand/collapse, width toggle and Reports selection/filtering. No new blockers or console errors were observed in the sampled flows; mobile and real backend integrations remain unverified.",
+      "Persisted full-width/standard-width preference in browser storage so both choices survive section navigation and reloads; open tabs synchronize changes, with an in-memory fallback when storage is unavailable.",
+      "Moved the persistent width toggle into the shared portal header so it is available on every authenticated page, including Reports, Costs, Settings, Account and Changelog. Removed duplicate page-level width controls. The toggle is hidden below the desktop breakpoint because mobile already uses the available width.",
+      "Added a shared portal footer with Last Update and a daily Changelog page. The update date comes from this history rather than the current date or build time.",
+    ],
+    validation: "Member Info review: 54 tests passed across the full suite, TypeScript and ESLint passed, and webpack production build passed. Narrow-browser checks covered project child defaults, search/select-all results, successful multi-subsample queue creation, advanced defaults, duplicate toast/action and unavailable-file preview. Earlier desktop checks are recorded in handoff; no new desktop-specific pass was performed for this review.",
+    pending: "Date semantics and dashboard fields remain open. Contact assignment/origin validation, full Member Info status/substatus catalogue, backend generation rules and Monthly Billing remain pending. Full Security Rules criteria and real entry-link/rule integration await Product/Engineering inputs. Costs/Custom CPI, roles and Parent/Child behavior remain pending; existing behavior is preserved.",
+    source: "Current working changes and agreed scope from the November 12 review.",
+  },
+  {
+    date: "2026-10-28",
+    title: "Subsample configuration and security scenarios",
+    changes: [
+      "Added shared subsample configuration state for inherited supplier defaults and custom overrides across configuration and detail views.",
+      "Added Security Rules and empty-rule prototype scenarios, and updated workspace tabs and prototype tools.",
+      "Updated design-system, prototype-state and AI handoff documentation.",
+    ],
+    source: "Repository commit: subsample config. Historical summary based on committed changes.",
+  },
+  {
+    date: "2026-10-27",
+    title: "Subsample workspace and prototype scenarios",
+    changes: [
+      "Refined subsample details, Field Progress, contacts, costs and configuration screens, with additional prototype scenarios and sample data.",
+      "Added horizontal panel controls and revised the project activity panel.",
+      "Updated contact validation, repository support and associated documentation and tests.",
+    ],
+    source: "Repository commit: subsample overview + fixes. Historical summary based on committed changes.",
+  },
+  {
+    date: "2026-10-26",
+    title: "Initial prototype, settings and deployment foundation",
+    changes: [
+      "Established the committed prototype baseline and configured IIS deployment and CI/CD.",
+      "Expanded supplier settings, user management, account screens, report/cost workspaces and pagination.",
+      "Added the subsample list with search, status/language/router filters and date filtering, and revised project context and contact selection/inheritance.",
+      "Fixed deployment base-path and public-origin handling for authentication links, account invitations and email previews.",
+      "Added supporting tests and project/AI context documentation.",
+    ],
+    source: "Repository commits dated October 26. Historical summary grouped by commit date.",
+  },
+];
+
+export const lastUpdate = changelog[0].date;
+export function formatChangelogDate(date: string) {
+  return new Intl.DateTimeFormat("en", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }).format(new Date(`${date}T12:00:00Z`));
+}

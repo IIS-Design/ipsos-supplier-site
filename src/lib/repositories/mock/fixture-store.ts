@@ -125,6 +125,11 @@ function validateRelationships(): void {
   }
 
   const validateScopedRecord = (entityName: string, record: Report | Cost) => {
+    if (record.scope.scopeType === "supplier") return;
+    if (record.scope.scopeType === "subsamples") {
+      if (!record.scope.subsampleIds.every(id => subsampleById.get(id as Subsample["id"])?.supplierId === record.supplierId)) throw new Error(`${entityName} ${record.id} has invalid subsample ownership`);
+      return;
+    }
     const target =
       record.scope.scopeType === "project"
         ? projectById.get(record.scope.projectId)
