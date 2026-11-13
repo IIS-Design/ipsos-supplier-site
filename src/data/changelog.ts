@@ -1,6 +1,20 @@
 /** Newest day first. Add implemented changes here when shipping work; do not use build time as the update date. */
 export const changelog = [
   {
+    date: "2026-11-13",
+    title: "Redirects and Server-to-Server configuration",
+    changes: [
+      "Updated Redirects and Server-to-Server in Settings and Subsample Links with short explanations, status-coded labels, field notes and accessible URL-placeholder help. Added Opt Out / Unsubscribe (100) as the ninth redirect outcome and documented redirect fallbacks without executing them.",
+      "Added independent Subsample Save Changes/Cancel flows for Redirects and S2S, with supplier defaults, custom overrides, unsaved-change protection and process-local persistence across navigation/reloads. Blank custom fields remain independent of supplier defaults. Development fixture refresh preserves saved configuration.",
+      "Added GET/POST/PUT/PATCH selection for custom Subsample S2S configuration, with POST as the provisional inherited default. Pixel HTML remains unchanged. Existing routing settings are grouped as Respondent Routing with a note distinguishing rerouting limits from notification retries.",
+      "Unified HTTP(S) URL validation across Settings and Subsample form/API, accepting empty values and token templates up to 2048 characters with inline error feedback. No calls are made to validate destinations.",
+      "Added temporary URL placeholders and Invalid URL previews to Prototype Tools. Previews never save or send redirects/postbacks; Current data restores the saved configuration.",
+    ],
+    validation: "58 automated tests passed, including four new integration-configuration tests. Desktop and 390px browser checks covered URL errors, token save/reload, Cancel, inherited POST/custom PATCH, reset to defaults, help, routing copy and previews. TypeScript, ESLint and webpack production build checked.",
+    pending: "Respondent Routing may be removed from supplier control. Child suppliers, durable storage, redirect/postback execution, redirect hashing, S2S timeout/content type/Parse ID and an internal tester remain deferred. Pixel semantics and supplier-global HTTP method permissions need confirmation. Two HTML guides remain to review.",
+    source: "Approved point-by-point review of redirect-links-s2s-doc-by-claude.html.",
+  },
+  {
     date: "2026-11-12",
     title: "Dashboard filters and consistent project statuses",
     changes: [

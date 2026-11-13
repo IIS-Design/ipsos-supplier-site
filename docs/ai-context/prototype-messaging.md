@@ -75,3 +75,8 @@ discounted and rejected records are now available as local previews.
 ## Member Info review — November 12, 2026
 
 Current Reports behavior supersedes older entries here: see [Approved Member Info review](handoff.md#approved-member-info-review--november-12-2026). Supports 1–10 owned subsamples or all, Project child selection, Organization-zone dates (two-week default, three-month limit), multiple status/substatus codes, both link types by default and optional respondent deduplication. Upload URL/partial responses removed. Duplicate toast and unavailable-file states are reversible Prototype Tools previews only. Queue execution, emails and file generation remain absent; static CSV sample retained. Child suppliers remain pending.
+
+
+## Redirect/S2S review implemented November 13, 2026
+
+This supersedes earlier statements that Redirects/S2S are unsaved local editors or placeholders. [Redirects and S2S](redirects-s2s.md) documents the approved nine redirect URLs, seven S2S endpoints, field notes/token help, shared URL validation, independent process-local overrides with Save/Cancel, and Subsample-only HTTP Method (POST provisional default). The new links PUT route checks supplier, Project, Subsample and active actor; both supplier roles may save owned Subsamples. Blank custom fields never inherit individually. Prototype Tools includes token/invalid-URL examples without saving; Current data restores the baseline. Routing controls remain with clarifying copy and may later be removed. Pixel HTML and internal-admin capabilities remain unchanged. No real integration engine or durable storage is introduced. New UI copy avoids the long dash character.

@@ -3,6 +3,13 @@
 Read [handoff.md](handoff.md) first, including Documentation Rules. These are
 contribution conventions; [feature-status.md](feature-status.md) states what exists.
 
+## Language
+
+All deliverables outside the chat must be in English: code, comments, UI copy,
+documentation, reports, changelog entries and team-facing messages. Conversation
+with the user may remain in Spanish. Do not infer the deliverable language from
+the language of the chat.
+
 ## Framework / UI
 
 - Follow root AGENTS.md and installed Next.js docs before relevant API work. Current
@@ -26,12 +33,13 @@ JSON seed/process state. Clients submit through route handlers. Do not import JS
   exclusive Project-or-Subsample Cost scope; Reports also supports multiple subsamples and supplier-wide scope (see handoff). Validate access at API and mutation boundaries.
 - Schema/type changes require matching fixtures and relationship checks. Runtime
   saves do not rewrite JSON. Do not store real credentials/respondent data in mocks.
-- Only Contacts has saved inheritance. Reserved technical override types are not editors.
+- Contacts, Redirects and S2S have process-local saved Supplier-to-Subsample inheritance. Other reserved override types do not imply editors. See redirects-s2s.md.
 - Reports queue creation is not execution. Costs display supplied values; do not
   invent allocation, aggregation, invoice or discount rules.
 
 ## Interaction and quality
 
+- Avoid the long dash character in new UI copy. Add brief field notes or accessible help popovers when they explain a difficult concept, without cluttering the workflow.
 - Keep loading, empty, recoverable error and success states task-specific. Do not
   replace operational feedback with prototype guidance.
 - Preserve Save/Cancel/draft warnings. RHF 7.90 merges resetOptions; pass

@@ -86,3 +86,8 @@ Dimension/Match Value, plain-text Statuses and Time Span. Narrow screens stack
 fields within each row with visible labels; there are no per-rule cards or status
 badges. The empty state is only “No security rules have been configured for this
 subsample.” with no heading, border or icon. Prototype Tools scenarios are unchanged.
+
+
+## Redirect/S2S review implemented November 13, 2026
+
+This supersedes earlier statements that Redirects/S2S are unsaved local editors or placeholders. [Redirects and S2S](redirects-s2s.md) documents the approved nine redirect URLs, seven S2S endpoints, field notes/token help, shared URL validation, independent process-local overrides with Save/Cancel, and Subsample-only HTTP Method (POST provisional default). The new links PUT route checks supplier, Project, Subsample and active actor; both supplier roles may save owned Subsamples. Blank custom fields never inherit individually. Prototype Tools includes token/invalid-URL examples without saving; Current data restores the baseline. Routing controls remain with clarifying copy and may later be removed. Pixel HTML and internal-admin capabilities remain unchanged. No real integration engine or durable storage is introduced. New UI copy avoids the long dash character.

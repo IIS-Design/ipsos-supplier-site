@@ -1,3 +1,4 @@
+import type { LinkConfigurationRequest } from "@/features/settings/integration-model";
 import type { ContactOverrideInput } from "@/features/contacts/contact-model";
 import { getRepositories } from "@/lib/repositories";
 import type { ProjectId, SubsampleId, SupplierId, UserId } from "@/types/ids";
@@ -29,3 +30,6 @@ export const saveSubsampleContacts = (
     setting,
     actorId,
   );
+
+export const saveSubsampleLinkConfiguration = (supplierId: SupplierId, projectId: ProjectId, subsampleId: SubsampleId, input: LinkConfigurationRequest, actorId: UserId) =>
+  getRepositories().subsamples.saveLinkConfiguration(supplierId, projectId, subsampleId, input, actorId);

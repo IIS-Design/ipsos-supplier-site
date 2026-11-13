@@ -25,8 +25,8 @@ production integration exists. Parent statuses include their missing subareas.
 | Subsample Contacts                             | Complete    | Persisted inherit/custom mode, selections, save/cancel and feedback          |
 | Configuration navigation                       | Partial     | Query-selected subsections and return path only                              |
 | Entry Links editor                             | Partial | Supplier defaults and local override UI                                                    |
-| Subsample Redirects editor                     | Partial | Supplier defaults and local override UI                                                    |
-| Subsample Server-to-Server editor              | Partial | Supplier defaults and local override UI                                                    |
+| Subsample Redirects editor                     | Complete | Process-local Save/Cancel, independent overrides, nine URLs, shared validation/help; no execution                                                    |
+| Subsample Server-to-Server editor              | Complete | Process-local Save/Cancel, seven endpoints, HTTP method and unchanged Pixel HTML; no execution                                                    |
 | Subsample Security editor                      | Partial | Supplier security values and local override UI                                                    |
 | Reports area                                   | Partial     | Creation/activity work; execution and real outputs absent                    |
 | Three report creation flows                    | Complete    | Existing options, scope validation, queued save, draft warning, confirmation |

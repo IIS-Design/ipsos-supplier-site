@@ -1,3 +1,4 @@
+import type { LinkConfigurationRequest } from "@/features/settings/integration-model";
 import type { ContactOverrideInput } from "@/features/contacts/contact-model";
 import type { SettingsValues, EditableSettingsSection, UserManagementRequest } from "@/features/settings/settings-model";
 import type { AccountProfile } from "@/features/account/account-model";
@@ -44,6 +45,7 @@ export interface ProjectRepository {
 }
 
 export interface SubsampleRepository {
+  saveLinkConfiguration(supplierId: SupplierId, projectId: ProjectId, subsampleId: SubsampleId, input: LinkConfigurationRequest, actorId: UserId): Promise<Subsample>;
   listForSupplier(supplierId: SupplierId): Promise<Subsample[]>;
   listByProject(
     supplierId: SupplierId,

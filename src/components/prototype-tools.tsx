@@ -126,7 +126,9 @@ export function PrototypeTools() {
   const customLabel = section === "server-to-server" ? "Show Custom S2S" : section === "security" ? "Show Custom Security" : section === "redirects" ? "Show Custom Redirects" : "Show Custom Entry Link";
   const scenarios = tab === "links" && section === "entry-links" ? subsampleScenarios.links : tab === "links" ? [
     ["defaults", "Supplier defaults", "Displays inherited read-only values without changing the current settings."],
-    ["custom", customLabel, "Previews editable Subsample overrides."],
+    ["custom", customLabel, "Previews editable Subsample overrides without saving them."],
+    ["link-tokens", "URL placeholders", "Shows example URL templates; no links or notifications are sent."],
+    ["link-invalid", "Invalid URL", "Shows field-level URL validation feedback without changing saved data."],
   ] : tab ? subsampleScenarios[tab] : pathname === "/reports" ? reportScenarios : [];
   const selectedScenario = scenarios.find(([id]) => id === scenario);
   const scenarioGroup = (id: string) => {
@@ -151,7 +153,7 @@ export function PrototypeTools() {
     >
       {(tab || pathname === "/reports") && <section className="space-y-3"><h3 className="font-medium capitalize text-foreground">{tab === "links" && section === "security" ? "Security" : tab ? tab.replaceAll("-", " ") : "Reports"}</h3>
         <Select value={selectedScenario ? scenario : "current-data"} onValueChange={value => {
-          if (tab !== "contacts" || confirmContactNavigation()) {
+          if ((tab !== "contacts" && tab !== "links") || confirmContactNavigation()) {
             setScenario(value === "current-data" ? "" : value);
             toast.dismiss("report-duplicate-preview");
             if (value === "reports-duplicate") toast.info("Report already requested", { id: "report-duplicate-preview", description: "An identical report is already queued or running.", position: "top-center", duration: 12000, action: { label: "View report", onClick: () => router.push("/reports#report-RPT-PREVIEW-1") } });

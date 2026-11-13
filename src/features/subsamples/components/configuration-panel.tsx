@@ -2,13 +2,10 @@
 
 import { EntryLinks } from "./entry-links";
 import type { Subsample } from "@/types/subsample";
-import { Switch } from "@/components/ui/switch";
+import { LinkConfigurationForm } from "./link-configuration-form";
 import { useConfigurationState, type ConfigKey } from "./configuration-state";
-import { redirectFields, endpointFields, fieldLabels } from "@/features/settings/settings-model";
 import { usePrototypeState } from "@/components/prototype-state";
 import { ScenarioEmpty } from "./scenario-preview";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { ArrowLeftRight, Link2, Route } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -42,13 +39,18 @@ export function ConfigurationPanel({
   const { scenario, setScenario } = usePrototypeState();
   const config = useConfigurationState();
   const key: ConfigKey = activeSection === "server-to-server" ? "server-to-server" : "redirects";
-  const inherited = scenario === "defaults" ? true : scenario === "custom" ? false : config.sections[key].inherited;
-  const values = inherited ? config.defaults[key] : config.sections[key].values;
-  const edit = (field: string, value: string) => {
-    config.toggle(key, false);
-    config.edit(key, field, value);
-    setScenario("");
+  const preview = ["defaults", "custom", "link-tokens", "link-invalid"].includes(scenario);
+  const previewValues = {
+    ...config.sections[key].values,
+    ...(scenario === "link-tokens" ? {
+      [key === "redirects" ? "completes" : "complete"]: "https://supplier.example/complete?uid=<<UID>>&status=<<status>>&pid=<<PID>>",
+      ...(key === "redirects" ? { screenOuts: "https://supplier.example/screenout?survey=%%SURVEYID%%" } : {}),
+    } : {}),
+    ...(scenario === "link-invalid" ? { [key === "redirects" ? "completes" : "complete"]: "not-a-url" } : {}),
   };
+  const initial = preview
+    ? { inherited: scenario === "defaults", values: previewValues }
+    : config.sections[key];
   const base = `/projects/${projectId}/subsamples/${subsampleId}/links`;
   const active =
     sections.find((section) => section.id === activeSection) ?? sections[0];
@@ -85,11 +87,14 @@ export function ConfigurationPanel({
           {active.label}
         </h2>
         {activeSection === "entry-links" && scenario === "empty" ? <div className="mt-4"><ScenarioEmpty title="No links available" message="No values have been configured for this section." /></div> : <div className="mt-5 space-y-5">
-          {activeSection === "entry-links" ? <EntryLinks subsample={subsample} /> : <>
-            <div className="flex flex-wrap items-center gap-3"><label className="text-sm font-medium" htmlFor={`inherit-${key}`}>Use Supplier Defaults</label><Switch id={`inherit-${key}`} checked={inherited} onCheckedChange={checked => { setScenario(""); config.toggle(key, checked); }} /><Badge variant="outline">{inherited ? "Inherited" : "Custom Override"}</Badge></div>
-            {activeSection === "server-to-server" && <label className="block space-y-2 text-sm font-medium">Pixel HTML<textarea className="min-h-24 w-full rounded-md border bg-background p-3 text-sm font-normal read-only:bg-muted/40" readOnly={inherited} value={values.pixel ?? ""} onChange={event => edit("pixel", event.target.value)} placeholder="Insert your code here…" /></label>}
-            {(activeSection === "redirects" ? [...redirectFields] : [...endpointFields]).map(field => <label key={field} className="block space-y-2 text-sm font-medium">{fieldLabels[field]}<Input readOnly={inherited} className="read-only:bg-muted/40" value={values[field] ?? ""} onChange={event => edit(field, event.target.value)} /></label>)}
-          </>}
+          {activeSection === "entry-links" ? <EntryLinks subsample={subsample} /> : <LinkConfigurationForm
+            key={`${activeSection}:${scenario}`}
+            section={key}
+            projectId={projectId}
+            subsampleId={subsampleId}
+            initial={initial}
+            preview={preview}
+          />}
 
         </div>}
       </section>

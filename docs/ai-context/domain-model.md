@@ -68,8 +68,7 @@ Current hierarchy: **Supplier defaults → Subsample**. No Project intermediary.
   so existing custom selections do not change or become unresolvable.
 - Settings save is Admin-only; Subsample save accepts either role for its supplier
   and checks canonical Project relationship. Saving inherit removes custom values.
-- Redirects/serverToServer/security override types exist, but their editors and
-  inheritance save/resolution workflows are not implemented.
+- Redirects and serverToServer overrides have typed validated values and process-local save/inheritance workflows; security remains a reserved type. See [Redirects/S2S](redirects-s2s.md).
 
 See [contact-inheritance.md](contact-inheritance.md) for exact interactions and tests.
 

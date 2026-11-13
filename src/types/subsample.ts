@@ -1,3 +1,4 @@
+import type { RedirectValues, ServerToServerValues } from "@/features/settings/integration-model";
 import type { JobBookNumber, ProjectId, SubsampleId, SupplierId } from "./ids";
 import type { SettingOverride } from "./scopes";
 import type { SubsampleStatus } from "./status";
@@ -13,8 +14,8 @@ export type SubsampleContactOverrides = string[];
 
 export type SubsampleSettingsOverrides = {
   contacts?: SettingOverride<SubsampleContactOverrides>;
-  redirects?: SettingOverride<Record<string, unknown>>;
-  serverToServer?: SettingOverride<Record<string, unknown>>;
+  redirects?: SettingOverride<RedirectValues>;
+  serverToServer?: SettingOverride<ServerToServerValues>;
   security?: SettingOverride<Record<string, unknown>>;
 };
 

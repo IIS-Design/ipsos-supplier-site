@@ -1,3 +1,4 @@
+import { redirectOverrideSchema, serverToServerOverrideSchema } from "@/features/settings/integration-model";
 import { contactsSchema, contactOverrideSchema } from "@/features/contacts/contact-model";
 import { z } from "zod";
 import type {
@@ -155,8 +156,8 @@ export const subsampleSchema = z
     settingsOverrides: z
       .object({
         contacts: contactOverrideSchema.optional(),
-        redirects: settingOverrideSchema.optional(),
-        serverToServer: settingOverrideSchema.optional(),
+        redirects: redirectOverrideSchema.optional(),
+        serverToServer: serverToServerOverrideSchema.optional(),
         security: settingOverrideSchema.optional(),
       })
       .strict()

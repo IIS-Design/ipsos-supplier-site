@@ -1,3 +1,4 @@
+import { linkConfigurationRequestSchema } from "@/features/settings/integration-model";
 import { refreshSubsampleFixtures } from "./refresh-subsample-fixtures";
 import { defaultSettings, settingsSchema, userManagementSchema } from "@/features/settings/settings-model";
 import type { SettingsValues } from "@/features/settings/settings-model";
@@ -241,6 +242,17 @@ const subsampleRepository: SubsampleRepository = {
       ) ?? null,
     );
   },
+  async saveLinkConfiguration(supplierId, projectId, subsampleId, input, actorId) {
+    const actor = userRecords.find(user => user.id === actorId && user.supplierId === supplierId && (user.status ?? "active") === "active");
+    if (!actor) throw new Error("FORBIDDEN");
+    const parsed = linkConfigurationRequestSchema.parse(input);
+    const subsample = contactState.subsamples.find(item => item.id === subsampleId && item.projectId === projectId && item.supplierId === supplierId);
+    if (!subsample) throw new Error("NOT_FOUND");
+    subsample.settingsOverrides ??= {};
+    if (parsed.section === "redirects") subsample.settingsOverrides.redirects = structuredClone(parsed.setting);
+    else subsample.settingsOverrides.serverToServer = structuredClone(parsed.setting);
+    return structuredClone(subsample);
+  },
   async saveContacts(supplierId, projectId, subsampleId, input, actorId) {
     requireContactActor(supplierId, actorId);
     const setting = contactOverrideSchema.parse(input);
@@ -396,7 +408,8 @@ export const mockRepositories: PortalRepositories = {
     async get(supplierId) {
       const supplier = contactState.suppliers.find(item => item.id === supplierId);
       if (!supplier) throw new Error("NOT_FOUND");
-      return structuredClone(preferences[supplierId] ?? defaultSettings(supplier.name));
+      const values = preferences[supplierId] ?? defaultSettings(supplier.name);
+      return structuredClone({ ...values, redirects: { ...defaultSettings(supplier.name).redirects, ...values.redirects } });
     },
     async save(supplierId, actorId, section, input) {
       const actor = userRecords.find(user => user.id === actorId && user.supplierId === supplierId && (user.status ?? "active") === "active");
@@ -404,7 +417,8 @@ export const mockRepositories: PortalRepositories = {
       const values = settingsSchema.parse(input);
       const supplier = contactState.suppliers.find(item => item.id === supplierId);
       if (!supplier) throw new Error("NOT_FOUND");
-      const current = preferences[supplierId] ?? defaultSettings(supplier.name);
+      const stored = preferences[supplierId] ?? defaultSettings(supplier.name);
+      const current = { ...stored, redirects: { ...defaultSettings(supplier.name).redirects, ...stored.redirects } };
       const next = { ...current, [section]: structuredClone(values[section]) };
       preferences[supplierId] = next;
       if (section === "organization") supplier.name = values.organization.companyName;

@@ -18,8 +18,8 @@ references. Existing primary navigation, blue theme and 40px controls are retain
   invite/edit dialogs, reset-password and deactivate/activate row actions, followed
   by Default Contacts with unchanged Supplier → Subsample inheritance.
 - `/settings/survey-configuration`: five required-field choices.
-- `/settings/redirects`: four Survey Outcomes and four Other Outcomes URLs.
-- `/settings/server-to-server`: seven endpoints, four routing choices, custom
+- `/settings/redirects`: four Survey Outcomes and five Other Outcomes URLs, including Opt Out / Unsubscribe (100).
+- `/settings/server-to-server`: seven status-coded endpoints, contextual token help, four Respondent Routing choices, custom
   minutes/attempts and and/or combination; defaults are 15 minutes/4 attempts.
 - `/settings/security`: source key, masked/revealable secret, confirmed regeneration
   of a staged synthetic key. Save commits; Cancel restores the saved values.
@@ -69,8 +69,7 @@ remain Invited. Reset Password previews use actual mock recovery receipts.
 Integration source/secret keys are synthetic; there is no external credential rotation,
 endpoint execution or real authentication integration. Required survey fields, routing
 and URL defaults are editable supplier settings, not an enforcement engine. Subsample
-Configuration remains a placeholder; only Contacts currently has operational
-Supplier → Subsample inheritance. No Project inheritance layer is introduced.
+Links Redirects and S2S now have process-local saved Supplier-to-Subsample inheritance with Save/Cancel, alongside Contacts. No Project inheritance layer is introduced.
 
 Tests in `tests/settings.test.ts` cover schema boundaries, section isolation, cloned
 reads, cross-supplier/admin authorization, duplicates, statuses and self-lockout.
@@ -110,3 +109,8 @@ validates the full selection atomically, reuses matching contacts or assigns
 canonical IDs, and stores only the independent override IDs. Supplier defaults
 remain unchanged. Cancel discards additions; invalid/duplicate emails and
 unavailable contact IDs are rejected. Existing inheritance and permissions remain.
+
+
+## Redirect/S2S review (November 13)
+
+See [Redirects and S2S](redirects-s2s.md) for shared URL validation, field notes, tokens, saved Subsample overrides and method selection. Respondent Routing controls remain pending possible removal from the supplier portal. Pixel HTML, Source Key and Secret Key are unchanged; internal Cortex Admin capabilities remain excluded.

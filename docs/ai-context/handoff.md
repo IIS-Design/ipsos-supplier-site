@@ -7,6 +7,12 @@ Verified against source on 2026-10-23. This is a running Next.js prototype, not 
 earlier docs/data-only foundation. Prefer current code over historical summaries,
 screenshots or session memory. No business-data persistence exists outside one process.
 
+## Output language
+
+The user requires English for every deliverable outside the chat, including code,
+comments, UI, documentation, reports and team-facing communication. Chat discussion
+may remain in Spanish. See [Development rules](dev-rules.md#language).
+
 ## Information hierarchy updated November 12
 
 Project labels use SID (`surveyEventId`). Billing Entity is project-level. Job Book Number and Research Type are subsample-level; Product Type has been removed. Subsample `languages` supports multiple values; `language` is retained for compatibility with older fixtures. Use `subsampleLanguages` for displays and filtering, with Country before Languages. Mock migration preserves existing identifiers; synthetic demo scenarios demonstrate differing JBN/research types and multiple languages. Cost target summaries derive JBN from their subsamples.
@@ -697,3 +703,8 @@ Validation: four focused MIR tests cover DST, month-end date boundaries, request
 Supersedes the earlier all/cross-project UI: removed All my subsamples and Select subsamples from the scope dropdown; users choose a Project (then its children) or a direct Subsample. The underlying supplier scope is retained for compatibility but is no longer offered by this form. Missing child selection errors now appear directly below the Subsamples selector, with an accessible error association and focused message. Status/Substatus dropdowns have no search and show Name (code), e.g. In Router (1). Link Type uses Live Users (Real Respondents) and Proofing Users (Test Users), with muted parenthetical text.
 
 The restricted report date picker offers Last Week and Last 2 Weeks in addition to Last Month/Last 3 Months; Last 2 Weeks is initially selected. Presets show their name in the control and exact dates/zone below. Custom ranges show dates in the control and only the zone below, avoiding duplicate dates. Removed the three-month helper sentence; the picker disables dates before the minimum, while API validation remains. Rolling presets use the current Organization-local date. Other unrestricted shared date pickers retain their existing presets.
+
+
+## Redirect/S2S review implemented November 13, 2026
+
+This supersedes earlier statements that Redirects/S2S are unsaved local editors or placeholders. [Redirects and S2S](redirects-s2s.md) documents the approved nine redirect URLs, seven S2S endpoints, field notes/token help, shared URL validation, independent process-local overrides with Save/Cancel, and Subsample-only HTTP Method (POST provisional default). The new links PUT route checks supplier, Project, Subsample and active actor; both supplier roles may save owned Subsamples. Blank custom fields never inherit individually. Prototype Tools includes token/invalid-URL examples without saving; Current data restores the baseline. Routing controls remain with clarifying copy and may later be removed. Pixel HTML and internal-admin capabilities remain unchanged. No real integration engine or durable storage is introduced. New UI copy avoids the long dash character.
