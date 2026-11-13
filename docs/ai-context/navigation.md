@@ -168,3 +168,15 @@ Member Info form refinement: all/cross-project scope choices removed; child-sele
 ## Redirect/S2S review implemented November 13, 2026
 
 This supersedes earlier statements that Redirects/S2S are unsaved local editors or placeholders. [Redirects and S2S](redirects-s2s.md) documents the approved nine redirect URLs, seven S2S endpoints, field notes/token help, shared URL validation, independent process-local overrides with Save/Cancel, and Subsample-only HTTP Method (POST provisional default). The new links PUT route checks supplier, Project, Subsample and active actor; both supplier roles may save owned Subsamples. Blank custom fields never inherit individually. Prototype Tools includes token/invalid-URL examples without saving; Current data restores the baseline. Routing controls remain with clarifying copy and may later be removed. Pixel HTML and internal-admin capabilities remain unchanged. No real integration engine or durable storage is introduced. New UI copy avoids the long dash character.
+
+
+## Changelog review report link (November 13, 2026)
+
+The November 13 Changelog entry links to `/reviews/product-review-2026-11-13/`
+under the `/supplier` base path. The report opens in a new tab and is explicitly
+a discussion proposal, not an implemented roles model. A Node route handler reads
+the canonical English HTML from `docs/reviews/` and calls `requireUser()` directly;
+route handlers do not inherit the portal layout guard. Responses are private and
+not cached. The webpack build was checked to include the exact HTML in the standalone
+production package. No public asset duplicate or external hosting is required.
+The link becomes available on the live prototype after deployment of this version.

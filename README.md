@@ -196,3 +196,5 @@ not save data; Redirects/S2S support read-only defaults and saved process-local 
 and remaining design gaps.
 
 Redirect/S2S configuration and remaining boundaries: [implementation guide](docs/ai-context/redirects-s2s.md).
+
+The November 13 Changelog entry links to the authenticated [product review report](docs/reviews/supplier-portal-product-review-2026-11-13.html), served at `/supplier/reviews/product-review-2026-11-13/`. It compares current, intermediate and ideal approaches; proposals are not implemented role changes.
