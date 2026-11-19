@@ -4,6 +4,6 @@ import { SettingsPage } from "@/features/settings/settings-page";
 export default async function SettingsSectionRoute({ params }: { params: Promise<{ section: string }> }) {
   const { section } = await params;
   if (!settingsSections.includes(section as SettingsSection)) notFound();
-  if (section === "organization") redirect("/settings");
+  if (section === "organization") redirect("/supplier/settings");
   return <SettingsPage section={section as SettingsSection} />;
 }
