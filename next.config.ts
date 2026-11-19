@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
   trailingSlash: true,
+  experimental: {
+    agentUpgrade: "security",
+  },
 };
 
 export default nextConfig;
