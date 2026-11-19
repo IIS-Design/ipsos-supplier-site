@@ -1,5 +1,7 @@
 "use client";
 
+import { formatSubsampleId } from "@/lib/subsample-id";
+
 import { usePrototypeState } from "@/components/prototype-state";
 import { CopyValue } from "@/components/ui/copy-value";
 import type { Subsample } from "@/types/subsample";
@@ -10,8 +12,8 @@ export function EntryLinks({ subsample }: { subsample: Subsample }) {
   if (scenario.startsWith("links-")) {
     const languages = scenario === "links-multiple" || scenario === "links-partial" ? ["en-CA", "fr-CA"] : ["en-CA"];
     links = languages.map(language => ({ language,
-      live: scenario === "links-no-live" ? undefined : `https://survey.example.test/entry?subsample=${subsample.id}&language=${language}${scenario === "links-long" ? `&token=${"example-token-".repeat(20)}` : ""}`,
-      testing: scenario === "links-partial" ? undefined : `https://survey.example.test/proof?subsample=${subsample.id}&language=${language}`,
+      live: scenario === "links-no-live" ? undefined : `https://survey.example.test/entry?subsample=${formatSubsampleId(subsample)}&language=${language}${scenario === "links-long" ? `&token=${"example-token-".repeat(20)}` : ""}`,
+      testing: scenario === "links-partial" ? undefined : `https://survey.example.test/proof?subsample=${formatSubsampleId(subsample)}&language=${language}`,
     }));
   }
   if (!links.length) return <p className="text-sm text-muted-foreground">No entry links are available for this subsample.</p>;

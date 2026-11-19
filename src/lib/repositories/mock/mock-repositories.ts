@@ -1,4 +1,5 @@
 import { linkConfigurationRequestSchema } from "@/features/settings/integration-model";
+import { refreshCostFixtures, restorePendingCostFixtures } from "./refresh-cost-fixtures";
 import { refreshSubsampleFixtures } from "./refresh-subsample-fixtures";
 import { defaultSettings, settingsSchema, userManagementSchema } from "@/features/settings/settings-model";
 import type { SettingsValues } from "@/features/settings/settings-model";
@@ -58,6 +59,11 @@ type MockCostGlobal = typeof globalThis & {
 
 const costState = globalThis as MockCostGlobal;
 const costRecords = (costState.__ipsosSupplierMockCosts ??= [...costs]);
+refreshCostFixtures(costRecords, costs);
+
+export function restoreMockPendingCosts(supplierId: string) {
+  return restorePendingCostFixtures(costRecords, costs, supplierId);
+}
 
 // Process-local mock persistence, matching Reports and Costs. Replace this adapter
 // with durable storage for deployment. Contact identities are immutable: replacing

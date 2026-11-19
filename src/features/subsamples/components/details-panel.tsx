@@ -1,5 +1,7 @@
 "use client";
 
+import { formatSubsampleId } from "@/lib/subsample-id";
+
 import type { JobBookNumber } from "@/types/ids";
 import { IpsosContacts } from "./ipsos-contacts";
 import { CopyValue } from "@/components/ui/copy-value";
@@ -7,6 +9,7 @@ import { useConfigurationState } from "./configuration-state";
 import { usePrototypeState } from "@/components/prototype-state";
 import { subsampleLanguages } from "@/types/subsample";
 import type { Subsample } from "@/types/subsample";
+import { CountryFlag } from "@/components/ui/country-flag";
 
 function ConfigurationSummary({ subsample }: { subsample: Subsample }) {
   const { sections, securityRulesDefined } = useConfigurationState();
@@ -37,8 +40,8 @@ function ConfigurationSummary({ subsample }: { subsample: Subsample }) {
       <dl className="mt-5">
         {items.map((item) => (
           <div className="flex items-start justify-between gap-4 border-b px-2 py-3" key={item.label}>
-            <dt className="text-sm font-medium">{item.label}</dt>
-            <dd className="shrink-0 text-sm text-muted-foreground">{item.value}</dd>
+            <dt className="text-sm font-medium text-muted-foreground">{item.label}</dt>
+            <dd className="shrink-0 text-sm text-foreground">{item.value === "Not provided" ? <span className="text-muted-foreground">{item.value}</span> : item.value}</dd>
           </div>
         ))}
       </dl>
@@ -55,9 +58,9 @@ function DetailField({
 }) {
   return (
     <div className="space-y-1">
-      <dt className="text-sm font-medium">{label}</dt>
-      <dd className="wrap-break-word text-sm text-muted-foreground">
-        {value || "Not provided"}
+      <dt className="text-sm font-medium text-muted-foreground">{label}</dt>
+      <dd className="wrap-break-word text-sm text-foreground">
+        {value || <span className="text-muted-foreground">Not provided</span>}
       </dd>
     </div>
   );
@@ -74,7 +77,7 @@ function formatDate(value: string | null | undefined): string {
 
 export function DetailsPanel({ subsample: original }: { subsample: Subsample }) {
   const { scenario } = usePrototypeState();
-  const subsample = scenario === "multilingual" ? { ...original, country: "Canada", language: "en-CA", languages: ["en-CA", "fr-CA"], jobBookNumber: "260001000002" as JobBookNumber, researchType: "Product testing" } : scenario === "populated" ? { ...original, ipsosContact: original.ipsosContact || "supplier.support@example.test" } : scenario === "minimal" ? { ...original, ipsosContact: undefined, ipsosContacts: [], jobBookNumber: undefined, researchType: undefined, configurationSummary: undefined } : original;
+  const subsample = scenario === "multilingual" ? { ...original, country: "Canada", language: "en-CA", languages: ["en-CA", "fr-CA"], jobBookNumber: "260001000002" as JobBookNumber, researchType: "Product testing" } : scenario === "populated" ? { ...original, ipsosContact: original.ipsosContact || "sarah.billingson@ipsos.com" } : scenario === "minimal" ? { ...original, ipsosContact: undefined, ipsosContacts: [], jobBookNumber: undefined, researchType: undefined, configurationSummary: undefined } : original;
   return (
     <div className="grid gap-8 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
       <section aria-labelledby="subsample-details-heading">
@@ -115,15 +118,21 @@ export function DetailsPanel({ subsample: original }: { subsample: Subsample }) 
         </dl>
         <dl className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
-            <DetailField label="Subsample ID" value={subsample.id} />
-            <div className="min-w-0 space-y-1"><dt className="text-sm font-medium">Job Book Number</dt><dd className="flex flex-wrap items-center gap-2 wrap-break-word text-sm text-muted-foreground">{subsample.jobBookNumber || "Not provided"}{subsample.jobBookNumber && <CopyValue value={subsample.jobBookNumber} label="Job Book Number" />}</dd></div>
+            <DetailField label="Subsample ID" value={formatSubsampleId(subsample)} />
+            <div className="min-w-0 space-y-1"><dt className="text-sm font-medium text-muted-foreground">Job Book Number</dt><dd className="flex flex-wrap items-center gap-2 wrap-break-word text-sm text-foreground">{subsample.jobBookNumber || <span className="text-muted-foreground">Not provided</span>}{subsample.jobBookNumber && <CopyValue value={subsample.jobBookNumber} label="Job Book Number" />}</dd></div>
           </div>
           <div className="grid grid-cols-2 gap-6">
             <DetailField label="Field Start Date" value={formatDate(subsample.fieldStartDate)} />
             <DetailField label="Field End Date" value={formatDate(subsample.fieldEndDate)} />
           </div>
           <div className="grid grid-cols-2 gap-6">
-            <DetailField label="Country" value={subsample.country} />
+            <div className="min-w-0 space-y-1">
+              <dt className="text-sm font-medium text-muted-foreground">Country</dt>
+              <dd className="flex items-center gap-1.5 wrap-break-word text-sm text-foreground">
+                <CountryFlag country={subsample.country} />
+                <span>{subsample.country}</span>
+              </dd>
+            </div>
             <DetailField label="Languages" value={subsampleLanguages(subsample).join(", ")} />
           </div>
           <DetailField label="Research Type" value={subsample.researchType} />

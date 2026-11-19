@@ -13,6 +13,6 @@ export type Project = {
   name: string;
   status: ProjectStatus;
   billingEntity?: string;
-  deviceCompatibility?: { mobile: boolean; tablet: boolean; desktop: boolean };
+  deviceCompatibility: { mobile: boolean; tablet: boolean; desktop: boolean };
   categoryPaths?: string[][];
 };

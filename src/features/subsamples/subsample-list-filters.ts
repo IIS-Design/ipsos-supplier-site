@@ -1,3 +1,4 @@
+import { formatSubsampleId } from "@/lib/subsample-id";
 import { subsampleLanguages } from "@/types/subsample";
 import type { Subsample } from "@/types/subsample";
 export type SubsampleListFilters = { query: string; status: string | string[]; language: string | string[]; router: string | string[]; from: string; to: string };
@@ -6,7 +7,7 @@ function selected(filter: string | string[], value: string) {
 }
 export function filterSubsamples(subsamples: Subsample[], filters: SubsampleListFilters) {
   const query = filters.query.trim().toLowerCase();
-  return subsamples.filter(item => (!query || `${item.name} ${item.id}`.toLowerCase().includes(query))
+  return subsamples.filter(item => (!query || `${item.name} ${item.id} ${formatSubsampleId(item)}`.toLowerCase().includes(query))
     && selected(filters.status, item.status)
     && subsampleLanguages(item).some(value => selected(filters.language, value))
     && selected(filters.router, item.router || "unassigned")

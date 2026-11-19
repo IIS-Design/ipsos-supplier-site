@@ -6,7 +6,7 @@
     "name": "InnoTest 1046192",
     "status": "live",
     "deviceCompatibility": {
-      "mobile": false,
+      "mobile": true,
       "tablet": true,
       "desktop": true
     },
@@ -29,342 +29,636 @@
     "supplierId": "supplier-northstar",
     "surveyEventId": "1008301",
     "name": "Test BA qTarget",
-    "status": "pending"
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services US",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1024360",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1024360",
     "name": "Test RTO v2",
-    "status": "canceled"
+    "status": "canceled",
+    "billingEntity": "Ipsos Interactive Services US",
+    "deviceCompatibility": {
+      "mobile": false,
+      "tablet": false,
+      "desktop": true
+    }
   },
   {
     "id": "project-1008820",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1008820",
     "name": "SM-22022",
-    "status": "closed"
+    "status": "closed",
+    "billingEntity": "Ipsos Interactive Services US",
+    "deviceCompatibility": {
+      "mobile": false,
+      "tablet": false,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100000",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100000",
-    "name": "Consumer Confidence Tracker — Wave 01",
-    "status": "live"
+    "name": "Consumer Confidence Tracker - Wave 01",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services US",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100001",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100001",
-    "name": "Healthcare Access Study — Wave 02",
-    "status": "live"
+    "name": "Healthcare Access Study - Wave 02",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100002",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100002",
-    "name": "Retail Experience — Wave 03",
-    "status": "live"
+    "name": "Retail Experience - Wave 03",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100003",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100003",
-    "name": "Brand Awareness and Customer Experience Tracking — International Multi-market Research, Autumn 2026",
-    "status": "live"
+    "name": "Brand Awareness and Customer Experience Tracking - International Multi-market Research, Autumn 2026",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100004",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100004",
-    "name": "International Consumer Experience — Multi-market Longitudinal Research, Autumn 2026",
-    "status": "live"
+    "name": "International Consumer Experience - Multi-market Longitudinal Research, Autumn 2026",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100005",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100005",
-    "name": "Transport & Mobility — Wave 06",
-    "status": "live"
+    "name": "Transport & Mobility - Wave 06",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100006",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100006",
-    "name": "Sustainability Monitor — Wave 07",
-    "status": "live"
+    "name": "Sustainability Monitor - Wave 07",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100007",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100007",
-    "name": "Media Usage & Streaming — Wave 08",
-    "status": "live"
+    "name": "Media Usage & Streaming - Wave 08",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": false,
+      "tablet": false,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100008",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100008",
-    "name": "Household Spending — Wave 09",
-    "status": "live"
+    "name": "Household Spending - Wave 09",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100009",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100009",
-    "name": "Customer Satisfaction — Wave 10",
-    "status": "live"
+    "name": "Customer Satisfaction - Wave 10",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100010",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100010",
-    "name": "Consumer Confidence Tracker — Wave 11",
-    "status": "live"
+    "name": "Consumer Confidence Tracker - Wave 11",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100011",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100011",
-    "name": "Healthcare Access Study — Wave 12",
-    "status": "live"
+    "name": "Healthcare Access Study - Wave 12",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100012",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100012",
-    "name": "Retail Experience — Wave 13",
-    "status": "live"
+    "name": "Retail Experience - Wave 13",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100013",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100013",
-    "name": "Brand Awareness — Wave 14",
-    "status": "live"
+    "name": "Brand Awareness - Wave 14",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100014",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100014",
-    "name": "Digital Banking Habits — Wave 15",
-    "status": "live"
+    "name": "Digital Banking Habits - Wave 15",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100015",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100015",
-    "name": "Transport & Mobility — Wave 16",
-    "status": "live"
+    "name": "Transport & Mobility - Wave 16",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100016",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100016",
-    "name": "Sustainability Monitor — Wave 17",
-    "status": "live"
+    "name": "Sustainability Monitor - Wave 17",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100017",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100017",
-    "name": "Media Usage & Streaming — Wave 18",
-    "status": "live"
+    "name": "Media Usage & Streaming - Wave 18",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100018",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100018",
-    "name": "Household Spending — Wave 19",
-    "status": "live"
+    "name": "Household Spending - Wave 19",
+    "status": "live",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": false,
+      "tablet": false,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100019",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100019",
-    "name": "Customer Satisfaction — Wave 20",
-    "status": "pending"
+    "name": "Customer Satisfaction - Wave 20",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100020",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100020",
-    "name": "Consumer Confidence Tracker — Wave 21",
-    "status": "pending"
+    "name": "Consumer Confidence Tracker - Wave 21",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100021",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100021",
-    "name": "Healthcare Access Study — Wave 22",
-    "status": "pending"
+    "name": "Healthcare Access Study - Wave 22",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100022",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100022",
-    "name": "Retail Experience — Wave 23",
-    "status": "pending"
+    "name": "Retail Experience - Wave 23",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100023",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100023",
-    "name": "Brand Awareness — Wave 24",
-    "status": "pending"
+    "name": "Brand Awareness - Wave 24",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100024",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100024",
-    "name": "Digital Banking Habits — Wave 25",
-    "status": "pending"
+    "name": "Digital Banking Habits - Wave 25",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services US",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100025",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100025",
-    "name": "Transport & Mobility — Wave 26",
-    "status": "pending"
+    "name": "Transport & Mobility - Wave 26",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100026",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100026",
-    "name": "Sustainability Monitor — Wave 27",
-    "status": "pending"
+    "name": "Sustainability Monitor - Wave 27",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": false,
+      "tablet": false,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100027",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100027",
-    "name": "Media Usage & Streaming — Wave 28",
-    "status": "pending"
+    "name": "Media Usage & Streaming - Wave 28",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100028",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100028",
-    "name": "Household Spending — Wave 29",
-    "status": "pending"
+    "name": "Household Spending - Wave 29",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100029",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100029",
-    "name": "Customer Satisfaction — Wave 30",
-    "status": "pending"
+    "name": "Customer Satisfaction - Wave 30",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100030",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100030",
-    "name": "Consumer Confidence Tracker — Wave 31",
-    "status": "pending"
+    "name": "Consumer Confidence Tracker - Wave 31",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100031",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100031",
-    "name": "Healthcare Access Study — Wave 32",
-    "status": "pending"
+    "name": "Healthcare Access Study - Wave 32",
+    "status": "pending",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100032",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100032",
-    "name": "Retail Experience — Wave 33",
-    "status": "closed"
+    "name": "Retail Experience - Wave 33",
+    "status": "closed",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100033",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100033",
-    "name": "Brand Awareness — Wave 34",
-    "status": "closed"
+    "name": "Brand Awareness - Wave 34",
+    "status": "closed",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100034",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100034",
-    "name": "Digital Banking Habits — Wave 35",
-    "status": "closed"
+    "name": "Digital Banking Habits - Wave 35",
+    "status": "closed",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100035",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100035",
-    "name": "Transport & Mobility — Wave 36",
-    "status": "closed"
+    "name": "Transport & Mobility - Wave 36",
+    "status": "closed",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100036",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100036",
-    "name": "Sustainability Monitor — Wave 37",
-    "status": "closed"
+    "name": "Sustainability Monitor - Wave 37",
+    "status": "closed",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100037",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100037",
-    "name": "Media Usage & Streaming — Wave 38",
-    "status": "closed"
+    "name": "Media Usage & Streaming - Wave 38",
+    "status": "closed",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100038",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100038",
-    "name": "Household Spending — Wave 39",
-    "status": "closed"
+    "name": "Household Spending - Wave 39",
+    "status": "closed",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100039",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100039",
-    "name": "Customer Satisfaction — Wave 40",
-    "status": "closed"
+    "name": "Customer Satisfaction - Wave 40",
+    "status": "closed",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": false,
+      "tablet": false,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100040",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100040",
-    "name": "Consumer Confidence Tracker — Wave 41",
-    "status": "canceled"
+    "name": "Consumer Confidence Tracker - Wave 41",
+    "status": "canceled",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100041",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100041",
-    "name": "Healthcare Access Study — Wave 42",
-    "status": "canceled"
+    "name": "Healthcare Access Study - Wave 42",
+    "status": "canceled",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100042",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100042",
-    "name": "Retail Experience — Wave 43",
-    "status": "canceled"
+    "name": "Retail Experience - Wave 43",
+    "status": "canceled",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100043",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100043",
-    "name": "Brand Awareness — Wave 44",
-    "status": "canceled"
+    "name": "Brand Awareness - Wave 44",
+    "status": "canceled",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100044",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100044",
-    "name": "Digital Banking Habits — Wave 45",
-    "status": "canceled"
+    "name": "Digital Banking Habits - Wave 45",
+    "status": "canceled",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": true,
+      "tablet": true,
+      "desktop": true
+    }
   },
   {
     "id": "project-1100045",
     "supplierId": "supplier-northstar",
     "surveyEventId": "1100045",
-    "name": "Transport & Mobility — Wave 46",
-    "status": "canceled"
+    "name": "Transport & Mobility - Wave 46",
+    "status": "canceled",
+    "billingEntity": "Ipsos Interactive Services SRL",
+    "deviceCompatibility": {
+      "mobile": false,
+      "tablet": false,
+      "desktop": true
+    }
   }
 ]

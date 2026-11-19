@@ -95,7 +95,7 @@ export const projectSchema = z
     name: z.string().min(1),
     status: z.enum(["live", "pending", "closed", "canceled"]),
     billingEntity: z.string().optional(),
-    deviceCompatibility: z.object({ mobile: z.boolean(), tablet: z.boolean(), desktop: z.boolean() }).strict().optional(),
+    deviceCompatibility: z.object({ mobile: z.boolean(), tablet: z.boolean(), desktop: z.boolean() }).strict(),
     categoryPaths: z.array(z.array(z.string().trim().min(1)).min(1)).optional(),
   })
   .strict();
@@ -103,6 +103,9 @@ export const projectSchema = z
 export const subsampleSchema = z
   .object({
     id: subsampleIdSchema,
+    sampleOneId: z.string().regex(/^\d+$/).optional(),
+    sampleType: z.string().min(1).optional(),
+    lastStatusUpdatedAt: z.iso.datetime().optional(),
     supplierId: supplierIdSchema,
     projectId: projectIdSchema,
     name: z.string().min(1),
@@ -121,16 +124,16 @@ export const subsampleSchema = z
       facialCoding: z.boolean(),
       marketplaceEnabled: z.boolean(),
     }).strict().optional(),
-    ipsosContact: z.string().optional(),
-    ipsosContacts: z.array(z.object({ name: z.string(), email: z.email() }).strict()).optional(),
+    ipsosContact: z.email().refine(email => email.toLowerCase().endsWith("@ipsos.com"), "Ipsos contacts must use the ipsos.com domain").optional(),
+    ipsosContacts: z.array(z.object({ name: z.string(), email: z.email().refine(email => email.toLowerCase().endsWith("@ipsos.com"), "Ipsos contacts must use the ipsos.com domain") }).strict()).optional(),
     entryLinks: z.array(z.object({ language: z.string().min(1), live: z.url().optional(), testing: z.url().optional() }).strict()).optional(),
-    incidence: z.number().nonnegative(),
+    incidence: z.number().min(3).max(90),
     visitors: z.number().int().nonnegative(),
-    loi: z.number().nonnegative(),
+    loi: z.number().min(3).max(45),
     abandonRate: z.number().min(0).max(100).optional(),
     expectedMetrics: z.object({
-      incidence: z.number().min(0).max(100).optional(),
-      loi: z.number().nonnegative().optional(),
+      incidence: z.number().min(3).max(90).optional(),
+      loi: z.number().min(3).max(45).optional(),
       conversion: z.number().min(0).max(100).optional(),
       abandonRate: z.number().min(0).max(100).optional(),
     }).strict().optional(),
@@ -189,7 +192,7 @@ export const costSchema = z
     scope: scopeSchema,
     completes: z.number().int().nonnegative(),
     cpi: z.number().nonnegative(),
-    totalCost: z.number().nonnegative(),
+    totalCost: z.number(),
     currency: z.string().length(3),
     status: z.enum(["pending_approval", "approved", "rejected"]),
     country: z.string().min(1),
@@ -199,6 +202,16 @@ export const costSchema = z
     discountAmount: z.number().nonnegative().optional(),
     discountReason: z.string().optional(),
     publishedAt: z.iso.datetime().optional(),
+    updatedAt: z.iso.datetime().optional(),
+    incidence: z.number().min(3).max(90),
+    fieldIncidence: z.number().min(3).max(90).optional(),
+    loi: z.number().min(3).max(45),
+    fieldLoi: z.number().min(3).max(45).optional(),
+    completesPercentage: z.number().min(0).max(100).optional(),
+    sampleCost: z.number().nonnegative().optional(),
+    minimumFee: z.number().nonnegative().optional(),
+    otherFees: z.number().nonnegative().optional(),
+    otherFeesReason: z.string().optional(),
     supplierStatus: z.enum(["default", "submitted"]).optional(),
     ipsosStatus: z.enum(["pending", "published", "rejected"]).optional(),
     approval: z
@@ -211,4 +224,7 @@ export const costSchema = z
       .strict()
       .optional(),
   })
-  .strict();
+  .strict()
+  .refine(cost => cost.totalCost >= 0 || cost.scope.scopeType === "project", {
+    path: ["totalCost"], message: "Only project adjustments may have a negative cost",
+  });

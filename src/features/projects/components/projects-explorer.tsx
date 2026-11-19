@@ -1,5 +1,7 @@
 "use client";
 
+import { formatSubsampleId } from "@/lib/subsample-id";
+
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, Search, SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +28,7 @@ import type { Project } from "@/types/project";
 import { subsampleLanguages } from "@/types/subsample";
 import type { Subsample } from "@/types/subsample";
 import { ProjectGroup } from "./project-group";
+import { CountryFlag } from "@/components/ui/country-flag";
 
 
 
@@ -102,7 +105,8 @@ export function ProjectsExplorer({
               contains(subsample.jobBookNumber ?? "", normalizedQuery) ||
               subsampleLanguages(subsample).some(value => contains(value, normalizedQuery)) ||
               contains(subsample.country, normalizedQuery) ||
-              contains(subsample.id, normalizedQuery),
+              contains(subsample.id, normalizedQuery) ||
+              contains(formatSubsampleId(subsample), normalizedQuery),
           )
         : languageAndDateMatches;
 
@@ -165,14 +169,14 @@ export function ProjectsExplorer({
     ...projectStatuses.map(value => ({ id: `project-${value}`, label: `Project Status: ${statusLabels[value]}`, remove: () => { setProjectStatuses(projectStatuses.filter(item => item !== value)); setPage(1); } })),
     ...statusFilter.map(value => ({ id: `status-${value}`, label: `Subsample Status: ${statusLabels[value]}`, remove: () => { setStatusFilter(statusFilter.filter(item => item !== value)); setPage(1); } })),
     ...language.map(value => ({ id: `language-${value}`, label: `Language: ${value}`, remove: () => { setLanguage(language.filter(item => item !== value)); setPage(1); } })),
-    ...country.map(value => ({ id: `country-${value}`, label: `Country: ${value}`, remove: () => { changeCountries(country.filter(item => item !== value)); } })),
+    ...country.map(value => ({ id: `country-${value}`, label: <span className="inline-flex items-center gap-1.5"><CountryFlag country={value} /><span>Country: {value}</span></span>, ariaLabel: `Remove Country: ${value} filter`, remove: () => { changeCountries(country.filter(item => item !== value)); } })),
     ...(remainingFilter !== "any" ? [{ id: "remaining", label: `Remaining: ${remainingFilter === "zero" ? "0" : remainingFilter}`, remove: () => { setRemainingFilter("any"); setPage(1); } }] : []),
     ...(query ? [{ id: "query", label: `Search: ${query}`, remove: () => { setQuery(""); setPage(1); } }] : []),
     ...(fieldEndFrom || fieldEndTo ? [{ id: "dates", label: `Field end: ${fieldEndFrom || "Any"} – ${fieldEndTo || "Any"}`, remove: () => { setFieldEndFrom(""); setFieldEndTo(""); setPage(1); } }] : []),
   ];
 
   return (
-    <section aria-labelledby="projects-page-heading" className="projects-explorer min-w-0 space-y-5">
+    <section aria-labelledby="projects-page-heading" className="projects-explorer min-w-0 space-y-3">
       <header className="flex flex-wrap items-center justify-start gap-x-4 gap-y-2">
         <h1
           className="text-2xl font-semibold tracking-tight"
@@ -211,7 +215,7 @@ export function ProjectsExplorer({
               <div className="space-y-2">
                 <StatusMultiselect showLabel label="Subsample Status" values={statusFilter} options={["live", "pending", "closed", "canceled"]} onChange={values => { setStatusFilter(values); setPage(1); }} />
               </div>
-              <StatusMultiselect showLabel label="Country" values={country} options={countries} optionLabel={value => value} onChange={changeCountries} />
+              <StatusMultiselect showLabel label="Country" values={country} options={countries} optionLabel={value => <span className="inline-flex items-center gap-1.5"><CountryFlag country={value} /><span>{value}</span></span>} onChange={changeCountries} />
               <StatusMultiselect showLabel label="Languages" values={language} options={languages} optionLabel={value => value} onChange={values => { setLanguage(values); setPage(1); }} />
               <div className="space-y-2">
                 <label className="text-sm font-medium" htmlFor="subsample-remaining-filter">Remaining</label>

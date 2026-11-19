@@ -1,4 +1,4 @@
-# Design system — current implementation
+# Design system - current implementation
 
 Source verification: 2026-10-23. Visual references inform layouts but do not define
 implemented features. Accessibility/enterprise principles are targets, not compliance claims.
@@ -583,7 +583,7 @@ route and uses the same guarded navigation as desktop tabs. At lg and above,
 existing line tabs remain on one row. Hidden navigation is not keyboard-focusable.
 
 
-## Member Info review — November 12, 2026
+## Member Info review - November 12, 2026
 
 Current Reports behavior supersedes older entries here: see [Approved Member Info review](handoff.md#approved-member-info-review--november-12-2026). Supports 1–10 owned subsamples or all, Project child selection, Organization-zone dates (two-week default, three-month limit), multiple status/substatus codes, both link types by default and optional respondent deduplication. Upload URL/partial responses removed. Duplicate toast and unavailable-file states are reversible Prototype Tools previews only. Queue execution, emails and file generation remain absent; static CSV sample retained. Child suppliers remain pending.
 

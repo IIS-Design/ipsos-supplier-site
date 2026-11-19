@@ -8,8 +8,11 @@ export function IpsosContacts({ subsample }: { subsample: Subsample }) {
   const { scenario } = usePrototypeState();
   let contacts = getIpsosContacts(subsample);
   if (scenario === "ipsos-one" || scenario === "ipsos-many") contacts = [
-    { name: "Alex Morgan", email: "alex.morgan@example.test" },
-    ...(scenario === "ipsos-many" ? [{ name: "Taylor Chen", email: "taylor.chen@example.test" }, { name: "Project support", email: "project.support@example.test" }] : []),
+    { name: "", email: "sarah.billingson@ipsos.com" },
+    ...(scenario === "ipsos-many" ? [
+      { name: "", email: "project.support@ipsos.com" },
+      { name: "", email: "research.support@ipsos.com" },
+    ] : []),
   ];
   if (scenario === "ipsos-none") contacts = [];
   return <section aria-label="Ipsos Contacts" className="space-y-1">

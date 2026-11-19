@@ -1,7 +1,9 @@
-import { statusLabels, statusTextStyles as statusStyles } from "@/types/status";
+import { statusLabels, statusBadgeStyles as statusStyles } from "@/types/status";
+import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { subsampleLanguages } from "@/types/subsample";
 import type { Subsample } from "@/types/subsample";
+import { CountryFlag } from "@/components/ui/country-flag";
 
 function formatDate(date: string): string {
   return new Intl.DateTimeFormat("en", {
@@ -22,17 +24,17 @@ export function SubsampleSummary({ subsample, wholeRowLink = false }: { subsampl
           {subsample.name}
         </Link>
       </div>
-      <dl className="mt-0.5 flex flex-wrap items-center gap-y-0.5 [&>div+div]:before:mx-2 [&>div+div]:before:text-muted-foreground [&>div+div]:before:content-['·'] [&>div]:flex [&>div]:items-center [&>div]:whitespace-nowrap text-sm leading-5 text-foreground">
-        <div><dt className="sr-only">Status</dt><dd><span
-          className={`inline-flex shrink-0 items-center gap-1.5 text-sm font-medium ${statusStyles[subsample.status]}`}
+      <dl className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 [&>div]:flex [&>div]:items-center [&>div]:whitespace-nowrap text-sm leading-5 text-foreground">
+        <div><dt className="sr-only">Status</dt><dd><Badge variant="outline"
+          className={`inline-flex shrink-0 items-center gap-1.5 ${statusStyles[subsample.status]}`}
         >
           <span
             aria-hidden="true"
-            className={`size-2 rounded-full bg-current`}
+            className={`size-1.5 rounded-full bg-current`}
           />
           {statusLabels[subsample.status]}
-        </span></dd></div>
-        <div className="flex gap-1"><dt className="text-muted-foreground">Country:</dt><dd>{subsample.country}</dd></div>
+        </Badge></dd></div>
+        <div className="flex gap-1"><dt className="text-muted-foreground">Country:</dt><dd className="inline-flex items-center gap-1.5"><CountryFlag country={subsample.country} /><span>{subsample.country}</span></dd></div>
         <div className="flex gap-1">
           <dt className="text-muted-foreground">Languages:</dt>
           <dd className="text-foreground">{subsampleLanguages(subsample).join(", ")}</dd>

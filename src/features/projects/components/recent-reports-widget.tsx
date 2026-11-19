@@ -27,10 +27,10 @@ const reportStatusLabels: Record<Report["status"], string> = {
 };
 
 const reportStatusStyles: Record<Report["status"], string> = {
-  queued: "text-slate-600",
-  executing: "text-blue-800",
-  finished: "text-emerald-800",
-  error: "text-rose-800",
+  queued: "border-slate-200 bg-slate-50 text-slate-600",
+  executing: "border-blue-200 bg-blue-50 text-blue-800",
+  finished: "border-emerald-200 bg-emerald-50 text-emerald-800",
+  error: "border-rose-200 bg-rose-50 text-rose-800",
 };
 
 const reportStatusIcons = {
@@ -91,7 +91,7 @@ export function RecentReportsWidget({ reports }: { reports: Report[] }) {
                         <ReportAction report={report} className={report.status === "error" ? undefined : "underline-offset-4 hover:underline"}>{reportTypeLabels[report.type]}</ReportAction>
                       </p>
                       <div className="mt-0.5 flex flex-wrap gap-x-1 text-sm leading-5 text-muted-foreground">
-                        <span className={reportStatusStyles[report.status]}>
+                        <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${reportStatusStyles[report.status]}`}>
                           {reportStatusLabels[report.status]}
                         </span>
                         <span aria-hidden="true">·</span>

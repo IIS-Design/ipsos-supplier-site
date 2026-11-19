@@ -68,7 +68,7 @@ export function LoginForm() {
       ) : null}
 
       <div className="space-y-2">
-        <label className="block font-medium" htmlFor="email">
+        <label className="text-muted-foreground block font-medium" htmlFor="email">
           Email Address
         </label>
         <Input
@@ -88,7 +88,7 @@ export function LoginForm() {
       </div>
 
       <div className="space-y-2">
-        <label className="block font-medium" htmlFor="password">
+        <label className="text-muted-foreground block font-medium" htmlFor="password">
           Password
         </label>
         <PasswordInput

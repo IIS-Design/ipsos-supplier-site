@@ -1,6 +1,62 @@
 /** Newest day first. Add implemented changes here when shipping work; do not use build time as the update date. */
 export const changelog = [
   {
+    date: "2026-11-19",
+    title: "Compact project dashboard and status styling",
+    validation: "19 Costs tests, TypeScript, ESLint and diff checks passed. Layout changes checked statically; browser validation remains pending.",
+    changes: [
+      "Fixed duplicate React keys and heading IDs on the changelog when multiple entries share the same date.",
+      "Made Review Costs green and compacted dashboard section and project-row spacing. Project names wrap while SID remains aligned to the right.",
+      "Replaced subsample field separator dots with whitespace and added matching backgrounds to Live/Pending summary tags and report and subsample cost status tags.",
+      "Replaced 31 synthetic Remaining stress examples of 1,100,000 with 300, including their matching quota rows and tables. Preserved valid remaining counts and the existing regional, metric, country-flag and project-name normalization changes.",
+    ],
+  },
+  {
+    date: "2026-11-19",
+    title: "Regional and repeated-metric consistency",
+    changes: [
+      "Defined device compatibility for every project, with all three devices enabled except a small desktop-only set.",
+      "Normalized subsample LOI to 3-45 minutes and incidence to 3%-90%, and kept cost fixture metrics and completes synchronized with their subsamples.",
+      "Normalized small mixed-region projects to a single region while preserving explicit international and larger multi-market catalogues.",
+      "Added fixture validation for regional mixing, metric ranges and repeated cost/subsample values.",
+    ],
+  },
+  {
+    date: "2026-11-19",
+    title: "Data and cross-flow consistency audit",
+    changes: [
+      "Removed the em dash character from the source, fixtures, tests and implementation documentation.",
+      "Standardized Ipsos contacts to email-only records on the ipsos.com domain and added fixture-schema validation for that domain.",
+      "Audited project, subsample and cost relationships, required fields, ID formats, status values and optional scenario coverage.",
+    ],
+  },
+  {
+    date: "2026-11-19",
+    title: "Country flags in country references",
+    changes: [
+      "Added lipis/flag-icons and centralized country-name-to-ISO-code mapping for the countries used by the mock data.",
+      "Added flags beside country values in subsample summaries, details, lists, filters, cost metadata, report scope selectors and the project context subsample selector. Project and subsample names remain unchanged and do not add a flag. Standardized flags to an inline 4:3 16x12 shape with 1px rounded corners and vertical alignment.",
+    ],
+  },
+  {
+    date: "2026-11-19",
+    title: "Costs hierarchy, cost breakdowns and consistent detail styling",
+    changes: [
+      "Rebuilt Costs around Survey Events, with nested subsamples and individual CPI entries. Pending Approval and History retain their existing permission and decision behavior; search, country filters, history dates and Expand All/Collapse All operate on the grouped view. Removed the redundant status selector.",
+      "Added event-level checkboxes and Select All. Selecting an event includes all its pending entries, even when a search or country filter matches only one subsample. The selection toolbar shows the selected cost totals, separated by currency with a plus sign. Approval actions use the shared green Success button style.",
+      "Compacted event and subsample information into content-width stats with consistent spacing. Total Completes precedes Avg CPI at event level; Completes precedes CPI, Incidence and LOI in entries. Project and subsample names link to their detail pages. Total Cost appears above the emphasized, right-aligned amount; monetary values include a currency symbol and code.",
+      "Added cost-composition popovers showing Sample, Min Fee, applicable Other Fees, Discount and Total. Sample sums final subsample amounts; Avg CPI is weighted by completes and excludes project adjustments. Discounts appear as negative red amounts with an expandable reason. Reason and breakdown popovers use compact typography and spacing.",
+      "Reconciled synthetic cost examples so sample amounts are not duplicated in project-level records. Project rows hold fees and discounts separately, including discount-only adjustments. Moved aggregate sample costs into linked subsample entries, preserving event totals; every pending example now has at least one subsample with pending costs. Subsamples without costs in the current view are omitted.",
+      "Completed demo publication dates, Billing Entities, Incidence, LOI, Sample Types and last-status-update timestamps. Metadata is ordered SID, JBN, Published Date and other short fields before Supplier, Supplier Project ID and Billing Entity. Optional missing values use muted N/A; fees and discount reasons are available on demand.",
+      "Verified the numeric Subsample ID format against the supplied reports and applied it consistently in Costs, Details, subsample lists, report selectors and search. Added unique numeric display IDs for synthetic demo records while preserving internal identifiers, relationships and navigation URLs.",
+      "Expanded Costs Prototype Tools with fees-and-discounts previews, a no-adjustments preview and Restore Available Costs. Restoration returns original pending demo entries after approval/rejection while preserving original history and supplier isolation. Fixture refresh updates source-owned values without resetting saved mock decisions. Adjustment previews do not save data and require returning to Current data before approval.",
+      "Standardized gray field labels and foreground values across Costs, Details, Project Context, Field Progress, subsample lists, Reports, Account, Settings and form screens. Preserved semantic status colors, muted missing values and helper text.",
+    ],
+    validation: "19 automated Costs, restoration and identifier tests passed. Coverage includes grouping, complete-event filtering, multiple CPI entries, currency separation, weighted averages, final-subsample cost composition, fee reconciliation, required demo metadata and numeric display IDs. TypeScript, ESLint and diff checks passed. Earlier desktop/mobile browser checks and a webpack production build passed during the initial Costs restructuring; the final presentation revisions were checked statically.",
+    pending: "Invoice Number capture, Billing Entity approval constraints, Monthly Billing report implementation and durable billing integration remain pending. Pricing uses the additive Min Fee example discussed in the UI review; production pricing rules still require business confirmation. Data, restoration and cost decisions remain prototype/mock behavior.",
+    source: "November 18 Costs call transcript, supplied Costs Flow and Finance/Monthly Billing examples, SampleOne UI reference and approved November 19 browser-comment iterations.",
+  },
+  {
     date: "2026-11-13",
     title: "Redirects, Server-to-Server and product review",
     resources: [{ label: "Read the product review and proposed alternatives", href: "/reviews/product-review-2026-11-13/", description: "Discussion report covering all four HTML references, the 12 role topics, current/intermediate/ideal alternatives and open decisions. Proposals do not represent implemented role changes." }],

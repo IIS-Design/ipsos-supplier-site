@@ -72,7 +72,7 @@ contain only three direct pending records across 180 Subsamples; published,
 discounted and rejected records are now available as local previews.
 
 
-## Member Info review — November 12, 2026
+## Member Info review - November 12, 2026
 
 Current Reports behavior supersedes older entries here: see [Approved Member Info review](handoff.md#approved-member-info-review--november-12-2026). Supports 1–10 owned subsamples or all, Project child selection, Organization-zone dates (two-week default, three-month limit), multiple status/substatus codes, both link types by default and optional respondent deduplication. Upload URL/partial responses removed. Duplicate toast and unavailable-file states are reversible Prototype Tools previews only. Queue execution, emails and file generation remain absent; static CSV sample retained. Child suppliers remain pending.
 

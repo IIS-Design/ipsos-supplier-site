@@ -88,7 +88,7 @@ export function LinkConfigurationForm({ section, projectId, subsampleId, initial
         {!draft.inherited && <p className="text-xs text-muted-foreground">Custom settings apply to this section only. Blank fields do not inherit individual supplier URLs.</p>}
         {section === "server-to-server" && <>
           <div className="space-y-1.5">
-            <label htmlFor="s2s-method" className="text-sm font-medium">HTTP Method</label>
+            <label htmlFor="s2s-method" className="text-muted-foreground text-sm font-medium">HTTP Method</label>
             <Select value={values.method || "POST"} disabled={draft.inherited} onValueChange={method => edit("method", method)}>
               <SelectTrigger id="s2s-method" className="w-full sm:w-48" aria-invalid={Boolean(errors.method)} aria-describedby="s2s-method-note"><SelectValue /></SelectTrigger>
               <SelectContent>{httpMethods.map(method => <SelectItem key={method} value={method}>{method}</SelectItem>)}</SelectContent>
@@ -97,7 +97,7 @@ export function LinkConfigurationForm({ section, projectId, subsampleId, initial
             {errors.method && <p role="alert" className="text-sm text-rose-800">{errors.method}</p>}
           </div>
           <div className="space-y-1.5">
-            <label htmlFor="s2s-pixel" className="text-sm font-medium">Pixel HTML</label>
+            <label htmlFor="s2s-pixel" className="text-muted-foreground text-sm font-medium">Pixel HTML</label>
             <textarea id="s2s-pixel" className="min-h-24 w-full rounded-md border bg-background p-3 text-sm read-only:bg-muted/40" readOnly={draft.inherited} value={values.pixel ?? ""} onChange={event => edit("pixel", event.target.value)} placeholder="Insert your code here…" aria-invalid={Boolean(errors.pixel)} aria-describedby={errors.pixel ? "s2s-pixel-error" : undefined} />
             {errors.pixel && <p id="s2s-pixel-error" role="alert" className="text-sm text-rose-800">{errors.pixel}</p>}
           </div>
@@ -105,7 +105,7 @@ export function LinkConfigurationForm({ section, projectId, subsampleId, initial
         {fields.map(({ field, label, note }) => {
           const id = `${section}-${field}`;
           return <div className="space-y-1.5" key={field}>
-            <label htmlFor={id} className="text-sm font-medium">{label}</label>
+            <label htmlFor={id} className="text-muted-foreground text-sm font-medium">{label}</label>
             <Input id={id} readOnly={draft.inherited} className="read-only:bg-muted/40" value={values[field] ?? ""} onChange={event => edit(field, event.target.value)} placeholder="https://…" aria-invalid={Boolean(errors[field])} aria-describedby={[note && `${id}-note`, errors[field] && `${id}-error`].filter(Boolean).join(" ") || undefined} />
             {note && <p id={`${id}-note`} className="text-xs text-muted-foreground">{note}</p>}
             {errors[field] && <p id={`${id}-error`} role="alert" className="text-sm text-rose-800">{errors[field]}</p>}

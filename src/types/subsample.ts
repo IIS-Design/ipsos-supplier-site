@@ -22,6 +22,8 @@ export type SubsampleSettingsOverrides = {
 /** Operational supplier entity; projectId is its canonical parent reference. */
 export type Subsample = {
   id: SubsampleId;
+  /** Numeric supplier-facing SampleOne identifier, distinct from the internal route key. */
+  sampleOneId?: string;
   supplierId: SupplierId;
   projectId: ProjectId;
   name: string;
@@ -31,6 +33,8 @@ export type Subsample = {
   languages?: string[];
   jobBookNumber?: JobBookNumber;
   researchType?: string;
+  sampleType?: string;
+  lastStatusUpdatedAt?: string;
   country: string;
   router: string | null;
   fieldStartDate: string;

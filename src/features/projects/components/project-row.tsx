@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { statusBadgeStyles } from "@/types/status";
 import { ChevronDown, ChevronRight, Folder } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -20,7 +22,7 @@ export function ProjectRow({
   ).length;
 
   return (
-    <div className="flex items-start gap-1 py-2.5">
+    <div className="flex items-start gap-1 py-2">
       <CollapsibleTrigger asChild>
         <Button
           aria-label={`${expanded ? "Collapse" : "Expand"} ${project.name}, ${subsamples.length} subsamples`}
@@ -36,8 +38,8 @@ export function ProjectRow({
         </Button>
       </CollapsibleTrigger>
       <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
-          <p className="min-w-0 text-lg font-normal leading-6">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3">
+          <p className="min-w-0 wrap-break-word text-lg font-normal leading-6">
             <span className="text-muted-foreground">Project: </span>
             <Link
               className="font-normal text-foreground underline-offset-4 hover:text-primary hover:underline"
@@ -46,7 +48,7 @@ export function ProjectRow({
               {project.name}
             </Link>
           </p>
-          <span className="shrink-0 text-sm text-muted-foreground">
+          <span className="shrink-0 whitespace-nowrap text-right text-sm text-muted-foreground">
             SID:{" "}
             <span className="font-medium text-foreground">
               {project.surveyEventId}
@@ -59,14 +61,14 @@ export function ProjectRow({
             {subsamples.length} Available Subsamples
           </span>
           {liveCount > 0 ? (
-            <span className="font-medium text-emerald-800">
+            <Badge variant="outline" className={statusBadgeStyles.live}>
               {liveCount} Live
-            </span>
+            </Badge>
           ) : null}
           {pendingCount > 0 ? (
-            <span className="text-sky-700">
+            <Badge variant="outline" className={statusBadgeStyles.pending}>
               {pendingCount} Pending
-            </span>
+            </Badge>
           ) : null}
         </div>
       </div>

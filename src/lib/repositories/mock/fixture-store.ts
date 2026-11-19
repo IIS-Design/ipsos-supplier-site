@@ -12,6 +12,7 @@ import type { Report } from "@/types/report";
 import type { Subsample } from "@/types/subsample";
 import type { Supplier } from "@/types/supplier";
 import type { User } from "@/types/user";
+import { countryRegion } from "@/lib/countries";
 import {
   costSchema,
   projectSchema,
@@ -122,6 +123,14 @@ function validateRelationships(): void {
     if (!subsamples.some((subsample) => subsample.projectId === project.id)) {
       throw new Error(`Project ${project.id} has no subsample fixture`);
     }
+    const projectSubsamples = subsamples.filter((subsample) => subsample.projectId === project.id);
+    const regions = new Set(
+      projectSubsamples.map((subsample) => countryRegion(subsample.country)).filter(Boolean),
+    );
+    const international = /international|multi-market/i.test(project.name);
+    if (projectSubsamples.length <= 4 && !international && regions.size > 1) {
+      throw new Error(`Project ${project.id} mixes regions across its small subsample set`);
+    }
   }
 
   const validateScopedRecord = (entityName: string, record: Report | Cost) => {
@@ -161,6 +170,17 @@ function validateRelationships(): void {
 
   for (const cost of costs) {
     validateScopedRecord("Cost", cost);
+    if (cost.scope.scopeType === "subsample") {
+      const subsample = subsampleById.get(cost.scope.subsampleId);
+      if (subsample) {
+        if (cost.completes !== subsample.achievedCompletes)
+          throw new Error(`Cost ${cost.id} completes do not match Subsample ${subsample.id}`);
+        if (cost.incidence !== subsample.incidence)
+          throw new Error(`Cost ${cost.id} incidence does not match Subsample ${subsample.id}`);
+        if (cost.loi !== subsample.loi)
+          throw new Error(`Cost ${cost.id} LOI does not match Subsample ${subsample.id}`);
+      }
+    }
     if (!cost.approval) continue;
     const approver = userById.get(cost.approval.decidedByUserId);
     if (!approver)

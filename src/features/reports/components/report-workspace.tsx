@@ -1,5 +1,7 @@
 "use client";
 
+import { formatSubsampleId } from "@/lib/subsample-id";
+
 import { ReportAction } from "@/features/projects/components/report-action";
 import { ReportErrorDetails } from "@/components/report-error-details";
 import { withBasePath } from "@/lib/app-path";
@@ -45,10 +47,10 @@ const reportStatusLabels: Record<Report["status"], string> = {
 };
 
 const statusStyles: Record<Report["status"], string> = {
-  queued: "text-slate-600",
-  executing: "text-blue-800",
-  finished: "text-emerald-800",
-  error: "text-rose-800",
+  queued: "border-slate-200 bg-slate-50 text-slate-600",
+  executing: "border-blue-200 bg-blue-50 text-blue-800",
+  finished: "border-emerald-200 bg-emerald-50 text-emerald-800",
+  error: "border-rose-200 bg-rose-50 text-rose-800",
 };
 
 const statusIcons = {
@@ -129,11 +131,11 @@ function ReportList({
                 </Badge>
                 <p className="text-base font-medium leading-5"><ReportAction report={report} className="text-left underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{reportTypeLabels[report.type]}</ReportAction></p>
               </div>
-              <p className="mt-1 truncate text-sm text-muted-foreground">
+              <p className="mt-1 truncate text-sm text-foreground">
                 {reportScopeName(report, projectById, subsampleById)}
               </p>
               <p className="mt-0.5 text-sm text-muted-foreground">
-                ID {report.id} · {formatDate(report.createdAt)}
+                ID <span className="text-foreground">{report.id}</span> · <span className="text-foreground">{formatDate(report.createdAt)}</span>
               </p>
               {report.status === "finished" && !report.downloadUrl && <div className="mt-2 space-y-1"><p className="text-sm font-medium">File no longer available</p><p className="text-xs text-muted-foreground">Create a new report to download an updated file.</p><Button asChild size="sm" variant="outline"><Link href="/reports/create">Create report</Link></Button></div>}
               {report.status === "finished" && report.downloadUrl ? (
@@ -208,9 +210,10 @@ export function ReportWorkspace({
       reportTypeLabels[report.type],
       report.id,
       reportScopeName(report, new Map(projects.map(p => [p.id, p])), new Map(subsamples.map(s => [s.id, s]))),
-      ...(report.scope.scopeType === "subsamples" ? report.scope.subsampleIds.flatMap(id => [id, subsamples.find(s => s.id === id)?.name]) : []),
+      ...(report.scope.scopeType === "subsamples" ? report.scope.subsampleIds.flatMap(id => [id, formatSubsampleId(subsamples.find(s => s.id === id) ?? id), subsamples.find(s => s.id === id)?.name]) : []),
       project?.name,
       subsample?.name,
+      subsample ? formatSubsampleId(subsample) : undefined,
       reportStatusLabels[report.status],
     ].some((value) => value?.toLocaleLowerCase().includes(normalizedQuery));
   };
@@ -272,7 +275,7 @@ export function ReportWorkspace({
                 aria-label="Search reports by survey"
                 className="pl-9"
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search by Survey ID or name..."
+                placeholder="Search by Subsample ID or name..."
                 value={query}
               />
             </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "flag-icons/css/flag-icons.min.css";
 import { PrototypeEnvironment } from "@/components/prototype-tools";
 
 export const metadata: Metadata = {

@@ -13,6 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { PrototypeStateProvider, usePrototypeState } from "@/components/prototype-state";
 import { confirmContactNavigation } from "@/features/contacts/use-unsaved-changes";
 import { scenarioTab, subsampleScenarios, reportScenarios } from "@/features/subsamples/scenarios";
+import { costScenarios } from "@/features/costs/cost-scenarios";
 import { withBasePath } from "@/lib/app-path";
 
 export function PrototypeEnvironment({ children }: { children: ReactNode }) {
@@ -104,6 +105,7 @@ export function FloatingPrototypeTools({
 
 export function PrototypeTools() {
   const router = useRouter();
+  const [restoringCosts, setRestoringCosts] = useState(false);
   useEffect(() => () => { toast.dismiss("report-duplicate-preview"); }, []);
   const pathname = usePathname().replace(/\/$/, "") || "/";
   const { scenario, setScenario, empty, setEmpty, activityEmpty, setActivityEmpty } = usePrototypeState();
@@ -129,7 +131,7 @@ export function PrototypeTools() {
     ["custom", customLabel, "Previews editable Subsample overrides without saving them."],
     ["link-tokens", "URL placeholders", "Shows example URL templates; no links or notifications are sent."],
     ["link-invalid", "Invalid URL", "Shows field-level URL validation feedback without changing saved data."],
-  ] : tab ? subsampleScenarios[tab] : pathname === "/reports" ? reportScenarios : [];
+  ] : tab ? subsampleScenarios[tab] : pathname === "/reports" ? reportScenarios : pathname === "/costs" ? costScenarios : [];
   const selectedScenario = scenarios.find(([id]) => id === scenario);
   const scenarioGroup = (id: string) => {
     if (id === "empty" || id === "security-empty" || id === "reports-empty") return "Empty states";
@@ -139,7 +141,7 @@ export function PrototypeTools() {
     return "Progress";
   };
   const scenarioGroups = [...new Set(scenarios.map(([id]) => scenarioGroup(id)))];
-  const badgeCount = scenarios.length + (projects ? 2 : 0) + actions.length + (credentials ? 1 : 0) + (emptyModule ? 1 : 0);
+  const badgeCount = scenarios.length + (projects ? 2 : 0) + actions.length + (credentials ? 1 : 0) + (emptyModule ? 2 : 0);
   const availabilityKey = credentials ? "credentials" : actions.map(({ href }) => href).join(",") + (emptyModule ? `:${emptyModule}:${empty}` : "") + (projects ? `:activity:${activityEmpty.Reports}:${activityEmpty.Costs}` : "");
   if (!badgeCount) return null;
 
@@ -151,7 +153,7 @@ export function PrototypeTools() {
       key={pathname}
       title="Prototype Tools"
     >
-      {(tab || pathname === "/reports") && <section className="space-y-3"><h3 className="font-medium capitalize text-foreground">{tab === "links" && section === "security" ? "Security" : tab ? tab.replaceAll("-", " ") : "Reports"}</h3>
+      {(tab || pathname === "/reports" || pathname === "/costs") && <section className="space-y-3"><h3 className="font-medium capitalize text-foreground">{tab === "links" && section === "security" ? "Security" : tab ? tab.replaceAll("-", " ") : pathname === "/costs" ? "Costs" : "Reports"}</h3>
         <Select value={selectedScenario ? scenario : "current-data"} onValueChange={value => {
           if ((tab !== "contacts" && tab !== "links") || confirmContactNavigation()) {
             setScenario(value === "current-data" ? "" : value);
@@ -198,9 +200,26 @@ export function PrototypeTools() {
         </section>
       )) : null}
       {emptyModule ? (
-        <Button className="w-full justify-start" onClick={() => setEmpty(!empty)} size="sm" type="button" variant="outline">
-          {empty ? `Restore ${emptyModule}` : `Show Empty ${emptyModule} State`}
-        </Button>
+        <div className="space-y-2">
+          <Button className="w-full justify-start" onClick={() => setEmpty(!empty)} size="sm" type="button" variant="outline">
+            {empty ? `Restore ${emptyModule}` : `Show Empty ${emptyModule} State`}
+          </Button>
+          <Button className="w-full justify-start" disabled={restoringCosts} onClick={async () => {
+            setRestoringCosts(true);
+            try {
+              const response = await fetch(withBasePath("/api/prototype/costs/restore/"), { method: "POST" });
+              const payload = await response.json() as { count?: number; message?: string };
+              if (!response.ok) throw new Error(payload.message ?? "Unable to restore demo costs.");
+              setEmpty(false);
+              router.refresh();
+              toast.success("Available demo costs restored");
+            } catch (error) {
+              toast.error(error instanceof Error ? error.message : "Unable to restore demo costs.");
+            } finally { setRestoringCosts(false); }
+          }} size="sm" type="button" variant="outline">
+            {restoringCosts ? "Restoring Costs…" : "Restore Available Costs"}
+          </Button>
+        </div>
       ) : null}
     </FloatingPrototypeTools>
   );

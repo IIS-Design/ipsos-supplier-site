@@ -62,7 +62,7 @@ export function ForgotPasswordForm() {
         </p>
       ) : null}
       <div className="space-y-2">
-        <label className="block text-sm font-medium" htmlFor="recovery-email">
+        <label className="text-muted-foreground block text-sm font-medium" htmlFor="recovery-email">
           Email Address
         </label>
         <Input

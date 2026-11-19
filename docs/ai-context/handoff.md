@@ -1,4 +1,4 @@
-# AI handoff — read first
+# AI handoff - read first
 
 Human-facing project entry point: [README.md](../../README.md). This handoff remains
 the primary onboarding document for AI agents.
@@ -154,10 +154,10 @@ Subsamples 180, reports 4, costs 8. Do not infer runtime counts from fixtures af
 
 Global mock state keys:
 
-- `__ipsosSupplierMockReports`, `__ipsosSupplierMockCosts` — mutated lists.
-- `__ipsosAccountUsers` — saved self-service/managed users and statuses; `__ipsosReportSequences` — report ID reservations.
-- `__ipsosSupplierContacts` — cloned suppliers/Subsamples and the historical contact catalog.
-- `__ipsosMockRecovery` — recovery store instance with tokens/inboxes/password hashes.
+- `__ipsosSupplierMockReports`, `__ipsosSupplierMockCosts` - mutated lists.
+- `__ipsosAccountUsers` - saved self-service/managed users and statuses; `__ipsosReportSequences` - report ID reservations.
+- `__ipsosSupplierContacts` - cloned suppliers/Subsamples and the historical contact catalog.
+- `__ipsosMockRecovery` - recovery store instance with tokens/inboxes/password hashes.
   Navigation/reload/HMR may retain state; restart resets all process-local changes.
   No API writes JSON. Newly added modules/interfaces have previously required a clean
   `next dev` restart when HMR served stale methods/routes despite a passing build.
@@ -683,7 +683,7 @@ route and uses the same guarded navigation as desktop tabs. At lg and above,
 existing line tabs remain on one row. Hidden navigation is not keyboard-focusable.
 
 
-## Approved Member Info review — November 12, 2026
+## Approved Member Info review - November 12, 2026
 
 This section supersedes older Reports descriptions above. Member Info remains the only executable creation type; Monthly Billing is a disabled pending-definition view. Project selection reveals a searchable multiple Subsample selector: 1–10 children are preselected, >10 starts empty; changing Project resets selection. Select all adds matching search results only when the total stays <=10; Deselect all clears selection. Direct single-Subsample, cross-Project selections and explicit All my subsamples are supported. All scope is limited to the authenticated supplier; child suppliers are deferred.
 
@@ -698,7 +698,7 @@ Prototype Tools on Reports adds Duplicate request (top-center informational toas
 Validation: four focused MIR tests cover DST, month-end date boundaries, request validation and mutation ownership. Browser checks covered a 12-child project starting empty, search/Select all results, a two-child project starting fully selected, default advanced values, successful two-subsample creation, unavailable-file preview and duplicate toast/action. The inspected viewport was narrow; no desktop-specific visual pass is claimed for this task.
 
 
-## Member Info UI refinement — November 12, 2026
+## Member Info UI refinement - November 12, 2026
 
 Supersedes the earlier all/cross-project UI: removed All my subsamples and Select subsamples from the scope dropdown; users choose a Project (then its children) or a direct Subsample. The underlying supplier scope is retained for compatibility but is no longer offered by this form. Missing child selection errors now appear directly below the Subsamples selector, with an accessible error association and focused message. Status/Substatus dropdowns have no search and show Name (code), e.g. In Router (1). Link Type uses Live Users (Real Respondents) and Proofing Users (Test Users), with muted parenthetical text.
 

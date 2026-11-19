@@ -101,7 +101,7 @@ export function PendingCostApprovalsWidget({
         )}
       </CardContent>
       <div className="border-t px-4 py-2.5">
-        <Button asChild size="sm" variant="outline"><Link href="/costs">Review Costs</Link></Button>
+        <Button asChild size="sm" variant="success"><Link href="/costs">Review Costs</Link></Button>
       </div>
     </Card>
   );

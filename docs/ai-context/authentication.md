@@ -1,4 +1,4 @@
-# Authentication — current mock implementation
+# Authentication - current mock implementation
 
 Verified against source on 2026-10-23. This is a local testing system, not production
 identity. No self-registration, real email delivery, lockout, SSO or MFA exists.

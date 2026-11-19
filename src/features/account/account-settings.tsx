@@ -44,7 +44,7 @@ function PersonalInformation({ user, onDirtyChange }: { user: User; onDirtyChang
       {success ? <p className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900" role="status">{success}</p> : null}
       {([{ name: "firstName", label: "First Name", autoComplete: "given-name" }, { name: "lastName", label: "Last Name", autoComplete: "family-name" }, { name: "email", label: "Email Address", autoComplete: "email" }] as const).map(field => (
         <div className="space-y-2" key={field.name}>
-          <label className="block text-sm font-medium" htmlFor={`account-${field.name}`}>{field.label}</label>
+          <label className="text-muted-foreground block text-sm font-medium" htmlFor={`account-${field.name}`}>{field.label}</label>
           <Input {...register(field.name)} aria-describedby={errors[field.name] ? `account-${field.name}-error` : undefined} aria-invalid={Boolean(errors[field.name])} autoComplete={field.autoComplete} disabled={isSubmitting} id={`account-${field.name}`} maxLength={field.name === "email" ? 254 : 100} type={field.name === "email" ? "email" : "text"} />
           {errors[field.name] ? <FieldError id={`account-${field.name}-error`}>{errors[field.name]?.message}</FieldError> : null}
         </div>
@@ -73,7 +73,7 @@ function Security({ email }: { email: string }) {
   };
   return <section aria-busy={pending} className="max-w-3xl space-y-5">
     {error ? <FieldError>{error}</FieldError> : null}
-    <div className="space-y-1"><h2 className="text-sm font-medium">Password</h2><p aria-label="Password is hidden" className="tracking-widest">************</p></div>
+    <div className="space-y-1"><h2 className="text-sm font-medium text-muted-foreground">Password</h2><p aria-label="Password is hidden" className="tracking-widest">************</p></div>
     <p className="text-sm text-muted-foreground">Use a reset link sent to your email address to change your password.</p>
     <Button disabled={pending} onClick={changePassword} type="button" variant="outline">{pending ? "Requesting Reset…" : "Change Password"}</Button>
     <span className="sr-only" role="status">{pending ? "Requesting your password reset. Please wait." : ""}</span>

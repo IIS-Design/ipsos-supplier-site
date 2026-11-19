@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import type { Project } from "@/types/project";
 import type { Subsample } from "@/types/subsample";
+import { CountryFlag } from "@/components/ui/country-flag";
 
 const projectStatusStyle = statusBadgeStyles;
 const projectStatusLabel = statusLabels;
@@ -73,7 +74,7 @@ export function ProjectContextPanel({
           <SelectContent>
             {subsamples.map((item) => (
               <SelectItem className="text-base font-medium" key={item.id} value={item.id}>
-                {item.name} — {item.country}
+                <span className="inline-flex items-center gap-1.5"><span>{item.name} -</span><CountryFlag country={item.country} /><span>{item.country}</span></span>
               </SelectItem>
             ))}
             <SelectSeparator />
@@ -84,7 +85,7 @@ export function ProjectContextPanel({
 
       <dl className="grid grid-cols-2 gap-x-4 gap-y-4 border-t pt-4 text-sm">
         <div className="col-span-2 flex items-center justify-between gap-2">
-          <dt className="font-medium">Project Status</dt>
+          <dt className="font-medium text-muted-foreground">Project Status</dt>
           <dd>
             <Badge
               className={projectStatusStyle[project.status]}
@@ -95,24 +96,24 @@ export function ProjectContextPanel({
           </dd>
         </div>
         <div>
-          <dt className="font-medium">SID</dt>
-          <dd className="mt-1 text-muted-foreground">
+          <dt className="font-medium text-muted-foreground">SID</dt>
+          <dd className="mt-1 text-foreground">
             {project.surveyEventId}
           </dd>
         </div>
-        <div className="col-span-2"><dt className="font-medium">Billing Entity</dt><dd className="mt-1 text-muted-foreground">{project.billingEntity || "Not provided"}</dd></div>
+        <div className="col-span-2"><dt className="font-medium text-muted-foreground">Billing Entity</dt><dd className="mt-1 text-foreground">{project.billingEntity || <span className="text-muted-foreground">Not provided</span>}</dd></div>
         <div className="col-span-2">
-          <dt className="font-medium">Device Compatibility</dt>
+          <dt className="font-medium text-muted-foreground">Device Compatibility</dt>
           <dd className="mt-2 flex flex-wrap gap-1.5">
             {([ ["mobile", "Mobile"], ["tablet", "Tablet"], ["desktop", "Desktop"] ] as const).map(([key, label]) => {
               const supported = project.deviceCompatibility?.[key];
               const Icon = supported === undefined ? Minus : supported ? Check : X;
-              return <Badge key={key} variant={supported ? "outline" : "secondary"} aria-label={`${label}: ${supported === undefined ? "Not defined" : supported ? "Supported" : "Not supported"}`} className="gap-1"><Icon aria-hidden="true" className="size-3" />{label}<span className="sr-only">{supported === undefined ? " — Not defined" : supported ? " — Supported" : " — Not supported"}</span></Badge>;
+              return <Badge key={key} variant={supported ? "outline" : "secondary"} aria-label={`${label}: ${supported === undefined ? "Not defined" : supported ? "Supported" : "Not supported"}`} className="gap-1"><Icon aria-hidden="true" className="size-3" />{label}<span className="sr-only">{supported === undefined ? " - Not defined" : supported ? " - Supported" : " - Not supported"}</span></Badge>;
             })}
           </dd>
         </div>
         <div className="col-span-2 min-w-0">
-          <dt className="font-medium">Categories</dt>
+          <dt className="font-medium text-muted-foreground">Categories</dt>
           <dd className="mt-2 space-y-3">
             {project.categoryPaths?.length ? project.categoryPaths.map((path, pathIndex) => <ol key={pathIndex} aria-label={`Category path ${pathIndex + 1}`} className="flex flex-wrap items-center gap-x-1 gap-y-1">{path.map((level, index) => <Fragment key={index}><li className={`min-w-0 max-w-full wrap-break-word ${index === path.length - 1 ? "text-foreground" : "text-muted-foreground"}`}>{level}</li>{index < path.length - 1 && <li aria-hidden="true"><ChevronRight className="size-3.5 text-muted-foreground" /></li>}</Fragment>)}</ol>) : <p className="text-muted-foreground">Not Defined</p>}
           </dd>

@@ -7,7 +7,7 @@ import { fieldMetricRows, metricDifference } from "../field-metrics";
 import type { Subsample } from "@/types/subsample";
 
 function valueText(value: number | undefined, unit: string, signed = false) {
-  if (value === undefined) return "—";
+  if (value === undefined) return "-";
   const rounded = Number(value.toFixed(2));
   return `${signed && rounded > 0 ? "+" : ""}${rounded.toFixed(2)}${unit === "%" ? "%" : ` ${unit}`}`;
 }
@@ -48,7 +48,7 @@ export function FieldProgressPanel({ subsample: original }: { subsample: Subsamp
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
       <section aria-labelledby="field-progress-heading">
         <h2 className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground" id="field-progress-heading">Field Progress</h2>
-        <dl className="mt-5">{[["Visitors", subsample.visitors], ["Achieved Completes", subsample.achievedCompletes], ["Exclusive Remaining", subsample.exclusiveRemaining], ["Shared Remaining", subsample.sharedRemaining]].map(([label, value]) => <div key={label} className="flex items-center justify-between gap-4 border-b px-2 py-3 last:border-b-0"><dt className="text-sm font-medium">{label}</dt><dd className="text-sm tabular-nums text-muted-foreground">{value}</dd></div>)}</dl>
+        <dl className="mt-5">{[["Visitors", subsample.visitors], ["Achieved Completes", subsample.achievedCompletes], ["Exclusive Remaining", subsample.exclusiveRemaining], ["Shared Remaining", subsample.sharedRemaining]].map(([label, value]) => <div key={label} className="flex items-center justify-between gap-4 border-b px-2 py-3 last:border-b-0"><dt className="text-sm font-medium text-muted-foreground">{label}</dt><dd className="text-sm tabular-nums text-foreground">{value}</dd></div>)}</dl>
       </section>
       <section aria-labelledby="field-metrics-heading" className="min-w-0 border-t pt-6 xl:border-l xl:border-t-0 xl:pl-6 xl:pt-0">
         <h2 className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground" id="field-metrics-heading">Field Metrics</h2>

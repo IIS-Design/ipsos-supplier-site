@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { isProjectStatus, statusLabels } from "@/types/status";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 export function StatusMultiselect<T extends string>({ label, values, options, onChange, optionLabel, showLabel = false }: {
   showLabel?: boolean;
-  optionLabel?: (value: T) => string;
+  optionLabel?: (value: T) => ReactNode;
   label: string;
   values: T[];
   options: readonly T[];

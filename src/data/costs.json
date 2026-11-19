@@ -6,9 +6,9 @@
       "scopeType": "subsample",
       "subsampleId": "subsample-1014592"
     },
-    "completes": 35,
+    "completes": 40,
     "cpi": 5,
-    "totalCost": 175,
+    "totalCost": 200,
     "currency": "USD",
     "country": "Romania",
     "supplierProjectId": "1005248",
@@ -18,7 +18,10 @@
     "discountAmount": 0,
     "discountReason": "",
     "supplierStatus": "default",
-    "ipsosStatus": "pending"
+    "ipsosStatus": "pending",
+    "incidence": 42.1,
+    "loi": 4.2,
+    "publishedAt": "2026-10-19T09:00:00Z"
   },
   {
     "id": "cost-004",
@@ -39,7 +42,10 @@
     "discountAmount": 0,
     "discountReason": "",
     "supplierStatus": "submitted",
-    "ipsosStatus": "pending"
+    "ipsosStatus": "pending",
+    "incidence": 18.3,
+    "loi": 34,
+    "publishedAt": "2026-10-20T09:00:00Z"
   },
   {
     "id": "cost-005",
@@ -48,10 +54,10 @@
       "scopeType": "project",
       "projectId": "project-1046192"
     },
-    "completes": 62,
-    "cpi": 4.8,
-    "totalCost": 297.6,
-    "currency": "EUR",
+    "completes": 0,
+    "cpi": 0,
+    "totalCost": 87.6,
+    "currency": "USD",
     "country": "Romania",
     "supplierProjectId": "1005248",
     "billingMode": "project_level",
@@ -60,7 +66,12 @@
     "discountAmount": 12.4,
     "discountReason": "Project volume discount",
     "supplierStatus": "submitted",
-    "ipsosStatus": "pending"
+    "ipsosStatus": "pending",
+    "incidence": 42.1,
+    "loi": 4.2,
+    "minimumFee": 100,
+    "publishedAt": "2026-10-21T09:00:00Z",
+    "sampleCost": 0
   },
   {
     "id": "cost-006",
@@ -69,9 +80,9 @@
       "scopeType": "subsample",
       "subsampleId": "subsample-1008462"
     },
-    "completes": 24,
+    "completes": 0,
     "cpi": 6.1,
-    "totalCost": 146.4,
+    "totalCost": 0,
     "currency": "USD",
     "country": "United States",
     "supplierProjectId": "1008120",
@@ -81,7 +92,10 @@
     "discountAmount": 0,
     "discountReason": "",
     "supplierStatus": "submitted",
-    "ipsosStatus": "pending"
+    "ipsosStatus": "pending",
+    "incidence": 12,
+    "loi": 12,
+    "publishedAt": "2026-10-22T09:00:00Z"
   },
   {
     "id": "cost-002",
@@ -90,9 +104,9 @@
       "scopeType": "project",
       "projectId": "project-1008820"
     },
-    "completes": 58,
-    "cpi": 5,
-    "totalCost": 290,
+    "completes": 0,
+    "cpi": 0,
+    "totalCost": -4,
     "currency": "USD",
     "country": "United States",
     "supplierProjectId": "1008410",
@@ -109,7 +123,10 @@
       "decidedAt": "2026-10-05T11:20:00Z",
       "decidedByUserId": "user-admin-001",
       "note": "Approved after reconciliation with the completed fieldwork."
-    }
+    },
+    "incidence": 16.8,
+    "loi": 11.3,
+    "sampleCost": 0
   },
   {
     "id": "cost-003",
@@ -118,9 +135,9 @@
       "scopeType": "project",
       "projectId": "project-1024360"
     },
-    "completes": 18,
-    "cpi": 5,
-    "totalCost": 90,
+    "completes": 0,
+    "cpi": 0,
+    "totalCost": 0,
     "currency": "USD",
     "country": "United States",
     "supplierProjectId": "1008615",
@@ -136,7 +153,11 @@
       "decidedAt": "2026-10-02T16:45:00Z",
       "decidedByUserId": "user-admin-001",
       "note": "Returned for a completes-count discrepancy."
-    }
+    },
+    "incidence": 21.4,
+    "loi": 8.7,
+    "publishedAt": "2026-10-24T09:00:00Z",
+    "sampleCost": 0
   },
   {
     "id": "cost-007",
@@ -145,9 +166,9 @@
       "scopeType": "project",
       "projectId": "project-1100004"
     },
-    "completes": 125,
-    "cpi": 4.8,
-    "totalCost": 600,
+    "completes": 0,
+    "cpi": 0,
+    "totalCost": 2.6,
     "currency": "EUR",
     "country": "Romania",
     "supplierProjectId": "1100004",
@@ -157,7 +178,13 @@
     "discountAmount": 12.4,
     "discountReason": "Project volume discount",
     "supplierStatus": "submitted",
-    "ipsosStatus": "pending"
+    "ipsosStatus": "pending",
+    "incidence": 5,
+    "loi": 8,
+    "otherFees": 15,
+    "otherFeesReason": "Additional project management",
+    "publishedAt": "2026-10-25T09:00:00Z",
+    "sampleCost": 0
   },
   {
     "id": "cost-008",
@@ -166,9 +193,9 @@
       "scopeType": "project",
       "projectId": "project-1100003"
     },
-    "completes": 75,
-    "cpi": 4.8,
-    "totalCost": 360,
+    "completes": 0,
+    "cpi": 0,
+    "totalCost": -12.4,
     "currency": "EUR",
     "country": "Romania",
     "supplierProjectId": "1100003",
@@ -178,6 +205,242 @@
     "discountAmount": 12.4,
     "discountReason": "Project volume discount",
     "supplierStatus": "submitted",
-    "ipsosStatus": "pending"
+    "ipsosStatus": "pending",
+    "incidence": 42.1,
+    "loi": 34,
+    "publishedAt": "2026-10-26T09:00:00Z",
+    "sampleCost": 0
+  },
+  {
+    "id": "cost-002-sample-1",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-1008940"
+    },
+    "completes": 32,
+    "cpi": 5,
+    "totalCost": 160,
+    "currency": "USD",
+    "country": "United States",
+    "supplierProjectId": "1008410",
+    "billingMode": "project_level",
+    "apiEnabled": true,
+    "status": "approved",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "published",
+    "publishedAt": "2026-10-06T09:00:00Z",
+    "approval": {
+      "status": "approved",
+      "decidedAt": "2026-10-05T11:20:00Z",
+      "decidedByUserId": "user-admin-001",
+      "note": "Approved after reconciliation with the completed fieldwork."
+    },
+    "incidence": 16.8,
+    "loi": 11.3
+  },
+  {
+    "id": "cost-003-sample-1",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-1024376"
+    },
+    "completes": 18,
+    "cpi": 5,
+    "totalCost": 90,
+    "currency": "USD",
+    "country": "United States",
+    "supplierProjectId": "1008615",
+    "billingMode": "survey_level",
+    "apiEnabled": false,
+    "status": "rejected",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "rejected",
+    "approval": {
+      "status": "rejected",
+      "decidedAt": "2026-10-02T16:45:00Z",
+      "decidedByUserId": "user-admin-001",
+      "note": "Returned for a completes-count discrepancy."
+    },
+    "incidence": 21.4,
+    "loi": 8.7,
+    "publishedAt": "2026-10-24T09:00:00Z"
+  },
+  {
+    "id": "cost-007-sample-1",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-demo-05-01"
+    },
+    "completes": 148,
+    "cpi": 4.8,
+    "totalCost": 710.4,
+    "currency": "EUR",
+    "country": "Germany",
+    "supplierProjectId": "1100004",
+    "billingMode": "project_level",
+    "apiEnabled": false,
+    "status": "pending_approval",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending",
+    "incidence": 5,
+    "loi": 8,
+    "publishedAt": "2026-10-25T09:00:00Z"
+  },
+  {
+    "id": "cost-007-sample-2",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-demo-05-02"
+    },
+    "completes": 167,
+    "cpi": 4.8,
+    "totalCost": 801.6,
+    "currency": "EUR",
+    "country": "Japan",
+    "supplierProjectId": "1100004",
+    "billingMode": "project_level",
+    "apiEnabled": false,
+    "status": "pending_approval",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending",
+    "incidence": 8,
+    "loi": 12,
+    "publishedAt": "2026-10-25T09:00:00Z"
+  },
+  {
+    "id": "cost-007-sample-3",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-demo-05-03"
+    },
+    "completes": 186,
+    "cpi": 4.8,
+    "totalCost": 892.8,
+    "currency": "EUR",
+    "country": "Brazil",
+    "supplierProjectId": "1100004",
+    "billingMode": "project_level",
+    "apiEnabled": false,
+    "status": "pending_approval",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending",
+    "incidence": 12,
+    "loi": 15,
+    "publishedAt": "2026-10-25T09:00:00Z"
+  },
+  {
+    "id": "cost-007-sample-4",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-demo-05-04"
+    },
+    "completes": 205,
+    "cpi": 4.8,
+    "totalCost": 984,
+    "currency": "EUR",
+    "country": "Canada",
+    "supplierProjectId": "1100004",
+    "billingMode": "project_level",
+    "apiEnabled": false,
+    "status": "pending_approval",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending",
+    "incidence": 18,
+    "loi": 4.2,
+    "publishedAt": "2026-10-25T09:00:00Z"
+  },
+  {
+    "id": "cost-007-sample-5",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-demo-05-05"
+    },
+    "completes": 224,
+    "cpi": 4.8,
+    "totalCost": 1075.2,
+    "currency": "EUR",
+    "country": "United States",
+    "supplierProjectId": "1100004",
+    "billingMode": "project_level",
+    "apiEnabled": false,
+    "status": "pending_approval",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending",
+    "incidence": 18.3,
+    "loi": 12,
+    "publishedAt": "2026-10-25T09:00:00Z"
+  },
+  {
+    "id": "cost-008-sample-1",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-demo-04-01"
+    },
+    "completes": 111,
+    "cpi": 4.8,
+    "totalCost": 532.8,
+    "currency": "EUR",
+    "country": "France",
+    "supplierProjectId": "1100003",
+    "billingMode": "project_level",
+    "apiEnabled": false,
+    "status": "pending_approval",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending",
+    "incidence": 42.1,
+    "loi": 34,
+    "publishedAt": "2026-10-26T09:00:00Z"
+  },
+  {
+    "id": "cost-008-sample-2",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-demo-04-02"
+    },
+    "completes": 130,
+    "cpi": 4.8,
+    "totalCost": 624,
+    "currency": "EUR",
+    "country": "Germany",
+    "supplierProjectId": "1100003",
+    "billingMode": "project_level",
+    "apiEnabled": false,
+    "status": "pending_approval",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending",
+    "incidence": 85,
+    "loi": 45,
+    "publishedAt": "2026-10-26T09:00:00Z"
+  },
+  {
+    "id": "cost-008-sample-3",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-demo-04-03"
+    },
+    "completes": 149,
+    "cpi": 4.8,
+    "totalCost": 715.2,
+    "currency": "EUR",
+    "country": "Japan",
+    "supplierProjectId": "1100003",
+    "billingMode": "project_level",
+    "apiEnabled": false,
+    "status": "pending_approval",
+    "supplierStatus": "submitted",
+    "ipsosStatus": "pending",
+    "incidence": 90,
+    "loi": 5,
+    "publishedAt": "2026-10-26T09:00:00Z"
   }
 ]

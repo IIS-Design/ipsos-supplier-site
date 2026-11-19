@@ -13,7 +13,7 @@ export function SecurityRules() {
   const expanded = expansion.scenario === scenario ? expansion.ids : [];
   const setExpanded = (next: string[] | ((current: string[]) => string[])) => setExpansion(current => ({ scenario, ids: typeof next === "function" ? next(current.scenario === scenario ? current.ids : []) : next }));
   const hasRules = scenario === "security-rules" || scenario === "security-many";
-  const rules = Array.from({ length: scenario === "security-many" ? 6 : 1 }, (_, index) => ({ id: `rule-${index}`, name: `Research Type × Client${index ? ` — ${index + 1}` : ""}` }));
+  const rules = Array.from({ length: scenario === "security-many" ? 6 : 1 }, (_, index) => ({ id: `rule-${index}`, name: `Research Type × Client${index ? ` - ${index + 1}` : ""}` }));
   const statuses = ["In survey (2)", "Screened out (82)", "Complete (3)", "Erroneous complete (98)", "Potentially unengaged (99)"];
   return <section aria-labelledby="security-heading" className="space-y-5">
     <h2 id="security-heading" className="text-xs font-medium uppercase tracking-[0.08em] text-muted-foreground">Security Rules</h2>

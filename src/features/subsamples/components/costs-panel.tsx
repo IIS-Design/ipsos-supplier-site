@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { usePrototypeState } from "@/components/prototype-state";
 
 
@@ -24,6 +25,15 @@ const supplierStatusLabel: Record<SupplierCostStatus, string> = {
   submitted: "Submitted",
 };
 
+function statusBadge(value: string, label: string) {
+  const color = value === "rejected" ? "border-rose-200 bg-rose-50 text-rose-800"
+    : value === "approved" || value === "published" ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+    : value === "pending" || value === "pending_approval" ? "border-orange-200 bg-orange-50 text-orange-900"
+    : value === "submitted" ? "border-sky-200 bg-sky-50 text-sky-700"
+    : "border-gray-200 bg-gray-100 text-gray-600";
+  return <Badge variant="outline" className={color}>{label}</Badge>;
+}
+
 function currency(value: number, code: string) {
   return new Intl.NumberFormat("en", {
     style: "currency",
@@ -43,7 +53,7 @@ function SummaryMetric({ label, value }: { label: string; value: string }) {
 
 export function CostsPanel({ costs: original }: { costs: Cost[] }) {
   const { scenario } = usePrototypeState();
-  const sample: Cost = { id: "preview-cost" as Cost["id"], supplierId: "preview-supplier" as Cost["supplierId"], scope: { scopeType: "subsample", subsampleId: "preview-subsample" as SubsampleId } as Cost["scope"], completes: 50, cpi: 5, totalCost: 250, currency: "USD", status: "approved", country: "Romania", supplierProjectId: "1046192", billingMode: "survey_level", apiEnabled: true, discountAmount: 0, supplierStatus: "default", ipsosStatus: "published", publishedAt: "2026-10-20T09:30:00Z" };
+  const sample: Cost = { id: "preview-cost" as Cost["id"], supplierId: "preview-supplier" as Cost["supplierId"], scope: { scopeType: "subsample", subsampleId: "preview-subsample" as SubsampleId } as Cost["scope"], completes: 50, cpi: 5, totalCost: 250, currency: "USD", status: "approved", country: "Romania", supplierProjectId: "1046192", billingMode: "survey_level", apiEnabled: true, incidence: 42.1, loi: 12, discountAmount: 0, supplierStatus: "default", ipsosStatus: "published", publishedAt: "2026-10-20T09:30:00Z" };
   if (scenario === "discounted") Object.assign(sample, { discountAmount: 25, discountReason: "API discount", totalCost: 225 });
   if (scenario === "pending") Object.assign(sample, { status: "pending_approval", supplierStatus: "submitted", ipsosStatus: "pending", publishedAt: undefined });
   if (scenario === "rejected") Object.assign(sample, { status: "rejected", supplierStatus: "submitted", ipsosStatus: "rejected", publishedAt: undefined });
@@ -95,9 +105,9 @@ export function CostsPanel({ costs: original }: { costs: Cost[] }) {
             />
           </dl>
           <dl className="space-y-6">
-            <div><dt className="text-sm font-medium">Supplier Status</dt><dd className="mt-1 text-sm text-muted-foreground">{cost.supplierStatus ? supplierStatusLabel[cost.supplierStatus] : "Not provided"}</dd></div>
-            <div><dt className="text-sm font-medium">Ipsos Status</dt><dd className="mt-1 text-sm text-muted-foreground">{cost.ipsosStatus ? ipsosStatusLabel[cost.ipsosStatus] : "Not provided"}</dd>{cost.publishedAt && <dd className="mt-1 text-xs text-muted-foreground">Published {new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(new Date(cost.publishedAt))} UTC</dd>}</div>
-            <div><dt className="text-sm font-medium">Cost Status</dt><dd className="mt-1 text-sm text-muted-foreground">{costStatusLabel[cost.status]}</dd></div>
+            <div><dt className="text-sm font-medium text-muted-foreground">Supplier Status</dt><dd className="mt-1 text-sm text-foreground">{cost.supplierStatus ? statusBadge(cost.supplierStatus, supplierStatusLabel[cost.supplierStatus]) : <span className="text-muted-foreground">Not provided</span>}</dd></div>
+            <div><dt className="text-sm font-medium text-muted-foreground">Ipsos Status</dt><dd className="mt-1 text-sm text-foreground">{cost.ipsosStatus ? statusBadge(cost.ipsosStatus, ipsosStatusLabel[cost.ipsosStatus]) : <span className="text-muted-foreground">Not provided</span>}</dd>{cost.publishedAt && <dd className="mt-1 text-xs text-muted-foreground">Published <span className="text-foreground">{new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(new Date(cost.publishedAt))} UTC</span></dd>}</div>
+            <div><dt className="text-sm font-medium text-muted-foreground">Cost Status</dt><dd className="mt-1 text-sm text-foreground">{statusBadge(cost.status, costStatusLabel[cost.status])}</dd></div>
           </dl>
         </section>
       ))}

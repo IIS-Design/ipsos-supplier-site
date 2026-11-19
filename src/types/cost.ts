@@ -30,6 +30,19 @@ export type Cost = {
   discountAmount?: number;
   discountReason?: string;
   publishedAt?: string;
+  /** Entry-level values supplied by the costs source; absence is not zero. */
+  updatedAt?: string;
+  incidence: number;
+  fieldIncidence?: number;
+  loi: number;
+  fieldLoi?: number;
+  completesPercentage?: number;
+  /** Project-level sample and adjustments reconcile to totalCost. */
+  /** Sample component of a project-level record, excluding fees and discounts. */
+  sampleCost?: number;
+  minimumFee?: number;
+  otherFees?: number;
+  otherFeesReason?: string;
   supplierStatus?: SupplierCostStatus;
   ipsosStatus?: IpsosCostStatus;
   approval?: CostApproval;

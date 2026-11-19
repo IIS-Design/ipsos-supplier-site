@@ -171,7 +171,7 @@ export function DateRangePicker({ value, onChange, label = "Date range", compact
           </tbody>
         </table>
         <p className="mt-2 min-h-8 text-xs text-muted-foreground" role="status">
-          {draft.from ? `${shortDate(draft.from)}${draft.to ? ` – ${shortDate(draft.to)}` : " — choose an end date"}` : "No dates selected"}
+          {draft.from ? `${shortDate(draft.from)}${draft.to ? ` – ${shortDate(draft.to)}` : " - choose an end date"}` : "No dates selected"}
         </p>
         <Separator className="my-3" />
         <div className="mb-2 flex items-center justify-between gap-2">

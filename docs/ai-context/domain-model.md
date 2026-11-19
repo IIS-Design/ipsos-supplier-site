@@ -1,4 +1,4 @@
-# Domain model — implemented contracts
+# Domain model - implemented contracts
 
 Verified against `src/types`, repository contracts and fixtures on 2026-10-22.
 Fields below are current data contracts, not claims that all corresponding editors exist.
@@ -124,7 +124,7 @@ These are Project-owned attributes shown in the shared list/overview sidebar. Th
 UI label Project ID displays surveyEventId; internal branded project.id is unchanged.
 
 
-## Member Info review — November 12, 2026
+## Member Info review - November 12, 2026
 
 Current Reports behavior supersedes older entries here: see [Approved Member Info review](handoff.md#approved-member-info-review--november-12-2026). Supports 1–10 owned subsamples or all, Project child selection, Organization-zone dates (two-week default, three-month limit), multiple status/substatus codes, both link types by default and optional respondent deduplication. Upload URL/partial responses removed. Duplicate toast and unavailable-file states are reversible Prototype Tools previews only. Queue execution, emails and file generation remain absent; static CSV sample retained. Child suppliers remain pending.
 

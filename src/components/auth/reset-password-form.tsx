@@ -89,7 +89,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
         ).map(({ key, label }) => (
           <div className="space-y-2" key={key}>
             <label
-              className="block text-sm font-medium"
+              className="text-muted-foreground block text-sm font-medium"
               htmlFor={`reset-${key}`}
             >
               {label}
