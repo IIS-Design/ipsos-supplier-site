@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import styles from "@/components/ui/surface-gradient.module.css";
 import { getCostBreakdown } from "@/features/costs/cost-breakdown";
 import { formatSubsampleId } from "@/lib/subsample-id";
 
@@ -90,7 +91,7 @@ export function CostEventCard({ group, open, onOpenChange, expandedIds, onToggle
   const breakdowns = getCostBreakdown(group.records);
   const projectMetadata = recordMetadata(group.projectCosts.length ? group.projectCosts : group.records, users, history);
 
-  return <li className={`min-w-0 rounded-md border px-3 py-1 ${selected ? "border-indigo-200 bg-indigo-50/50" : "bg-card"}`}>
+  return <li className={`${styles.card} min-w-0 rounded-md border px-3 py-1 ${selected ? "border-indigo-300 ring-1 ring-indigo-200" : "border-border"}`}>
     <Collapsible open={open} onOpenChange={onOpenChange}>
       <div className="flex items-start gap-1 py-2.5">
         {canSelect && <label className="flex size-9 shrink-0 items-center justify-center"><Checkbox aria-label={`Select all pending costs for ${name}`} checked={selected} onCheckedChange={checked => onSelect(checked === true)} /></label>}
@@ -105,7 +106,7 @@ export function CostEventCard({ group, open, onOpenChange, expandedIds, onToggle
               { label: "Supplier", value: supplierName },
               ...projectMetadata.filter(field => field.label === "Supplier Project ID"),
               { label: "Billing Entity", value: group.project?.billingEntity || "N/A" },
-            ]} /><div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">{group.subsamples.length > 0 && <span className="inline-flex items-center gap-1.5"><Folder className="size-3.5" aria-hidden="true" />{group.subsamples.length} Subsamples</span>}<span>{group.records.length} cost {group.records.length === 1 ? "entry" : "entries"}</span></div></div>
+            ]} /><div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">{group.subsamples.length > 0 && <CollapsibleTrigger asChild><button type="button" aria-label={`${open ? "Collapse" : "Expand"} subsample costs for ${name}`} className="inline-flex cursor-pointer items-center gap-1.5 rounded-sm hover:text-primary"><Folder className="size-3.5" aria-hidden="true" />{group.subsamples.length} Subsamples</button></CollapsibleTrigger>}<span>{group.records.length} cost {group.records.length === 1 ? "entry" : "entries"}</span></div></div>
             <div className="flex flex-wrap gap-1">{statuses.map(status => <Status key={status} status={status} />)}</div>
             <div className="space-y-0.5 text-right"><span className="block text-xs leading-tight text-muted-foreground">Total Cost</span>{breakdowns.map(item => <Popover key={item.currency}><PopoverTrigger asChild><button type="button" className="block min-h-5 w-full rounded-sm text-right font-bold leading-tight tabular-nums underline decoration-dotted underline-offset-4 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Show cost breakdown for ${name}, ${item.currency}`}>{money(item.total, item.currency)}</button></PopoverTrigger><PopoverContent align="end" className="w-72 space-y-2 p-3 text-xs">
               <h3 className="font-medium">Cost breakdown</h3>
@@ -122,7 +123,7 @@ export function CostEventCard({ group, open, onOpenChange, expandedIds, onToggle
       </div>
       <CollapsibleContent>
         <div className="pb-3 pl-2 pr-1 sm:pl-8">
-          <div className={canSelect ? "mb-1 pl-16 sm:pl-10" : "mb-1 pl-6 sm:pl-0"}>
+          <div className={canSelect ? "mb-3 pl-16 sm:pl-10" : "mb-3 pl-6 sm:pl-0"}>
             {breakdowns.map(item => <dl key={item.currency} className="flex flex-wrap items-start gap-x-8 gap-y-3 pt-2 pb-0 text-sm">
               <Detail label="Total Completes"><span className="font-medium tabular-nums">{item.completes.toLocaleString("en")}</span></Detail>
               <Detail label="Avg CPI"><span className="font-medium tabular-nums">{item.averageCpi == null ? <NotAvailable /> : money(item.averageCpi, item.currency)}</span></Detail>
@@ -132,7 +133,7 @@ export function CostEventCard({ group, open, onOpenChange, expandedIds, onToggle
             </dl>)}
 
           </div>
-          <ul className="space-y-3 border-l pl-4" aria-label={`Subsample costs for ${name}`}>
+          <ul className="space-y-2" aria-label={`Subsample costs for ${name}`}>
             {group.subsamples.map(item => {
               const id = `${group.id}/subsample/${item.id}`;
               const subsampleOpen = expandedIds.has(id);
@@ -141,9 +142,9 @@ export function CostEventCard({ group, open, onOpenChange, expandedIds, onToggle
 
               const totals = new Map<string, number>();
               item.records.forEach(cost => totals.set(cost.currency, (totals.get(cost.currency) ?? 0) + cost.totalCost));
-              return <li className="relative min-w-0 before:absolute before:-left-4 before:top-5 before:w-3 before:border-t" key={id}>
+              return <li className="relative min-w-0 rounded-md border border-border/60 bg-white p-3 pb-2.5" key={id}>
                 <Collapsible open={subsampleOpen} onOpenChange={() => onToggleSubsample(id)}>
-                  <div className="flex items-start gap-1 py-1.5"><CollapsibleTrigger asChild><Button className="size-7 shrink-0 px-0" variant="ghost" size="sm" aria-label={`${subsampleOpen ? "Collapse" : "Expand"} CPI entries for ${subsample?.name ?? item.id}`}>{subsampleOpen ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />}</Button></CollapsibleTrigger>
+                  <div className="flex items-start gap-1"><CollapsibleTrigger asChild><Button className="size-7 shrink-0 px-0" variant="ghost" size="sm" aria-label={`${subsampleOpen ? "Collapse" : "Expand"} CPI entries for ${subsample?.name ?? item.id}`}>{subsampleOpen ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />}</Button></CollapsibleTrigger>
                     <div className="min-w-0 flex-1"><div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1"><h3 className="min-w-0 wrap-break-word text-base font-medium">{subsample ? <Link href={`/projects/${subsample.projectId}/subsamples/${subsample.id}/details/`} className="text-foreground underline-offset-4 hover:text-primary hover:underline">{subsample.name}</Link> : item.id}</h3><div>{[...totals].map(([code, total]) => <p className="text-sm tabular-nums" key={code}>{money(total, code)}</p>)}</div></div><Metadata fields={[
                       { label: "Country", value: (subsample?.country ?? item.records[0]?.country) ? <span className="inline-flex items-center gap-1.5"><CountryFlag country={subsample?.country ?? item.records[0]?.country ?? ""} /><span>{subsample?.country ?? item.records[0]?.country}</span></span> : "N/A" },
                       { label: "Subsample ID", value: formatSubsampleId(subsample ?? item.id) },

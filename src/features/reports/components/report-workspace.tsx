@@ -1,9 +1,11 @@
 "use client";
 
+import { reportScopeName } from "../report-presentation";
+
 import { formatSubsampleId } from "@/lib/subsample-id";
 
 import { ReportAction } from "@/features/projects/components/report-action";
-import { ReportErrorDetails } from "@/components/report-error-details";
+import { ReportStatusIcon } from "./report-status-icon";
 import { withBasePath } from "@/lib/app-path";
 
 import Link from "next/link";
@@ -11,14 +13,9 @@ import { usePrototypeState } from "@/components/prototype-state";
 import { useMemo, useState } from "react";
 import {
   Download,
-  CircleAlert,
-  FileCheck2,
-  Hourglass,
-  LoaderCircle,
   Plus,
   Search,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
@@ -46,37 +43,11 @@ const reportStatusLabels: Record<Report["status"], string> = {
   error: "Error",
 };
 
-const statusStyles: Record<Report["status"], string> = {
-  queued: "border-slate-200 bg-slate-50 text-slate-600",
-  executing: "border-blue-200 bg-blue-50 text-blue-800",
-  finished: "border-emerald-200 bg-emerald-50 text-emerald-800",
-  error: "border-rose-200 bg-rose-50 text-rose-800",
-};
-
-const statusIcons = {
-  queued: Hourglass,
-  executing: LoaderCircle,
-  finished: FileCheck2,
-  error: CircleAlert,
-} satisfies Record<Report["status"], typeof Hourglass>;
-
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
-}
-
-function reportScopeName(
-  report: Report,
-  projects: Map<string, Project>,
-  subsamples: Map<string, Subsample>,
-) {
-  if (report.scope.scopeType === "supplier") return "All my subsamples";
-  if (report.scope.scopeType === "subsamples") return report.scope.subsampleIds.length === 1 ? (subsamples.get(report.scope.subsampleIds[0])?.name ?? "Subsample") : `${report.scope.subsampleIds.length} subsamples`;
-  return report.scope.scopeType === "project"
-    ? (projects.get(report.scope.projectId)?.name ?? "Project")
-    : (subsamples.get(report.scope.subsampleId)?.name ?? "Subsample");
 }
 
 function ReportList({
@@ -106,49 +77,31 @@ function ReportList({
   return (
     <ul aria-label="Reports" className="divide-y">
       {reports.map((report) => {
-        const StatusIcon = statusIcons[report.status];
         return (
-          <li id={`report-${report.id}`} className="flex scroll-mt-24 gap-3 py-3" key={report.id}>
-            {report.status === "error" ? <ReportErrorDetails reportId={report.id} message={report.errorMessage} className="mt-0.5 grid size-11 shrink-0 place-items-center rounded-md bg-rose-100 text-rose-700 hover:bg-rose-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><StatusIcon aria-hidden="true" className="size-4" /></ReportErrorDetails> : (
-            <ReportAction
-              report={report}
-              label={`${report.status === "finished" ? "Download" : "View report:"} ${reportTypeLabels[report.type]} (${report.id})`}
-              className="mt-0.5 grid size-11 shrink-0 place-items-center rounded-md bg-muted text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <StatusIcon
-                aria-hidden="true"
-                className={`size-4 ${report.status === "executing" ? "animate-spin motion-reduce:animate-none" : ""}`}
-              />
-            </ReportAction>
-            )}
+          <li id={`report-${report.id}`} className="flex scroll-mt-24 items-center gap-2 py-2" key={report.id}>
+            <ReportStatusIcon report={report} />
             <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge
-                  className={`text-sm ${statusStyles[report.status]}`}
-                  variant="outline"
-                >
-                  {reportStatusLabels[report.status]}
-                </Badge>
-                <p className="text-base font-medium leading-5"><ReportAction report={report} className="text-left underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{reportTypeLabels[report.type]}</ReportAction></p>
+              <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:gap-3">
+                <div className="min-w-0 sm:flex-1">
+                  <p className="truncate font-medium leading-5" title={reportScopeName(report, projectById, subsampleById)}>
+                    <ReportAction report={report} className="text-left" interactiveClassName="underline-offset-4 hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" label={`Download Report: ${reportScopeName(report, projectById, subsampleById)} (${report.id})`}>{reportScopeName(report, projectById, subsampleById)}</ReportAction>
+                  </p>
+                  <p className="text-xs leading-4 text-muted-foreground">{reportTypeLabels[report.type]} · <time dateTime={report.createdAt}>{formatDate(report.createdAt)}</time></p>
+                </div>
+                <p className="shrink-0 text-xs text-muted-foreground sm:whitespace-nowrap">
+                  ID <span className="text-foreground">{report.id}</span>
+                </p>
               </div>
-              <p className="mt-1 truncate text-sm text-foreground">
-                {reportScopeName(report, projectById, subsampleById)}
-              </p>
-              <p className="mt-0.5 text-sm text-muted-foreground">
-                ID <span className="text-foreground">{report.id}</span> · <span className="text-foreground">{formatDate(report.createdAt)}</span>
-              </p>
-              {report.status === "finished" && !report.downloadUrl && <div className="mt-2 space-y-1"><p className="text-sm font-medium">File no longer available</p><p className="text-xs text-muted-foreground">Create a new report to download an updated file.</p><Button asChild size="sm" variant="outline"><Link href="/reports/create">Create report</Link></Button></div>}
-              {report.status === "finished" && report.downloadUrl ? (
-                <Button asChild size="sm" variant="outline" className="mt-2 h-7 gap-1.5 px-2 text-xs">
-                <a
-                  href={withBasePath(report.downloadUrl)}
-                  download
-                >
-                  <Download aria-hidden="true" className="size-3.5" />Download report
-                </a>
-                </Button>
-              ) : null}
+              {report.status === "finished" && !report.downloadUrl && <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs"><p className="font-medium">File no longer available</p><p className="text-muted-foreground">Create a new report to download an updated file.</p><Button asChild size="sm" variant="outline" className="h-7 px-2 text-xs"><Link href="/reports/create">Create report</Link></Button></div>}
             </div>
+            {report.status === "finished" && report.downloadUrl ? (
+              <Button asChild size="sm" variant="outline" className="h-7 shrink-0 gap-1.5 self-center px-2 text-xs">
+                <a href={withBasePath(report.downloadUrl)} download>
+                  <Download aria-hidden="true" className="size-3.5" />Download
+                </a>
+              </Button>
+            ) : null}
+
           </li>
         );
       })}
@@ -172,13 +125,14 @@ export function ReportWorkspace({
   const [dates, setDates] = useState(() => {
     const now = new Date();
     const format = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-    return { from: format(new Date(now.getFullYear(), now.getMonth() - 3, 1)), to: format(createdReportId ? now : new Date(now.getFullYear(), now.getMonth(), 0)) };
+    return { from: format(new Date(now.getFullYear(), now.getMonth() - 3, 1)), to: format(now) };
   });
   const { scenario } = usePrototypeState();
   const empty = scenario === "reports-empty";
   const reports = useMemo(() => {
     if (empty) return [];
     if (!scenario.startsWith("reports-") || !sourceReports.length) return sourceReports;
+    if (scenario === "reports-many") return Array.from({ length: 120 }, (_, index) => ({ ...sourceReports[index % sourceReports.length], id: `RPT-PREVIEW-${index + 1}` as Report["id"], createdAt: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 12).toISOString() }));
     const statuses: Report["status"][] = scenario === "reports-unavailable" ? ["finished"] : scenario === "reports-duplicate" ? ["queued"] : scenario === "reports-all" ? ["queued", "executing", "finished", "error"] : [scenario.slice(8) as Report["status"]];
     const now = new Date();
     const createdAt = new Date(now.getFullYear(), now.getMonth() - 1, 15, 12).toISOString();

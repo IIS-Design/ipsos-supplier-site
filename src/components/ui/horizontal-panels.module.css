@@ -1,0 +1,57 @@
+.divider {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .panels {
+    flex: 1;
+    grid-template-columns: minmax(0, 1fr) 24px clamp(280px, var(--panel-width), 55%);
+    column-gap: 0;
+    transition: none;
+  }
+
+  .panels > :last-child {
+    grid-column: 3;
+  }
+
+  .divider {
+    display: block;
+    position: relative;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: stretch;
+    margin-block: -24px;
+    cursor: col-resize;
+    touch-action: none;
+    outline-offset: -5px;
+  }
+
+  .divider::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: calc(50% - 0.5px);
+    width: 1px;
+    background: var(--border);
+  }
+
+  .divider:hover::before,
+  .divider:focus-visible::before,
+  .panels[data-dragging] .divider::before {
+    width: 2px;
+    background: var(--primary);
+  }
+
+  .panels[data-dragging] {
+    cursor: col-resize;
+    user-select: none;
+  }
+
+  .panels[data-panel-state="collapsed"] {
+    grid-template-columns: minmax(0, 1fr) 0 0;
+  }
+
+  .panels[data-panel-state="collapsed"] .divider {
+    display: none;
+  }
+}

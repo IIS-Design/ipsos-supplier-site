@@ -52,6 +52,12 @@ type MockReportGlobal = typeof globalThis & {
 
 const reportState = globalThis as MockReportGlobal;
 const reportRecords = (reportState.__ipsosSupplierMockReports ??= [...reports]);
+// Add new examples after HMR without replacing existing or user-created requests.
+for (const fixture of reports) {
+  if (!reportRecords.some(report => report.id === fixture.id && report.supplierId === fixture.supplierId)) {
+    reportRecords.push(structuredClone(fixture));
+  }
+}
 
 type MockCostGlobal = typeof globalThis & {
   __ipsosSupplierMockCosts?: Cost[];

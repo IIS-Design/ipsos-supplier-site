@@ -58,6 +58,7 @@ export function scenarioTab(path: string): ScenarioTab | undefined {
 }
 
 export const reportScenarios = [
+  ["reports-many", "Many reports", "Shows 120 synthetic report requests to inspect a long report list without saving them."],
   ["reports-duplicate", "Duplicate request", "Shows an informational toast linking to an existing queued report. No duplicate detection runs."],
   ["reports-unavailable", "File no longer available", "Shows a finished job whose file is unavailable, with an action to create a new report."],
   ["reports-all", "All report statuses", "Shows queued, executing, downloadable and failed Member Info reports."],

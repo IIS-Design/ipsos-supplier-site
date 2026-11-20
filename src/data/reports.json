@@ -62,5 +62,295 @@
     "startedAt": "2026-10-19T14:10:08Z",
     "finishedAt": "2026-10-19T14:10:20Z",
     "errorMessage": "The report could not be generated because no completed interviews were available."
+  },
+  {
+    "id": "RPT-2026-1050",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "supplier"
+    },
+    "type": "respondent_info",
+    "status": "queued",
+    "requestedByUserId": "user-ops-001",
+    "createdAt": "2026-11-19T09:00:00Z",
+    "parameters": {
+      "demo": true
+    }
+  },
+  {
+    "id": "RPT-2026-1051",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsamples",
+      "subsampleIds": [
+        "subsample-1014592",
+        "subsample-1014595",
+        "subsample-1008462"
+      ]
+    },
+    "type": "respondent_info",
+    "status": "executing",
+    "requestedByUserId": "user-admin-001",
+    "createdAt": "2026-11-18T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-11-18T09:00:10Z"
+  },
+  {
+    "id": "RPT-2026-1052",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "project",
+      "projectId": "project-1024360"
+    },
+    "type": "respondent_info",
+    "status": "finished",
+    "requestedByUserId": "user-ops-001",
+    "createdAt": "2026-11-17T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-11-17T09:00:10Z",
+    "finishedAt": "2026-11-17T09:02:00Z",
+    "downloadUrl": "/mock-reports/RPT-2026-1045.csv"
+  },
+  {
+    "id": "RPT-2026-1053",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-1024376"
+    },
+    "type": "respondent_info",
+    "status": "error",
+    "requestedByUserId": "user-admin-001",
+    "createdAt": "2026-11-16T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-11-16T09:00:10Z",
+    "finishedAt": "2026-11-16T09:02:00Z",
+    "errorMessage": "The demo report could not be generated. Please submit a new request."
+  },
+  {
+    "id": "RPT-2026-1054",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "supplier"
+    },
+    "type": "respondent_info",
+    "status": "finished",
+    "requestedByUserId": "user-ops-001",
+    "createdAt": "2026-11-15T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-11-15T09:00:10Z",
+    "finishedAt": "2026-11-15T09:02:00Z",
+    "downloadUrl": "/mock-reports/RPT-2026-1045.csv"
+  },
+  {
+    "id": "RPT-2026-1055",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsamples",
+      "subsampleIds": [
+        "subsample-1014592",
+        "subsample-1014595",
+        "subsample-1008462"
+      ]
+    },
+    "type": "respondent_info",
+    "status": "finished",
+    "requestedByUserId": "user-admin-001",
+    "createdAt": "2026-11-14T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-11-14T09:00:10Z",
+    "finishedAt": "2026-11-14T09:02:00Z",
+    "downloadUrl": "/mock-reports/RPT-2026-1045.csv"
+  },
+  {
+    "id": "RPT-2026-1056",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "project",
+      "projectId": "project-1100002"
+    },
+    "type": "respondent_info",
+    "status": "finished",
+    "requestedByUserId": "user-ops-001",
+    "createdAt": "2026-11-13T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-11-13T09:00:10Z",
+    "finishedAt": "2026-11-13T09:02:00Z",
+    "downloadUrl": "/mock-reports/RPT-2026-1045.csv"
+  },
+  {
+    "id": "RPT-2026-1057",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-demo-03-01"
+    },
+    "type": "respondent_info",
+    "status": "finished",
+    "requestedByUserId": "user-admin-001",
+    "createdAt": "2026-11-12T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-11-12T09:00:10Z",
+    "finishedAt": "2026-11-12T09:02:00Z",
+    "downloadUrl": "/mock-reports/RPT-2026-1045.csv"
+  },
+  {
+    "id": "RPT-2026-1058",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "supplier"
+    },
+    "type": "respondent_info",
+    "status": "queued",
+    "requestedByUserId": "user-ops-001",
+    "createdAt": "2026-10-28T09:00:00Z",
+    "parameters": {
+      "demo": true
+    }
+  },
+  {
+    "id": "RPT-2026-1059",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsamples",
+      "subsampleIds": [
+        "subsample-1014592",
+        "subsample-1014595",
+        "subsample-1008462"
+      ]
+    },
+    "type": "respondent_info",
+    "status": "executing",
+    "requestedByUserId": "user-admin-001",
+    "createdAt": "2026-10-26T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-10-26T09:00:10Z"
+  },
+  {
+    "id": "RPT-2026-1060",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "project",
+      "projectId": "project-1100006"
+    },
+    "type": "respondent_info",
+    "status": "finished",
+    "requestedByUserId": "user-ops-001",
+    "createdAt": "2026-10-24T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-10-24T09:00:10Z",
+    "finishedAt": "2026-10-24T09:02:00Z",
+    "downloadUrl": "/mock-reports/RPT-2026-1045.csv"
+  },
+  {
+    "id": "RPT-2026-1061",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-demo-04-03"
+    },
+    "type": "respondent_info",
+    "status": "error",
+    "requestedByUserId": "user-admin-001",
+    "createdAt": "2026-10-22T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-10-22T09:00:10Z",
+    "finishedAt": "2026-10-22T09:02:00Z",
+    "errorMessage": "The demo report could not be generated. Please submit a new request."
+  },
+  {
+    "id": "RPT-2026-1062",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "supplier"
+    },
+    "type": "respondent_info",
+    "status": "finished",
+    "requestedByUserId": "user-ops-001",
+    "createdAt": "2026-10-20T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-10-20T09:00:10Z",
+    "finishedAt": "2026-10-20T09:02:00Z",
+    "downloadUrl": "/mock-reports/RPT-2026-1045.csv"
+  },
+  {
+    "id": "RPT-2026-1063",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsamples",
+      "subsampleIds": [
+        "subsample-1014592",
+        "subsample-1014595",
+        "subsample-1008462"
+      ]
+    },
+    "type": "respondent_info",
+    "status": "finished",
+    "requestedByUserId": "user-admin-001",
+    "createdAt": "2026-10-18T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-10-18T09:00:10Z",
+    "finishedAt": "2026-10-18T09:02:00Z",
+    "downloadUrl": "/mock-reports/RPT-2026-1045.csv"
+  },
+  {
+    "id": "RPT-2026-1064",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "project",
+      "projectId": "project-1100010"
+    },
+    "type": "respondent_info",
+    "status": "finished",
+    "requestedByUserId": "user-ops-001",
+    "createdAt": "2026-10-16T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-10-16T09:00:10Z",
+    "finishedAt": "2026-10-16T09:02:00Z",
+    "downloadUrl": "/mock-reports/RPT-2026-1045.csv"
+  },
+  {
+    "id": "RPT-2026-1065",
+    "supplierId": "supplier-northstar",
+    "scope": {
+      "scopeType": "subsample",
+      "subsampleId": "subsample-demo-05-04"
+    },
+    "type": "respondent_info",
+    "status": "finished",
+    "requestedByUserId": "user-admin-001",
+    "createdAt": "2026-10-14T09:00:00Z",
+    "parameters": {
+      "demo": true
+    },
+    "startedAt": "2026-10-14T09:00:10Z",
+    "finishedAt": "2026-10-14T09:02:00Z",
+    "downloadUrl": "/mock-reports/RPT-2026-1045.csv"
   }
 ]

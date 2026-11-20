@@ -1,14 +1,14 @@
 import Link from "next/link";
+import { costsForView, groupCosts } from "@/features/costs/cost-groups";
+import { getCostBreakdown } from "@/features/costs/cost-breakdown";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
-  CardAction,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import type { Cost } from "@/types/cost";
 import type { Project } from "@/types/project";
 import type { Subsample } from "@/types/subsample";
@@ -27,49 +27,26 @@ function formatCurrency(amount: number, currency: string): string {
   }).format(amount);
 }
 
-function getScopeName(
-  cost: Cost,
-  projectById: Map<string, Project>,
-  subsampleById: Map<string, Subsample>,
-): string {
-  if (cost.scope.scopeType === "project") {
-    return projectById.get(cost.scope.projectId)?.name ?? "Project";
-  }
-  return subsampleById.get(cost.scope.subsampleId)?.name ?? "Subsample";
-}
-
 export function PendingCostApprovalsWidget({
   costs,
   projects,
   subsamples,
 }: PendingCostApprovalsWidgetProps) {
-  const pendingCosts = costs.filter(
-    (cost) => cost.status === "pending_approval",
-  );
-  const projectById = new Map(projects.map((project) => [project.id, project]));
-  const subsampleById = new Map(
-    subsamples.map((subsample) => [subsample.id, subsample]),
-  );
+  const pendingGroups = groupCosts(costsForView(costs, "pending"), projects, subsamples);
 
   return (
-    <Card className="gap-0 rounded-none border-0 py-0 shadow-none">
-      <CardHeader className="gap-1 px-4 pb-1 pt-2">
+    <Card className="gap-0 rounded-none border-0 bg-transparent py-0 shadow-none">
+      <CardHeader className="gap-1 px-2 pb-2 pt-2">
         <CardTitle>
-          <h2 className="text-base font-semibold">Pending Cost Approvals</h2>
+          <h2 className="flex flex-wrap items-center gap-1.5 text-base font-semibold">
+            <Badge className="border-orange-200 bg-orange-50 text-base font-semibold text-orange-900" variant="outline">{pendingGroups.length}</Badge>
+            <span>Pending Approvals</span>
+          </h2>
         </CardTitle>
-        <CardAction className="flex items-center gap-2">
-          {pendingCosts.length > 0 ? (
-            <Badge
-              className="border-orange-200 bg-orange-50 text-orange-900"
-              variant="outline"
-            >
-              {pendingCosts.length} Pending
-            </Badge>
-          ) : null}
-        </CardAction>
+        {pendingGroups.length > 0 && <p className="text-xs text-muted-foreground">Showing {Math.min(10, pendingGroups.length)} of {pendingGroups.length} pending events</p>}
       </CardHeader>
-      <CardContent className="px-4 py-0">
-        {pendingCosts.length === 0 ? (
+      <CardContent className="px-2 py-0">
+        {pendingGroups.length === 0 ? (
           <div className="py-5 text-center">
             <p className="text-sm font-medium">No costs are pending approval</p>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -77,31 +54,29 @@ export function PendingCostApprovalsWidget({
             </p>
           </div>
         ) : (
-          <ul aria-label="Pending cost approvals">
-            {pendingCosts.slice(0, 10).map((cost, index) => (
-              <li key={cost.id}>
-                {index > 0 ? <Separator /> : null}
-                <div className="flex items-center justify-between gap-3 py-2.5">
+          <ul aria-label="Pending cost approvals" className="space-y-1 pb-2">
+            {pendingGroups.slice(0, 10).map((group) => (
+              <li key={group.id} className="rounded-md border border-border/60 bg-white px-2 py-2">
+                <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-base font-medium leading-5" title={getScopeName(cost, projectById, subsampleById)}>
-                      {getScopeName(cost, projectById, subsampleById)}
+                    <p className="truncate text-sm font-medium leading-5" title={group.project?.name ?? "Unavailable survey event"}>
+                      <Link href="/costs" className="hover:text-primary hover:underline underline-offset-4">{group.project?.name ?? "Unavailable survey event"}</Link>
                     </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {cost.completes} completes · CPI{" "}
-                      {formatCurrency(cost.cpi, cost.currency)}
+                    <p className="mt-0.5 text-sm leading-5 text-muted-foreground">
+                      {group.subsamples.length} {group.subsamples.length === 1 ? "subsample" : "subsamples"} · {group.records.length} cost {group.records.length === 1 ? "entry" : "entries"}
                     </p>
                   </div>
-                  <p className="shrink-0 whitespace-nowrap text-sm font-semibold tabular-nums">
-                    {formatCurrency(cost.totalCost, cost.currency)}
-                  </p>
+                  <div className="shrink-0 text-right text-sm font-semibold tabular-nums">
+                    {getCostBreakdown(group.records).map(total => <p key={total.currency}>{formatCurrency(total.total, total.currency)} <span className="text-xs font-normal">{total.currency}</span></p>)}
+                  </div>
                 </div>
               </li>
             ))}
           </ul>
         )}
       </CardContent>
-      <div className="border-t px-4 py-2.5">
-        <Button asChild size="sm" variant="success"><Link href="/costs">Review Costs</Link></Button>
+      <div className="px-2 py-2.5">
+        <Button asChild size="sm" variant="success"><Link href="/costs">Review All Costs</Link></Button>
       </div>
     </Card>
   );

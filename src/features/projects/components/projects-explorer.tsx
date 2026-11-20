@@ -29,6 +29,7 @@ import { subsampleLanguages } from "@/types/subsample";
 import type { Subsample } from "@/types/subsample";
 import { ProjectGroup } from "./project-group";
 import { CountryFlag } from "@/components/ui/country-flag";
+import styles from "@/components/ui/surface-gradient.module.css";
 
 
 
@@ -187,6 +188,7 @@ export function ProjectsExplorer({
         <div className="ml-auto flex items-center gap-1"><HorizontalPanelTrigger /></div>
       </header>
 
+      <div className={`${styles.card} space-y-3 rounded-md border border-border p-3`}>
       <div className="project-filters grid min-w-0 gap-2 sm:grid-cols-2">
         <div className="min-w-0">
           <label className="sr-only" htmlFor="project-search">Search</label>
@@ -237,7 +239,8 @@ export function ProjectsExplorer({
         </Sheet>
       </div>
 
-      <ActiveFilters filters={chips} onClear={clearFilters} />
+      <ActiveFilters filters={chips} onClear={clearFilters} className="border-0 pb-0" />
+      </div>
 
       <div className="flex min-h-6 flex-wrap items-center justify-between gap-3">
         <p aria-live="polite" className="text-sm text-muted-foreground">

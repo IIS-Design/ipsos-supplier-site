@@ -26,7 +26,7 @@ export default async function ProjectsRoute() {
 
   return (
     <ProjectsWorkspace
-      reports={<PrototypeActivityPreview module="Reports" emptyContent={<RecentReportsWidget reports={[]} />}><RecentReportsWidget reports={reports} /></PrototypeActivityPreview>}
+      reports={<PrototypeActivityPreview module="Reports" emptyContent={<RecentReportsWidget reports={[]} projects={projects} subsamples={subsamples} />}><RecentReportsWidget reports={reports} projects={projects} subsamples={subsamples} /></PrototypeActivityPreview>}
       costs={<PrototypeActivityPreview module="Costs" emptyContent={<PendingCostApprovalsWidget costs={[]} projects={projects} subsamples={subsamples} />}><PendingCostApprovalsWidget costs={costs} projects={projects} subsamples={subsamples} /></PrototypeActivityPreview>}
     >
       <ProjectsExplorer projects={projects} subsamples={subsamples} />

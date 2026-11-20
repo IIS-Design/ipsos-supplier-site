@@ -11,7 +11,7 @@ export function ProjectExpansion({ subsamples, wholeRowLink = false }: { subsamp
   }
 
   return (
-    <ul aria-label="Available subsamples" className="border-l border-border pl-4">
+    <ul aria-label="Available subsamples" className="space-y-2">
       {subsamples.map((subsample) => (
         <SubsampleSummary wholeRowLink={wholeRowLink} key={subsample.id} subsample={subsample} />
       ))}

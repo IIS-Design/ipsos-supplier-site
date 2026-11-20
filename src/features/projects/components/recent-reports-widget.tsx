@@ -1,16 +1,14 @@
-import { ReportErrorDetails } from "@/components/report-error-details";
+import { ReportStatusIcon } from "@/features/reports/components/report-status-icon";
 import { ReportAction } from "./report-action";
 import Link from "next/link";
 import {
-  CircleAlert,
-  FileCheck2,
-  Hourglass,
-  LoaderCircle,
   UserRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { recentReportSummary, reportScopeName } from "@/features/reports/report-presentation";
+import type { Project } from "@/types/project";
+import type { Subsample } from "@/types/subsample";
 import type { Report } from "@/types/report";
 
 const reportTypeLabels: Record<Report["type"], string> = {
@@ -19,27 +17,6 @@ const reportTypeLabels: Record<Report["type"], string> = {
   mini_router_quota: "Mini-Router Quota Report",
 };
 
-const reportStatusLabels: Record<Report["status"], string> = {
-  queued: "Queued",
-  executing: "Executing",
-  finished: "Finished",
-  error: "Error",
-};
-
-const reportStatusStyles: Record<Report["status"], string> = {
-  queued: "border-slate-200 bg-slate-50 text-slate-600",
-  executing: "border-blue-200 bg-blue-50 text-blue-800",
-  finished: "border-emerald-200 bg-emerald-50 text-emerald-800",
-  error: "border-rose-200 bg-rose-50 text-rose-800",
-};
-
-const reportStatusIcons = {
-  queued: Hourglass,
-  executing: LoaderCircle,
-  finished: FileCheck2,
-  error: CircleAlert,
-} satisfies Record<Report["status"], typeof Hourglass>;
-
 function formatReportDate(value: string): string {
   return new Intl.DateTimeFormat("en", {
     dateStyle: "medium",
@@ -47,60 +24,42 @@ function formatReportDate(value: string): string {
   }).format(new Date(value));
 }
 
-export function RecentReportsWidget({ reports }: { reports: Report[] }) {
-  const recentReports = [...reports]
-    .sort(
-      (left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt),
-    )
-    .slice(0, 10);
+export function RecentReportsWidget({ reports, projects, subsamples }: { reports: Report[]; projects: Project[]; subsamples: Subsample[] }) {
+  const projectById = new Map(projects.map(project => [project.id, project]));
+  const subsampleById = new Map(subsamples.map(subsample => [subsample.id, subsample]));
+  const { visible: recentReports, failed } = recentReportSummary(reports);
 
   return (
-    <Card className="gap-0 rounded-none border-0 py-0 shadow-none">
-      <CardHeader className="gap-1 px-4 pb-1 pt-2">
+    <Card className="gap-0 rounded-none border-0 bg-transparent py-0 shadow-none">
+      <CardHeader className="gap-1 px-2 pb-2 pt-2">
+        <div className="flex items-center justify-between gap-2">
         <CardTitle>
           <h2 className="text-base font-semibold">Recent Reports</h2>
         </CardTitle>
+          <Button asChild size="xs" variant="outline"><Link href="/reports">View All</Link></Button>
+        </div>
+        {reports.length > 0 && <p className="text-xs text-muted-foreground">Showing {recentReports.length} of {reports.length} reports{failed > 0 && <> - <Link href="/reports" className="font-medium text-destructive underline-offset-4 hover:underline">{failed} Failed</Link></>}</p>}
       </CardHeader>
-      <CardContent className="space-y-3 px-4 pb-3 pt-1">
+      <CardContent className="space-y-3 px-2 pb-3 pt-1">
         {recentReports.length === 0 ? (
           <div className="py-5 text-center">
-            <p className="text-sm font-medium">No reports yet</p>
+            <p className="text-sm font-medium">{reports.length ? "No non-failed reports available" : "No reports yet"}</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Reports you run will appear here.
             </p>
           </div>
         ) : (
-          <ul aria-label="Recent Reports">
-            {recentReports.map((report, index) => {
-              const StatusIcon = reportStatusIcons[report.status];
+          <ul aria-label="Recent Reports" className="space-y-1">
+            {recentReports.map((report) => {
               return (
-                <li key={report.id}>
-                  {index > 0 ? <Separator /> : null}
-                  <div className="flex gap-2.5 py-2">
-                    {report.status === "error" ? (
-                      <ReportErrorDetails reportId={report.id} message={report.errorMessage} className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-md bg-rose-100 text-rose-700 hover:bg-rose-200">
-                        <StatusIcon aria-hidden="true" className="size-4" />
-                      </ReportErrorDetails>
-                    ) : (
-                      <ReportAction report={report} label={`${report.status === "finished" ? "Download" : "View in queue:"} ${reportTypeLabels[report.type]} (${report.id})`} className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-md bg-muted text-muted-foreground hover:bg-accent hover:text-foreground">
-                        <StatusIcon aria-hidden="true" className={`size-4 ${report.status === "executing" ? "animate-spin motion-reduce:animate-none" : ""}`} />
-                      </ReportAction>
-                    )}
+                <li key={report.id} className="rounded-md border border-border/60 bg-white px-2 py-2">
+                    <div className="flex gap-2">
+                    <ReportStatusIcon report={report} />
                     <div className="min-w-0 flex-1">
-                      <p className="text-base font-medium leading-5">
-                        <ReportAction report={report} className={report.status === "error" ? undefined : "underline-offset-4 hover:underline"}>{reportTypeLabels[report.type]}</ReportAction>
+                      <p className="truncate text-sm font-medium leading-5" title={reportScopeName(report, projectById, subsampleById)}>
+                        <ReportAction report={report} interactiveClassName="underline-offset-4 hover:text-primary hover:underline">{reportScopeName(report, projectById, subsampleById)}</ReportAction>
                       </p>
-                      <div className="mt-0.5 flex flex-wrap gap-x-1 text-sm leading-5 text-muted-foreground">
-                        <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${reportStatusStyles[report.status]}`}>
-                          {reportStatusLabels[report.status]}
-                        </span>
-                        <span aria-hidden="true">·</span>
-                        <span>ID {report.id}</span>
-                        <span aria-hidden="true">·</span>
-                        <time dateTime={report.createdAt}>
-                          {formatReportDate(report.createdAt)}
-                        </time>
-                      </div>
+                      <p className="text-xs leading-4 text-muted-foreground">{reportTypeLabels[report.type]} · <time dateTime={report.createdAt}>{formatReportDate(report.createdAt)}</time></p>
                     </div>
                   </div>
                 </li>
@@ -108,13 +67,11 @@ export function RecentReportsWidget({ reports }: { reports: Report[] }) {
             })}
           </ul>
         )}
-      </CardContent>
-      <div className="flex items-center gap-2 border-t px-4 py-2.5">
-        <Button asChild className="gap-1.5 px-2" size="sm" variant="outline">
-          <Link href="/reports"><UserRound aria-hidden="true" className="size-4" />Create New Report</Link>
+        <Button asChild className="gap-1 px-2 [&_svg]:size-3" size="xs" variant="outline">
+          <Link href="/reports/create"><UserRound aria-hidden="true" className="size-3" />Create New Report</Link>
         </Button>
-        <Button asChild size="sm" variant="outline"><Link href="/reports">View All</Link></Button>
-      </div>
+      </CardContent>
+
     </Card>
   );
 }

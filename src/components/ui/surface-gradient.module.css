@@ -1,0 +1,11 @@
+.card {
+  background-color: var(--card);
+  background-image: linear-gradient(
+    110deg,
+    #ffffff 0%,
+    #ffffff 35%,
+    #f8f9fc 65%,
+    #f2f5fb 85%,
+    #edf2fa 100%
+  );
+}

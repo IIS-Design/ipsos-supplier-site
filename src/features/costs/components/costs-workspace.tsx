@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import styles from "@/components/ui/surface-gradient.module.css";
 import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronRight, Search, X } from "lucide-react";
 import { usePrototypeState } from "@/components/prototype-state";
@@ -35,7 +36,7 @@ export function CostsWorkspace({ costs: sourceCosts, projects, subsamples, suppl
   const router = useRouter();
   const costs = useMemo(() => empty ? [] : previewCostAdjustments(sourceCosts, scenario), [empty, sourceCosts, scenario]);
   const canDecide = userRole === "admin";
-  const previewing = scenario === "costs-with-adjustments" || scenario === "costs-without-adjustments";
+  const previewing = scenario.startsWith("costs-");
   const [view, setView] = useState<View>("pending");
   const [search, setSearch] = useState("");
   const [country, setCountry] = useState("all");
@@ -103,9 +104,9 @@ export function CostsWorkspace({ costs: sourceCosts, projects, subsamples, suppl
   const hasFilters = Boolean(search.trim() || country !== "all" || dateFrom || dateTo);
   return <div className="space-y-5">
     <header className="flex flex-wrap items-center gap-x-4 gap-y-2"><h1 className="text-2xl font-semibold tracking-tight">Costs</h1><Tabs value={view} onValueChange={changeView}><TabsList aria-label="Cost views"><TabsTrigger value="pending">Pending Approval <ViewCountBadge active={view === "pending"} className="ml-2">{pendingGroups.length}</ViewCountBadge></TabsTrigger><TabsTrigger value="history">History</TabsTrigger></TabsList></Tabs></header>
-    {previewing && <p className="text-sm text-muted-foreground">Previewing example adjustments. <button type="button" className="text-primary underline underline-offset-4" onClick={() => setScenario("")}>Return to current data to approve costs</button>.</p>}
+    {previewing && <p className="text-sm text-muted-foreground">Previewing example costs. <button type="button" className="text-primary underline underline-offset-4" onClick={() => setScenario("")}>Return to current data to approve costs</button>.</p>}
     {success && <p className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900" role="status">{success}</p>}
-    <div className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-[minmax(220px,1fr)_240px]">
+    <div className={`${styles.card} grid min-w-0 grid-cols-1 gap-3 rounded-md border border-border p-3 lg:grid-cols-[minmax(220px,1fr)_240px]`}>
       <div className="relative"><Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search costs by project, SID, subsample, or job book" placeholder="Search by Project, SID, Subsample or Job Book..." className="pl-9" value={search} onChange={event => { setSearch(event.target.value); clearSelection(); }} /></div>
       {view === "pending" ? <Select value={country} onValueChange={value => { setCountry(value); clearSelection(); }}><SelectTrigger aria-label="Filter costs by country"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">Country: All</SelectItem>{countries.map(item => <SelectItem key={item} value={item}><span className="inline-flex items-center gap-1.5"><CountryFlag country={item} /><span>{item}</span></span></SelectItem>)}</SelectContent></Select> : <DateRangePicker label="Approval date range" value={{ from: dateFrom, to: dateTo }} onChange={range => { setDateFrom(range.from); setDateTo(range.to); clearSelection(); }} />}
 

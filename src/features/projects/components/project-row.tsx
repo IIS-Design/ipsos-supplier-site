@@ -56,10 +56,12 @@ export function ProjectRow({
           </span>
         </div>
         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
-          <span className="inline-flex items-center gap-1.5 text-foreground">
+          <CollapsibleTrigger asChild>
+          <button type="button" aria-label={`${expanded ? "Collapse" : "Expand"} subsamples for ${project.name}`} className="inline-flex cursor-pointer items-center gap-1.5 rounded-sm text-foreground hover:text-primary">
             <Folder aria-hidden="true" className="size-3.5" />
             {subsamples.length} Available Subsamples
-          </span>
+          </button>
+          </CollapsibleTrigger>
           {liveCount > 0 ? (
             <Badge variant="outline" className={statusBadgeStyles.live}>
               {liveCount} Live

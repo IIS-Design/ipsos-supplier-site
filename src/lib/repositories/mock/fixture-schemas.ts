@@ -225,6 +225,9 @@ export const costSchema = z
       .optional(),
   })
   .strict()
+  .refine(cost => cost.totalCost !== 0, {
+    path: ["totalCost"], message: "Published cost entries must have a non-zero amount",
+  })
   .refine(cost => cost.totalCost >= 0 || cost.scope.scopeType === "project", {
     path: ["totalCost"], message: "Only project adjustments may have a negative cost",
   });
